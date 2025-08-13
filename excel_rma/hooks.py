@@ -213,3 +213,5 @@ app_license = "MIT"
 # auth_hooks = [
 # 	"excel_rma.auth.validate"
 # ]
+
+website_route_rules = [{'from_route': '/rma-web/<path:app_path>', 'to_route': 'rma-web'}, {'from_route': '/rma-web/<path:app_path>', 'to_route': 'rma-web'},]

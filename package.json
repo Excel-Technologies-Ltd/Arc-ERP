@@ -1,0 +1,15 @@
+{
+  "name": "excel_rma",
+  "version": "1.0.0",
+  "description": "This is an Excel RMA Service App.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "postinstall": "cd rma-web && yarn install",
+    "dev": "cd rma-web && yarn dev",
+    "build": "cd rma-web && yarn build"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}

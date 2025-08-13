@@ -1,0 +1,45 @@
+/*
+ |--------------------------------------------------------------------------
+ | Fonts
+ |--------------------------------------------------------------------------
+ |
+ | Import all fonts used in the template, the font configuration can be
+ | seen in "tailwind.config.js".
+ |
+ | Please check this link for more details:
+ | https://tailwindcss.com/docs/theme
+ |
+ */
+@import "./fonts/_roboto.css";
+
+/*
+ |--------------------------------------------------------------------------
+ | Components
+ |--------------------------------------------------------------------------
+ |
+ | Import CSS components.
+ |
+ */
+@import "./components/base/_box.css";
+@import "./components/base/_global.css";
+@import "./components/base/_image-fit.css";
+@import "./components/base/_scrollbar-hidden.css";
+@import "./components/base/_typing-dots.css";
+@import "./components/base/_zoom-in.css";
+@import "./components/base/_intro.css";
+
+/*
+ |--------------------------------------------------------------------------
+ | TailwindCSS Directives
+ |--------------------------------------------------------------------------
+ |
+ | Import TailwindCSS directives and swipe out at build-time with all of
+ | the styles it generates based on your configured design system.
+ |
+ | Please check this link for more details:
+ | https://tailwindcss.com/docs/installation#include-tailwind-in-your-css
+ |
+ */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
