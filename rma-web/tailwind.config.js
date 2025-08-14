@@ -97,8 +97,8 @@ module.exports = {
     },
   },
   plugins: [
-    require('@tailwindcss/forms'),
-    plugin(function ({ addBase, matchUtilities }) {
+    // require('@tailwindcss/forms'),
+    plugin(function ({ addBase }) {
       addBase({
         // Default colors
         ':root': {

@@ -1,20 +1,20 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { RootState } from "./store";
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { RootState } from './store';
 
 interface DarkModeState {
   value: boolean;
 }
 
 const initialState: DarkModeState = {
-  value: localStorage.getItem("darkMode") === "true",
+  value: localStorage.getItem('darkMode') === 'true',
 };
 
 export const darkModeSlice = createSlice({
-  name: "darkMode",
+  name: 'darkMode',
   initialState,
   reducers: {
     setDarkMode: (state, action: PayloadAction<boolean>) => {
-      localStorage.setItem("darkMode", action.payload.toString());
+      localStorage.setItem('darkMode', action.payload.toString());
       state.value = action.payload;
     },
   },
@@ -23,8 +23,8 @@ export const darkModeSlice = createSlice({
 export const { setDarkMode } = darkModeSlice.actions;
 
 export const selectDarkMode = (state: RootState) => {
-  if (localStorage.getItem("darkMode") === null) {
-    localStorage.setItem("darkMode", "false");
+  if (localStorage.getItem('darkMode') === null) {
+    localStorage.setItem('darkMode', 'false');
   }
 
   return state.darkMode.value;

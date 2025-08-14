@@ -11,10 +11,13 @@ import clsx from 'clsx';
 import { Transition } from '@headlessui/react';
 import { useFrappeAuth } from 'frappe-react-sdk';
 import { showSuccessToast } from '@/components/Toast/Toast.utils';
+import { useDispatch } from 'react-redux';
+import { resetPermissions } from '@/stores/permissionSlice';
 
 function Main(props: { layout?: 'side-menu' | 'simple-menu' | 'top-menu' }) {
   const { logout } = useFrappeAuth();
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const [searchDropdown, setSearchDropdown] = useState(false);
   const showSearchDropdown = () => {
@@ -28,6 +31,7 @@ function Main(props: { layout?: 'side-menu' | 'simple-menu' | 'top-menu' }) {
   const handleLogout = async () => {
     await logout().then(() => {
       showSuccessToast('Log Out Successfully');
+      dispatch(resetPermissions());
       navigate('/login');
     });
   };

@@ -1,5 +1,8 @@
 import { URLLogin } from '@/router/routes.url';
+import { getPermissionlist } from '@/services/Permissions/Permissions';
+import { resetPermissions, setPermissions } from '@/stores/permissionSlice';
 import { useFrappeAuth } from 'frappe-react-sdk';
+import { useDispatch } from 'react-redux';
 import { Navigate, Outlet } from 'react-router-dom';
 
 /**
@@ -8,9 +11,24 @@ import { Navigate, Outlet } from 'react-router-dom';
 function PrivateGuard() {
   // check if user is logged in
   const { currentUser, isLoading, isValidating } = useFrappeAuth();
+  const dispatch = useDispatch();
 
-  if (isLoading || isValidating) {
+  const {
+    data: permissionList,
+    isLoading: isLoadingPermissionList,
+    error: isErrorPermissionList,
+  } = getPermissionlist();
+
+  if (isLoading || isValidating || isLoadingPermissionList) {
     return <div>Loading...</div>;
+  }
+
+  if (isErrorPermissionList) {
+    dispatch(resetPermissions());
+  }
+
+  if (permissionList) {
+    dispatch(setPermissions(permissionList.message));
   }
 
   // protected route

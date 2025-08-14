@@ -4,6 +4,15 @@ import {
   URLSalesInvoiceList,
   URLSalesReturn,
   URLAddSalesInvoice,
+  URLAddStock,
+  URLStockEntrylist,
+  URLStockAvailability,
+  URLStockSerial,
+  URLStockLedger,
+  URLCustomerProfile,
+  URLCustomerBrandLimit,
+  URLServer,
+  URLItemPrice,
 } from '@/router/routes.url';
 
 const menu: Array<Menu | 'divider'> = [
@@ -35,6 +44,69 @@ const menu: Array<Menu | 'divider'> = [
         icon: 'Activity',
         pathname: URLSalesReturn(),
         title: 'Sales Return',
+      },
+    ],
+  },
+  {
+    icon: 'ShoppingBag',
+    title: 'Stock',
+    subMenu: [
+      {
+        icon: 'Activity',
+        pathname: URLAddStock(),
+        title: 'Add Stock Entry',
+      },
+      {
+        icon: 'Activity',
+        pathname: URLStockEntrylist(),
+        title: 'Stock Entry List',
+      },
+      {
+        icon: 'Activity',
+        pathname: URLStockAvailability(),
+        title: 'Stock Availability',
+      },
+      {
+        icon: 'Activity',
+        pathname: URLStockSerial(),
+        title: 'Stock Serial',
+      },
+      {
+        icon: 'Activity',
+        pathname: URLStockLedger(),
+        title: 'Stock Ledger',
+      },
+    ],
+  },
+  {
+    icon: 'ShoppingBag',
+    title: 'Customer',
+    subMenu: [
+      {
+        icon: 'Activity',
+        pathname: URLCustomerProfile(),
+        title: 'Customer Profile',
+      },
+      {
+        icon: 'Activity',
+        pathname: URLCustomerBrandLimit(),
+        title: 'Customer Brand Limit',
+      },
+    ],
+  },
+  {
+    icon: 'ShoppingBag',
+    title: 'Settings',
+    subMenu: [
+      {
+        icon: 'Activity',
+        pathname: URLServer(),
+        title: 'Server',
+      },
+      {
+        icon: 'Activity',
+        pathname: URLItemPrice(),
+        title: 'Item Price',
       },
     ],
   },

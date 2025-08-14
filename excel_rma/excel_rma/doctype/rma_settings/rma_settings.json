@@ -1,0 +1,61 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2025-08-14 13:54:14.471924",
+ "default_view": "List",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "roles_tab",
+  "doctype_list",
+  "permissions_tab",
+  "tst"
+ ],
+ "fields": [
+  {
+   "fieldname": "roles_tab",
+   "fieldtype": "Tab Break",
+   "label": "Roles"
+  },
+  {
+   "fieldname": "doctype_list",
+   "fieldtype": "Table MultiSelect",
+   "label": "Usable Doctype List",
+   "options": "Doctype Child Table"
+  },
+  {
+   "fieldname": "permissions_tab",
+   "fieldtype": "Tab Break",
+   "label": "Permissions"
+  },
+  {
+   "fieldname": "tst",
+   "fieldtype": "Data",
+   "label": "Tst"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "issingle": 1,
+ "links": [],
+ "modified": "2025-08-14 13:54:14.471924",
+ "modified_by": "Administrator",
+ "module": "Excel Rma",
+ "name": "RMA Settings",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "print": 1,
+   "read": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

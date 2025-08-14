@@ -1,19 +1,18 @@
-import ThemeSwitcher from '@/components/ThemeSwitcher';
 import logoUrl from '@/assets/images/logo.svg';
 import illustrationUrl from '@/assets/images/illustration.svg';
-import { FormInput, FormCheck } from '@/components/Base/Form';
 import Button from '@/components/Base/Button';
 import clsx from 'clsx';
-import { useForm } from 'react-hook-form';
+import { useForm, Controller } from 'react-hook-form';
 import z from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useFrappeAuth } from 'frappe-react-sdk';
 import { useNavigate } from 'react-router-dom';
 import { showErrorToast, showSuccessToast } from '@/components/Toast/Toast.utils';
+import AntInput from '@/components/Base/Form/FormInput/AntInput';
 
 const schema = z.object({
-  username: z.string().nonempty('User Name is Required!'),
-  password: z.string().nonempty('Password is Required'),
+  username: z.string().min(1, 'User Name is Required!'),
+  password: z.string().min(1, 'Password is Required'),
 });
 
 type formTypes = z.infer<typeof schema>;
@@ -22,7 +21,7 @@ function Main() {
   const { login } = useFrappeAuth();
   const navigate = useNavigate();
   const {
-    register,
+    control,
     handleSubmit,
     formState: { errors, isSubmitting },
   } = useForm({
@@ -91,26 +90,35 @@ function Main() {
                 </div>
                 <form onSubmit={handleSubmit(onSubmit)}>
                   <div className='mt-8 intro-x'>
-                    <FormInput
-                      {...register('username')}
-                      type='text'
-                      placeholder='User Name'
-                      className={clsx('block px-4 py-3 intro-x min-w-full xl:min-w-[350px]', {
-                        'border-danger': errors.username,
-                      })}
+                    <Controller
+                      name='username'
+                      control={control}
+                      render={({ field }) => (
+                        <AntInput
+                          {...field}
+                          type='text'
+                          placeholder='User Name'
+                          errors={errors.username?.message || ''}
+                        />
+                      )}
                     />
                     {errors.username && (
                       <div className='mt-2 text-danger'>
                         {typeof errors.username.message === 'string' && errors.username.message}
                       </div>
                     )}
-                    <FormInput
-                      {...register('password')}
-                      type='password'
-                      placeholder='Password'
-                      className={clsx('block px-4 py-3 mt-4 intro-x min-w-full xl:min-w-[350px]', {
-                        'border-danger': errors.password,
-                      })}
+                    <Controller
+                      name='password'
+                      control={control}
+                      render={({ field }) => (
+                        <AntInput
+                          {...field}
+                          type='password'
+                          className='mt-4'
+                          placeholder='Password'
+                          errors={errors.password?.message || ''}
+                        />
+                      )}
                     />
                     {errors.password && (
                       <div className='mt-2 text-danger'>
