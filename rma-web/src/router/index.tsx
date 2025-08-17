@@ -8,6 +8,7 @@ import {
   URLAddSalesInvoice,
   URLSalesInvoiceList,
   URLSalesReturn,
+  URLPurchaseDetails,
 } from './routes.url';
 import PrivateGuard from '@/guard/PrivateGuard';
 import PublicGuard from '@/guard/PublicGuard';
@@ -16,7 +17,7 @@ import Loadable from '@/shared/loadable/Loadable';
 
 // Lazy Components
 const DashboardOverview3 = Loadable(lazy(() => import('../pages/DashboardOverview3')));
-const Purchase = Loadable(lazy(() => import('../pages/purchase/Purchase')));
+const Purchase = Loadable(lazy(() => import('../pages/purchase/purchase/Purchase')));
 const AddSalesInvoice = Loadable(
   lazy(() => import('../pages/sales/add-sales-invoice/AddSalesInvoice'))
 );
@@ -24,6 +25,8 @@ const SalesInvoiceList = Loadable(
   lazy(() => import('../pages/sales/sales-invoice-list/SalesInvoiceList'))
 );
 const SalesReturn = Loadable(lazy(() => import('../pages/sales/sales-return/SalesReturn')));
+
+const ViewPurchase = Loadable(lazy(() => import('../pages/purchase/veiw-purchase/ViewPurchase')));
 
 const routes = [
   {
@@ -41,6 +44,10 @@ const routes = [
           {
             path: URLPurchase(),
             element: <Purchase />,
+          },
+          {
+            path: URLPurchaseDetails(),
+            element: <ViewPurchase />,
           },
           {
             path: URLAddSalesInvoice(),

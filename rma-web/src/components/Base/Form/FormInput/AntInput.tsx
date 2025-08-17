@@ -1,48 +1,24 @@
 import React from 'react';
-import { Input } from 'antd';
-import clsx from 'clsx';
+import { Input, type InputProps } from 'antd';
 
-// Define a type for the input type (text or password)
+// Define a type for the input type
 type InputType = 'text' | 'password';
 
 // Interface for the props
-interface InputProps {
-  label?: string;
+interface AntInputProps extends InputProps {
   type: InputType;
-  placeholder: string;
-  size?: 'small' | 'large';
-  className?: string;
-  errors?: string;
+  label?: string;
+  errors?: boolean;
 }
 
-const AntInput: React.FC<InputProps> = ({
-  label,
-  type,
-  placeholder,
-  size = 'large',
-  className = '',
-  errors,
-  ...props
-}) => {
+const AntInput: React.FC<AntInputProps> = ({ label, type = 'text', errors, ...props }) => {
   return (
     <>
-      {label && <label>{label}</label>}
+      {label && <label className='ant-input-label'>{label}</label>}
       {type === 'password' ? (
-        <Input.Password
-          {...props}
-          placeholder={placeholder}
-          size={size}
-          status={errors ? 'error' : undefined}
-          className={clsx(className)}
-        />
+        <Input.Password {...props} status={errors ? 'error' : undefined} />
       ) : (
-        <Input
-          {...props}
-          placeholder={placeholder}
-          size={size}
-          status={errors ? 'error' : undefined}
-          className={clsx(className)}
-        />
+        <Input {...props} status={errors ? 'error' : undefined} />
       )}
     </>
   );

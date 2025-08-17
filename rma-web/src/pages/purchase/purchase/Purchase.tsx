@@ -1,7 +1,10 @@
 import Button from '@/components/Base/Button';
 import AntInput from '@/components/Base/Form/FormInput/AntInput';
+import AntSelect from '@/components/Base/Form/FormSelect/AntSelect';
+import AntCustomTable from '@/components/Table/AntCustomTable';
+import { URLPurchaseDetails } from '@/router/routes.url';
 import { getPurchaseInvoiceList, getSupplierList } from '@/services/purchase/purchase';
-import { DatePicker, Select, Space, Spin, Table, Tag } from 'antd';
+import { DatePicker, Progress, Select, Spin } from 'antd';
 import { TableProps } from 'antd/es/table';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
@@ -21,20 +24,31 @@ interface DataType {
 const Purchase = () => {
   const [supplierSearch, setSupplierSearch] = useState<string | null>(null);
 
+  // Filter
+  const [purchaseInvoiceNumber, setPurchaseInvoiceNumber] = useState<string | null>(null);
+  const [status, setStatus] = useState<string | null>(null);
+  const [supplier, setSupplier] = useState<string | null>(null);
+
   // API Call to get suppliers based on search
   const { data: suppliers, isLoading: isLoadingSuppliers } = getSupplierList(supplierSearch);
-  const { data: purchaseInvoices, isLoading: isLoadingPurchaseInvoices } = getPurchaseInvoiceList();
+  const { data: purchaseInvoices, isLoading: isLoadingPurchaseInvoices } = getPurchaseInvoiceList({
+    purchase_invoice_number: purchaseInvoiceNumber ?? '',
+    status: status ?? '',
+    supplier: supplier ?? '',
+  });
 
-  console.log(purchaseInvoices);
-
+  // Table Columns
   const columns: TableProps<DataType>['columns'] = [
     {
       title: 'Invoice Number',
       dataIndex: 'invoice_number',
       key: 'invoice_number',
       render: (text) => (
-        <Link to={`/`} className='text-blue-800 font-bold underline underline-offset-2'>
-          {text}
+        <Link
+          to={URLPurchaseDetails(text)}
+          className='text-primary font-semibold underline underline-offset-2 hover:text-primary/80 hover:underline text-xs'
+        >
+          <span>{text}</span>
         </Link>
       ),
     },
@@ -42,11 +56,26 @@ const Purchase = () => {
       title: 'Status',
       dataIndex: 'status',
       key: 'status',
+      render: (text) => {
+        const makeColor = (status: string) => {
+          switch (status) {
+            case 'Overdue':
+              return 'text-blue-500';
+            case 'Unpaid':
+              return 'text-red-500';
+          }
+        };
+
+        return <span className={makeColor(text)}>{text}</span>;
+      },
     },
     {
       title: 'Progress',
       dataIndex: 'progress',
       key: 'progress',
+      render: (text) => {
+        return <Progress percent={60} size='small' showInfo={false} />;
+      },
     },
     {
       title: 'Posting Date',
@@ -62,6 +91,9 @@ const Purchase = () => {
       title: 'Total Amount',
       dataIndex: 'total_amount',
       key: 'total_amount',
+      render: (amount) => {
+        return amount ? amount?.toLocaleString('en-IN') : '0';
+      },
     },
     {
       title: 'Created By',
@@ -73,50 +105,45 @@ const Purchase = () => {
       dataIndex: 'delivered_by',
       key: 'delivered_by',
     },
-    {
-      title: 'Action',
-      key: 'action',
-      render: (_, record) => (
-        <Space size='middle'>
-          <a>Edit</a>
-          <a>Delete</a>
-        </Space>
-      ),
-    },
   ];
 
   return (
     <div>
       <div className='flex items-center gap-2 py-5'>
         <h1 className='text-xl font-semibold w-full'>Purchase Invoice</h1>
-        <AntInput placeholder='Purchase Invoice Number' type='text' />
-        <Select
-          placeholder='Status'
-          allowClear={true}
-          className='w-full'
+        <AntInput
+          placeholder='Purchase Invoice Number'
+          type='text'
           size='large'
-          options={[
-            { value: 'pending', label: 'Pending' },
-            { value: 'approved', label: 'Approved' },
-            { value: 'rejected', label: 'Rejected' },
-          ]}
+          onChange={(e) => setPurchaseInvoiceNumber(e.target.value)}
+          value={purchaseInvoiceNumber ?? ''}
         />
-        <Select
-          onSearch={(value) => setSupplierSearch(value)} // Trigger the search on input change
+        <AntSelect
+          placeholder='Status'
+          value={status ?? undefined}
+          onChange={(value) => setStatus(value)}
+          options={[
+            { value: 'completed', label: 'Completed' },
+            { value: 'cancelled', label: 'Cancelled' },
+            { value: 'submitted', label: 'Submitted' },
+            { value: 'all', label: 'All' },
+          ]}
+          showSearch={false}
+        />
+        <AntSelect
           placeholder='Select Supplier'
-          className='w-full'
-          showSearch={true}
-          allowClear={true}
-          size='large'
-          onChange={() => {
+          value={supplier ?? undefined}
+          onChange={(value) => {
+            setSupplier(value);
             setSupplierSearch(null);
           }}
+          onSearch={(value) => setSupplierSearch(value)}
           loading={isLoadingSuppliers}
-          notFoundContent={isLoadingSuppliers ? <Spin /> : undefined}
-          options={suppliers?.map((supplier) => ({
-            value: supplier.supplier_name, // Search by supplier name
-            label: supplier.supplier_name,
+          options={suppliers?.map((s) => ({
+            value: s.supplier_name,
+            label: s.supplier_name,
           }))}
+          notFoundText='No Supplier Found'
         />
         <DatePicker.RangePicker allowClear={true} size='large' className='w-full' />
         <div className='flex items-center gap-2'>
@@ -125,9 +152,9 @@ const Purchase = () => {
         </div>
       </div>
 
-      <Table<DataType>
+      <AntCustomTable<DataType>
         columns={columns}
-        dataSource={purchaseInvoices?.map((invoice) => ({
+        data={purchaseInvoices?.map((invoice) => ({
           key: invoice.name,
           invoice_number: invoice.name,
           status: invoice.status,
@@ -138,10 +165,7 @@ const Purchase = () => {
           created_by: invoice.owner,
           delivered_by: invoice.modified_by,
         }))}
-        loading={{
-          spinning: isLoadingPurchaseInvoices,
-          tip: 'Loading',
-        }}
+        loading={isLoadingPurchaseInvoices}
       />
     </div>
   );

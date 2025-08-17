@@ -1,14 +1,8 @@
-import ThemeSwitcher from "@/components/ThemeSwitcher";
-import { useAppDispatch, useAppSelector } from "@/stores/hooks";
-import {
-  Themes,
-  getTheme,
-  selectTheme,
-  setTheme,
-  themes,
-} from "@/stores/themeSlice";
-import { useEffect } from "react";
-import { useLocation } from "react-router-dom";
+import ThemeSwitcher from '@/components/ThemeSwitcher';
+import { useAppDispatch, useAppSelector } from '@/stores/hooks';
+import { Themes, getTheme, selectTheme, setTheme, themes } from '@/stores/themeSlice';
+import { useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 
 function Main() {
   const dispatch = useAppDispatch();
@@ -18,15 +12,13 @@ function Main() {
   const { search } = useLocation();
   const queryParams = new URLSearchParams(search);
 
-  const switchTheme = (theme: Themes["name"]) => {
+  const switchTheme = (theme: Themes['name']) => {
     dispatch(setTheme(theme));
   };
 
   useEffect(() => {
-    if (queryParams.get("theme")) {
-      const selectedTheme = themes.find(
-        (theme) => theme.name === queryParams.get("theme")
-      );
+    if (queryParams.get('theme')) {
+      const selectedTheme = themes.find((theme) => theme.name === queryParams.get('theme'));
 
       if (selectedTheme) {
         switchTheme(selectedTheme.name);

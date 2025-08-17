@@ -3,6 +3,8 @@ export const URLLogin = () => '/login';
 
 // Purchase URLS
 export const URLPurchase = () => '/purchase';
+export const URLPurchaseDetails = (invoiceNumber: string = ':invoice_number') =>
+  `/purchase/view-purchase-invoice/${invoiceNumber}`;
 
 // Sales URLS
 export const URLAddSalesInvoice = () => '/sales/add-sales-invoice';
