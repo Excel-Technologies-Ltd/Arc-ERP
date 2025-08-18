@@ -1,10 +1,11 @@
 import Button from '@/components/Base/Button';
 import AntInput from '@/components/Base/Form/FormInput/AntInput';
 import AntSelect from '@/components/Base/Form/FormSelect/AntSelect';
+import AntRangePicker from '@/components/DatePicker/AntRangePicker';
 import AntCustomTable from '@/components/Table/AntCustomTable';
 import { URLPurchaseDetails } from '@/router/routes.url';
 import { getPurchaseInvoiceList, getSupplierList } from '@/services/purchase/purchase';
-import { DatePicker, Progress, Select, Spin } from 'antd';
+import { Progress } from 'antd';
 import { TableProps } from 'antd/es/table';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
@@ -114,7 +115,6 @@ const Purchase = () => {
         <AntInput
           placeholder='Purchase Invoice Number'
           type='text'
-          size='large'
           onChange={(e) => setPurchaseInvoiceNumber(e.target.value)}
           value={purchaseInvoiceNumber ?? ''}
         />
@@ -140,12 +140,13 @@ const Purchase = () => {
           onSearch={(value) => setSupplierSearch(value)}
           loading={isLoadingSuppliers}
           options={suppliers?.map((s) => ({
-            value: s.supplier_name,
+            value: s.name,
             label: s.supplier_name,
           }))}
           notFoundText='No Supplier Found'
         />
-        <DatePicker.RangePicker allowClear={true} size='large' className='w-full' />
+        {/* <DatePicker.RangePicker allowClear={true} size='large' className='w-full' /> */}
+        <AntRangePicker allowClear={true} size='large' placeholder={['Start Date', 'End Date']} />
         <div className='flex items-center gap-2'>
           <Button variant='outline-primary'>Search</Button>
           <Button variant='outline-primary'>Clear</Button>

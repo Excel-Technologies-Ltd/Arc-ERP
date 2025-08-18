@@ -8,7 +8,7 @@ type Props = {
   status: string;
   poNumber: string;
   className?: string;
-  colNumber?: number;
+  gridCols?: number; // Add this new prop
 };
 
 export default function SummaryCard({
@@ -18,16 +18,29 @@ export default function SummaryCard({
   warehouse,
   status,
   poNumber,
-  colNumber = 3,
   className = '',
+  gridCols = 3, // Default to 3 columns
 }: Props) {
+  // Map grid columns to Tailwind classes
+  const getGridColsClass = (cols: number) => {
+    const gridColsMap: Record<number, string> = {
+      1: 'md:grid-cols-1',
+      2: 'md:grid-cols-2',
+      3: 'md:grid-cols-3',
+      4: 'md:grid-cols-4',
+      5: 'md:grid-cols-5',
+      6: 'md:grid-cols-6',
+    };
+    return gridColsMap[cols] || 'md:grid-cols-3';
+  };
+
   return (
     <div
       className={
         'rounded-xl border border-slate-200 bg-white shadow-sm ' + 'p-4 sm:p-5 md:p-6 ' + className
       }
     >
-      <div className={`grid grid-cols-1 md:grid-cols-${colNumber} gap-y-6 md:gap-y-8`}>
+      <div className={`grid grid-cols-1 gap-y-6 ${getGridColsClass(gridCols)} md:gap-y-8`}>
         {/* Row 1 */}
         <Field label='Supplier' value={supplier} />
         <Field label='Purchase Invoice Number' value={invoiceNo} />

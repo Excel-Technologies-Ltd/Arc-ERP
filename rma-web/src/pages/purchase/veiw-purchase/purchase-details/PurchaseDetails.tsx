@@ -21,7 +21,6 @@ const PurchaseDetails = () => {
     isLoading,
     isValidating,
   } = getPurchaseInvoiceDetails(invoice_number ?? '');
-  console.log(purchaseInvoiceDetails);
 
   // Table Columns
   const columns: TableProps<DataType>['columns'] = [
