@@ -27,6 +27,7 @@
 @import './components/base/_typing-dots.css';
 @import './components/base/_zoom-in.css';
 @import './components/base/_intro.css';
+@import './components/base/_Ant_Design.css';
 
 /*
  |--------------------------------------------------------------------------
@@ -43,14 +44,3 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
-/* Remove default margin/padding between label and content */
-.no-space .ant-descriptions-item-label {
-  margin-bottom: 0 !important;
-  padding-bottom: 0 !important;
-}
-
-.no-space .ant-descriptions-item-content {
-  margin-top: 0 !important;
-  padding-top: 0 !important;
-}

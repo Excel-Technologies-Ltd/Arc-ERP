@@ -1,0 +1,16 @@
+/* customRangePicker.css */
+.single-month-picker .ant-picker-panel-container .ant-picker-panels {
+  display: flex !important; /* Ensure panels container remains flexible */
+}
+
+.single-month-picker .ant-picker-panel-container .ant-picker-panels > *:last-child {
+  display: none !important; /* Hide the second calendar */
+}
+
+.single-month-picker .ant-picker-panel .ant-picker-header {
+  display: flex !important; /* Ensure header with arrows is visible */
+}
+
+.single-month-picker .ant-picker-panel .ant-picker-header > * {
+  visibility: visible !important; /* Ensure navigation arrows are visible */
+}

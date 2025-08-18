@@ -2,31 +2,21 @@ import { Select, Spin } from 'antd';
 import type { SelectProps } from 'antd';
 import React from 'react';
 
-export type AntSelectOption = {
-  value: string | number;
-  label: React.ReactNode;
-  disabled?: boolean;
-};
-
-export interface AntSelectProps extends Omit<SelectProps, 'options' | 'loading'> {
-  options?: AntSelectOption[];
-  loading?: boolean;
-  showSearch?: boolean;
-  allowClear?: boolean;
-  className?: string;
-  notFoundText?: React.ReactNode;
+export interface AntSelectProps extends SelectProps {
+  notFoundText?: string;
 }
 
-const AntSelect: React.FC<AntSelectProps> = ({
-  options = [],
-  loading = false,
-  allowClear = true,
-  showSearch = true,
-  size = 'large',
-  className = 'w-full',
-  notFoundText,
-  ...rest
-}) => {
+const AntSelect: React.FC<AntSelectProps> = (props) => {
+  const {
+    size = 'large',
+    allowClear = true,
+    showSearch = true,
+    className = 'w-full',
+    loading = false,
+    notFoundText = 'No options',
+    options,
+    ...rest
+  } = props;
   return (
     <Select
       size={size}
@@ -34,7 +24,7 @@ const AntSelect: React.FC<AntSelectProps> = ({
       showSearch={showSearch}
       className={className}
       loading={loading}
-      notFoundContent={loading ? <Spin size='small' /> : (notFoundText ?? 'No options')}
+      notFoundContent={loading ? <Spin size='small' /> : notFoundText}
       filterOption={(input, option) =>
         (option?.label as string)?.toLowerCase().includes(input.toLowerCase())
       }

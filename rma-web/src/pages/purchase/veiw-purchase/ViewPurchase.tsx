@@ -1,8 +1,18 @@
 import { Tab } from '@/components/Base/Headless';
 import PurchaseDetails from './purchase-details/PurchaseDetails';
 import Serials from './serials/Serials';
+import { useParams } from 'react-router-dom';
+import { getPurchaseInvoiceDetails } from '@/services/purchase/purchase';
+import { Spin } from 'antd';
 
 const ViewPurchase = () => {
+  const { invoice_number } = useParams();
+  const {
+    data: purchaseInvoiceDetails,
+    isLoading,
+    isValidating,
+  } = getPurchaseInvoiceDetails(invoice_number ?? '');
+
   return (
     <div className='mt-5'>
       <Tab.Group>
@@ -20,10 +30,14 @@ const ViewPurchase = () => {
         </Tab.List>
         <Tab.Panels className='mt-5'>
           <Tab.Panel className='leading-relaxed'>
-            <PurchaseDetails />
+            <Spin spinning={isLoading || isValidating}>
+              {purchaseInvoiceDetails && <PurchaseDetails data={purchaseInvoiceDetails} />}
+            </Spin>
           </Tab.Panel>
           <Tab.Panel className='leading-relaxed'>
-            <Serials />
+            <Spin spinning={isLoading || isValidating}>
+              {purchaseInvoiceDetails && <Serials data={purchaseInvoiceDetails} />}
+            </Spin>
           </Tab.Panel>
         </Tab.Panels>
       </Tab.Group>

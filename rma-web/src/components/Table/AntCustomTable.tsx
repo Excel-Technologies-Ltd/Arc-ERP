@@ -1,51 +1,25 @@
 import { Table } from 'antd';
-import type { TableColumnsType, TableProps } from 'antd';
-import type { TablePaginationConfig } from 'antd/es/table';
+import type { TableProps } from 'antd';
 
-export type DataTableProps<T extends object> = {
-  columns: TableColumnsType<T>;
+export interface DataTableProps<T> extends TableProps<T> {
   data?: T[];
-  loading?: boolean;
-  pagination?: TablePaginationConfig | false;
-  onChange?: TableProps<T>['onChange'];
-  size?: TableProps<T>['size'];
-  scroll?: TableProps<T>['scroll'];
-  bordered?: boolean;
   emptyText?: React.ReactNode;
-  title?: TableProps<T>['title'];
-  footer?: TableProps<T>['footer'];
-};
+}
 
-const AntCustomTable = <T extends object>({
-  columns,
-  data = [],
-  loading = false,
-  pagination,
-  onChange,
-  size = 'middle',
-  scroll,
-  bordered = false,
-  emptyText,
-  title,
-  footer,
-}: DataTableProps<T>) => {
+const AntCustomTable = <T extends object>(props: DataTableProps<T>) => {
+  const { columns, data = [], loading = false, size = 'middle', emptyText, ...rest } = props;
   return (
     <>
       <Table<T>
         columns={columns}
         dataSource={data}
         loading={loading}
-        pagination={pagination}
-        onChange={onChange}
         size={size}
-        scroll={scroll}
-        bordered={bordered}
         locale={{ emptyText: emptyText ?? undefined }}
-        title={title}
-        footer={footer}
+        {...rest} 
       />
     </>
-  );
+  );  
 };
 
 export default AntCustomTable;

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Input, type InputProps } from 'antd';
+import { Input, type InputProps, type InputRef } from 'antd';
 
 // Define a type for the input type
 type InputType = 'text' | 'password' | 'number';
@@ -9,26 +9,20 @@ interface AntInputProps extends InputProps {
   type: InputType;
   label?: string;
   errors?: boolean;
-  size?: 'large' | 'middle' | 'small';
-  allowClear?: boolean;
+  ref?: React.RefObject<InputRef>;
 }
 
-const AntInput: React.FC<AntInputProps> = ({
-  label,
-  type = 'text',
-  errors,
-  size = 'large',
-  allowClear = true,
-  ...props
-}) => {
+const AntInput: React.FC<AntInputProps> = (props) => {
+  const { label, type = 'text', errors, size = 'large', allowClear = true, ref, ...rest } = props;
   return (
     <div className='flex flex-col w-full'>
       {label && <label className='ant-input-label'>{label}</label>}
       {type === 'password' ? (
-        <Input.Password {...props} status={errors ? 'error' : undefined} size={size} />
+        <Input.Password {...rest} ref={ref} status={errors ? 'error' : undefined} size={size} />
       ) : (
         <Input
-          {...props}
+          {...rest}
+          ref={ref}
           status={errors ? 'error' : undefined}
           size={size}
           allowClear={allowClear}

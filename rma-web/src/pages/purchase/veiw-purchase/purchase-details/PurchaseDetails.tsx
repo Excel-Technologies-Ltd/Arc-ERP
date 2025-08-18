@@ -1,9 +1,7 @@
 import SummaryCard from '@/components/Cards/SummaryCard/SummaryCard';
 import AntCustomTable from '@/components/Table/AntCustomTable';
-import { getPurchaseInvoiceDetails } from '@/services/purchase/purchase';
-import { Spin } from 'antd';
+import { type PurchaseInvoiceType } from '@/services/purchase/purchase';
 import { type TableProps } from 'antd/es/table';
-import { useParams } from 'react-router-dom';
 
 interface DataType {
   key: string;
@@ -14,14 +12,7 @@ interface DataType {
   total: number;
 }
 
-const PurchaseDetails = () => {
-  const { invoice_number } = useParams();
-  const {
-    data: purchaseInvoiceDetails,
-    isLoading,
-    isValidating,
-  } = getPurchaseInvoiceDetails(invoice_number ?? '');
-
+const PurchaseDetails = ({ data }: { data: PurchaseInvoiceType }) => {
   // Table Columns
   const columns: TableProps<DataType>['columns'] = [
     {
@@ -56,32 +47,30 @@ const PurchaseDetails = () => {
 
   return (
     <div className='mt-5'>
-      <Spin spinning={isLoading || isValidating}>
-        <SummaryCard
-          supplier={purchaseInvoiceDetails?.supplier ?? ''}
-          invoiceNo={purchaseInvoiceDetails?.name ?? ''}
-          postingDate={purchaseInvoiceDetails?.posting_date ?? ''}
-          warehouse={purchaseInvoiceDetails?.set_warehouse ?? ''}
-          status={purchaseInvoiceDetails?.status ?? ''}
-          poNumber={purchaseInvoiceDetails?.items.map((i) => i.purchase_order).join(', ') ?? ''}
-        />
+      <SummaryCard
+        supplier={data?.supplier ?? ''}
+        invoiceNo={data?.name ?? ''}
+        postingDate={data?.posting_date ?? ''}
+        warehouse={data?.set_warehouse ?? ''}
+        status={data?.status ?? ''}
+        poNumber={data?.items.map((i) => i.purchase_order).join(', ') ?? ''}
+      />
 
-        <div className='mt-5 w-full'>
-          <AntCustomTable<DataType>
-            columns={columns}
-            data={purchaseInvoiceDetails?.items?.map((invoice) => ({
-              key: invoice.name,
-              item_group: invoice.item_group,
-              item_name: invoice.item_name,
-              quantity: invoice.qty,
-              rate: invoice.rate,
-              total: invoice.amount,
-            }))}
-            loading={false}
-            title={() => <div className='text-lg font-bold text-center'>Purchased Items</div>}
-          />
-        </div>
-      </Spin>
+      <div className='mt-5 w-full'>
+        <AntCustomTable<DataType>
+          columns={columns}
+          data={data?.items?.map((invoice) => ({
+            key: invoice.name,
+            item_group: invoice.item_group,
+            item_name: invoice.item_name,
+            quantity: invoice.qty,
+            rate: invoice.rate,
+            total: invoice.amount,
+          }))}
+          loading={false}
+          title={() => <div className='text-lg font-bold text-center'>Purchased Items</div>}
+        />
+      </div>
     </div>
   );
 };

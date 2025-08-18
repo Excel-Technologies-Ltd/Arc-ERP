@@ -39,7 +39,16 @@ function PrivateGuard() {
   return currentUser ? (
     <ConfigProvider
       theme={{
+        token: {
+          colorPrimary: '#164E63',
+        },
         algorithm: darkMode ? theme.darkAlgorithm : theme.defaultAlgorithm,
+        components: {
+          Table: {
+            headerBg: '#164E63',
+            headerColor: '#fff',
+          },
+        },
       }}
     >
       <Outlet />

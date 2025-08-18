@@ -1,7 +1,7 @@
 import { useFrappeGetDoc, useFrappeGetDocList } from 'frappe-react-sdk';
 
 // Purchase Invoice Single Document Interface
-export interface PurchaseInvoice {
+export interface PurchaseInvoiceType {
   name: string;
   supplier: string;
   posting_date: string;
@@ -58,5 +58,5 @@ export const getPurchaseInvoiceList = ({
 
 // API Call to get purchase invoice details
 export const getPurchaseInvoiceDetails = (invoice_number: string) => {
-  return useFrappeGetDoc<PurchaseInvoice>('Purchase Invoice', invoice_number);
+  return useFrappeGetDoc<PurchaseInvoiceType>('Purchase Invoice', invoice_number);
 };
