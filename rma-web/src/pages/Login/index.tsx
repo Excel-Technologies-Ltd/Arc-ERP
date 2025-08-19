@@ -98,7 +98,7 @@ function Main() {
                           {...field}
                           type='text'
                           placeholder='User Name'
-                          errors={errors.username?.message || ''}
+                          errors={Boolean(errors.username?.message) || false}
                         />
                       )}
                     />
@@ -116,7 +116,7 @@ function Main() {
                           type='password'
                           className='mt-4'
                           placeholder='Password'
-                          errors={errors.password?.message || ''}
+                          errors={Boolean(errors.password?.message) || false}
                         />
                       )}
                     />

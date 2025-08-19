@@ -14,7 +14,11 @@ const AntRangePicker = React.forwardRef<RangePickerRef, RangePickerProps>(
         allowClear={allowClear}
         className={className}
         {...rest}
-        dropdownClassName='single-month-picker'
+        classNames={{
+          popup: {
+            root: 'single-month-picker',
+          },
+        }}
       />
     );
   }

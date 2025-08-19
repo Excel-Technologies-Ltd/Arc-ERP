@@ -9,20 +9,18 @@ interface AntInputProps extends InputProps {
   type: InputType;
   label?: string;
   errors?: boolean;
-  ref?: React.RefObject<InputRef>;
 }
 
 const AntInput: React.FC<AntInputProps> = (props) => {
-  const { label, type = 'text', errors, size = 'large', allowClear = true, ref, ...rest } = props;
+  const { label, type = 'text', errors, size = 'large', allowClear = true, ...rest } = props;
   return (
     <div className='flex flex-col w-full'>
       {label && <label className='ant-input-label'>{label}</label>}
       {type === 'password' ? (
-        <Input.Password {...rest} ref={ref} status={errors ? 'error' : undefined} size={size} />
+        <Input.Password {...rest} status={errors ? 'error' : undefined} size={size} />
       ) : (
         <Input
           {...rest}
-          ref={ref}
           status={errors ? 'error' : undefined}
           size={size}
           allowClear={allowClear}

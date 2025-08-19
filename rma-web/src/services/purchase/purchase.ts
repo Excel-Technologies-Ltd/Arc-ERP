@@ -1,24 +1,6 @@
 import { useFrappeGetDoc, useFrappeGetDocList } from 'frappe-react-sdk';
+import { PurchaseInvoice } from '@/types/Accounts/PurchaseInvoice';
 
-// Purchase Invoice Single Document Interface
-export interface PurchaseInvoiceType {
-  name: string;
-  supplier: string;
-  posting_date: string;
-  set_warehouse: string;
-  status: string;
-  items: {
-    purchase_order: string;
-    name: string;
-    item_group: string;
-    item_name: string;
-    qty: number;
-    rate: number;
-    amount: number;
-  }[];
-}
-
-// Purchase Invoice List Document Interface
 export interface PurchaseInvoiceFilters {
   purchase_invoice_number?: string;
   status?: string;
@@ -50,7 +32,7 @@ export const getPurchaseInvoiceList = ({
   if (supplier) {
     conditions.push(['supplier', 'like', `%${supplier}%`]);
   }
-  return useFrappeGetDocList('Purchase Invoice', {
+  return useFrappeGetDocList<PurchaseInvoice>('Purchase Invoice', {
     fields: ['*'],
     filters: conditions,
   });
@@ -58,5 +40,5 @@ export const getPurchaseInvoiceList = ({
 
 // API Call to get purchase invoice details
 export const getPurchaseInvoiceDetails = (invoice_number: string) => {
-  return useFrappeGetDoc<PurchaseInvoiceType>('Purchase Invoice', invoice_number);
+  return useFrappeGetDoc<PurchaseInvoice>('Purchase Invoice', invoice_number);
 };

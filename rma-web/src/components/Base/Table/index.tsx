@@ -1,9 +1,7 @@
-import { twMerge } from "tailwind-merge";
-import { createContext, useContext } from "react";
+import { twMerge } from 'tailwind-merge';
+import { createContext, useContext } from 'react';
 
-interface TableProps
-  extends React.PropsWithChildren,
-    React.ComponentPropsWithoutRef<"table"> {
+interface TableProps extends React.PropsWithChildren, React.ComponentPropsWithoutRef<'table'> {
   dark?: boolean;
   bordered?: boolean;
   hover?: boolean;
@@ -12,11 +10,11 @@ interface TableProps
 }
 
 const tableContext = createContext<{
-  dark: TableProps["dark"];
-  bordered: TableProps["bordered"];
-  hover: TableProps["hover"];
-  striped: TableProps["striped"];
-  sm: TableProps["sm"];
+  dark: TableProps['dark'];
+  bordered: TableProps['bordered'];
+  hover: TableProps['hover'];
+  striped: TableProps['striped'];
+  sm: TableProps['sm'];
 }>({
   dark: false,
   bordered: false,
@@ -24,15 +22,7 @@ const tableContext = createContext<{
   striped: false,
   sm: false,
 });
-function Table({
-  className,
-  dark,
-  bordered,
-  hover,
-  striped,
-  sm,
-  ...props
-}: TableProps) {
+function Table({ className, dark, bordered, hover, striped, sm, ...props }: TableProps) {
   return (
     <tableContext.Provider
       value={{
@@ -45,8 +35,8 @@ function Table({
     >
       <table
         className={twMerge([
-          "w-full text-left",
-          dark && "bg-dark text-white dark:bg-black/30",
+          'w-full text-left',
+          dark && 'bg-dark text-white dark:bg-black/30',
           className,
         ])}
         {...props}
@@ -57,16 +47,14 @@ function Table({
   );
 }
 
-interface TheadProps
-  extends React.PropsWithChildren,
-    React.ComponentPropsWithoutRef<"thead"> {
-  variant?: "default" | "light" | "dark";
+interface TheadProps extends React.PropsWithChildren, React.ComponentPropsWithoutRef<'thead'> {
+  variant?: 'default' | 'light' | 'dark';
 }
 
 const theadContext = createContext<{
-  variant: TheadProps["variant"];
+  variant: TheadProps['variant'];
 }>({
-  variant: "default",
+  variant: 'default',
 });
 Table.Thead = ({ className, ...props }: TheadProps) => {
   return (
@@ -77,8 +65,8 @@ Table.Thead = ({ className, ...props }: TheadProps) => {
     >
       <thead
         className={twMerge([
-          props.variant === "light" && "bg-slate-200/60 dark:bg-slate-200",
-          props.variant === "dark" && "bg-dark text-white dark:bg-black/30",
+          props.variant === 'light' && 'bg-slate-200/60 dark:bg-slate-200',
+          props.variant === 'dark' && 'bg-dark text-white dark:bg-black/30',
           className,
         ])}
         {...props}
@@ -89,15 +77,13 @@ Table.Thead = ({ className, ...props }: TheadProps) => {
   );
 };
 
-type TbodyProps = React.PropsWithChildren<
-  React.ComponentPropsWithoutRef<"tbody">
->;
+type TbodyProps = React.PropsWithChildren<React.ComponentPropsWithoutRef<'tbody'>>;
 
 Table.Tbody = ({ className, ...props }: TbodyProps) => {
   return <thead className={className}>{props.children}</thead>;
 };
 
-type TrProps = React.PropsWithChildren & React.ComponentPropsWithoutRef<"tr">;
+type TrProps = React.PropsWithChildren & React.ComponentPropsWithoutRef<'tr'>;
 
 Table.Tr = ({ className, ...props }: TrProps) => {
   const table = useContext(tableContext);
@@ -105,9 +91,9 @@ Table.Tr = ({ className, ...props }: TrProps) => {
     <tr
       className={twMerge([
         table.hover &&
-          "[&:hover_td]:bg-slate-100 [&:hover_td]:dark:bg-darkmode-300 [&:hover_td]:dark:bg-opacity-50",
+          '[&:hover_td]:bg-slate-100 [&:hover_td]:dark:bg-darkmode-300 [&:hover_td]:dark:bg-opacity-50',
         table.striped &&
-          "[&:nth-of-type(odd)_td]:bg-slate-100 [&:nth-of-type(odd)_td]:dark:bg-darkmode-300 [&:nth-of-type(odd)_td]:dark:bg-opacity-50",
+          '[&:nth-of-type(odd)_td]:bg-slate-100 [&:nth-of-type(odd)_td]:dark:bg-darkmode-300 [&:nth-of-type(odd)_td]:dark:bg-opacity-50',
         className,
       ])}
       {...props}
@@ -117,7 +103,7 @@ Table.Tr = ({ className, ...props }: TrProps) => {
   );
 };
 
-type ThProps = React.PropsWithChildren & React.ComponentPropsWithoutRef<"th">;
+type ThProps = React.PropsWithChildren & React.ComponentPropsWithoutRef<'th'>;
 
 Table.Th = ({ className, ...props }: ThProps) => {
   const table = useContext(tableContext);
@@ -125,12 +111,12 @@ Table.Th = ({ className, ...props }: ThProps) => {
   return (
     <th
       className={twMerge([
-        "font-medium px-5 py-3 border-b-2 dark:border-darkmode-300",
-        thead.variant === "light" && "border-b-0 text-slate-700",
-        thead.variant === "dark" && "border-b-0",
-        table.dark && "border-slate-600 dark:border-darkmode-300",
-        table.bordered && "border-l border-r border-t",
-        table.sm && "px-4 py-2",
+        'font-medium px-5 py-3 border-b-2 dark:border-darkmode-300',
+        thead.variant === 'light' && 'border-b-0 text-slate-700',
+        thead.variant === 'dark' && 'border-b-0',
+        table.dark && 'border-slate-600 dark:border-darkmode-300',
+        table.bordered && 'border-l border-r border-t',
+        table.sm && 'px-4 py-2',
         className,
       ])}
       {...props}
@@ -140,17 +126,17 @@ Table.Th = ({ className, ...props }: ThProps) => {
   );
 };
 
-type TdProps = React.PropsWithChildren & React.ComponentPropsWithoutRef<"td">;
+type TdProps = React.PropsWithChildren & React.ComponentPropsWithoutRef<'td'>;
 
 Table.Td = ({ className, ...props }: TdProps) => {
   const table = useContext(tableContext);
   return (
     <td
       className={twMerge([
-        "px-5 py-3 border-b dark:border-darkmode-300",
-        table.dark && "border-slate-600 dark:border-darkmode-300",
-        table.bordered && "border-l border-r border-t",
-        table.sm && "px-4 py-2",
+        'px-5 py-1 border-b dark:border-darkmode-300',
+        table.dark && 'border-slate-600 dark:border-darkmode-300',
+        table.bordered && 'border-l border-r border-t',
+        table.sm && 'px-4 py-2',
         className,
       ])}
       {...props}
