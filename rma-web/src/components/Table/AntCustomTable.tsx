@@ -16,10 +16,10 @@ const AntCustomTable = <T extends object>(props: DataTableProps<T>) => {
         loading={loading}
         size={size}
         locale={{ emptyText: emptyText ?? undefined }}
-        {...rest} 
+        {...rest}
       />
     </>
-  );  
+  );
 };
 
 export default AntCustomTable;

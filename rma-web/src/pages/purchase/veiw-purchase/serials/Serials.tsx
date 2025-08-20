@@ -1,12 +1,14 @@
 import { useState } from 'react';
-import { getWarehouseList } from '@/services/common/commonApi';
 import AntCustomTable from '@/components/Table/AntCustomTable';
 import { ProductTableColumns } from './table-column/ProducttableColumn';
 import { SerialTableColumns } from './table-column/SerialTableColumn';
 import Button from '@/components/Base/Button';
+import { DeleteOutlined, PlusOutlined } from '@ant-design/icons';
+import { PurchaseInvoice } from '@/types/Accounts/PurchaseInvoice';
 
 export interface ProductDataType {
   key: string;
+  item_code?: string;
   item_name: string;
   quantity: number;
   assigned: number;
@@ -16,26 +18,22 @@ export interface ProductDataType {
 }
 
 export interface SerialItemType extends Pick<ProductDataType, 'key' | 'item_name' | 'quantity'> {
-  serial_no: string;
   item_code: string;
   warranty_date: Date;
   serials: string;
 }
 
-const Serials = ({ data }: { data: any }) => {
-  // Api Call
-  const { data: warehouseList, isLoading: isLoadingWarehouses } = getWarehouseList();
-
+const Serials = ({ data }: { data: PurchaseInvoice | undefined }) => {
   // State
   const [SerialtableData, setSerialtableData] = useState<SerialItemType[]>([]);
 
-  const handleAddSerial = () => {
+  const handleAddSerial = (record: ProductDataType) => {
+    console.log(record);
     const newSerial: SerialItemType = {
-      key: Math.random().toString(36).substring(2, 15),
-      item_code: '1521252',
-      serial_no: `SN-${Date.now()}`,
-      item_name: 'Tp-Link Archer C20',
-      quantity: 1,
+      key: record.key,
+      item_code: record.item_code || '',
+      item_name: record.item_name,
+      quantity: record.quantity,
       warranty_date: new Date(),
       serials: '',
     };
@@ -43,12 +41,28 @@ const Serials = ({ data }: { data: any }) => {
     setSerialtableData([...SerialtableData, newSerial]);
   };
 
+  const handleSerialDelete = (key: string) => {
+    setSerialtableData(SerialtableData.filter((i) => i.key !== key));
+  };
+
   return (
     <div>
-      <div className='mt-5 w-full'>
+      <div className='w-full'>
         <AntCustomTable<ProductDataType>
-          columns={ProductTableColumns || []}
-          data={data?.items?.map((i: any) => ({
+          columns={[
+            ...(ProductTableColumns || []),
+            {
+              title: 'Add Serial',
+              key: 'add_serial',
+              render: (_, record) => (
+                <Button variant='outline-primary' onClick={() => handleAddSerial(record)}>
+                  <PlusOutlined />
+                </Button>
+              ),
+            },
+          ]}
+          data={data?.items?.map((i) => ({
+            ...i,
             key: i.name,
             item_name: i.item_name,
             quantity: i.qty,
@@ -62,17 +76,29 @@ const Serials = ({ data }: { data: any }) => {
         />
       </div>
 
-      <Button variant='primary' size='sm' onClick={handleAddSerial}>
-        Add Serial
-      </Button>
-
       <div className='mt-5 w-full'>
         <AntCustomTable<SerialItemType>
-          columns={SerialTableColumns}
+          columns={[
+            ...(SerialTableColumns || []),
+            {
+              title: 'Actions',
+              key: 'actions',
+              render: (_, record) => {
+                return (
+                  <Button
+                    onClick={() => handleSerialDelete(record.key)}
+                    variant='outline-danger'
+                    size='sm'
+                  >
+                    <DeleteOutlined />
+                  </Button>
+                );
+              },
+            },
+          ]}
           data={SerialtableData?.map((i) => ({
             key: i.key,
             item_code: i.item_code,
-            serial_no: i.serial_no,
             item_name: i.item_name,
             quantity: i.quantity,
             warranty_date: i.warranty_date,

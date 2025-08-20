@@ -9,7 +9,8 @@ import App from './App';
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   <FrappeProvider
-    enableSocket={false}
+    enableSocket={true}
+    socketPort='9000'
     swrConfig={{
       revalidateOnFocus: false,
     }}
