@@ -1,18 +1,18 @@
-import Chart from "@/components/Base/Chart";
-import { ChartData, ChartOptions } from "chart.js/auto";
-import { getColor } from "@/utils/colors";
-import { selectColorScheme } from "@/stores/colorSchemeSlice";
-import { selectDarkMode } from "@/stores/darkModeSlice";
-import { useAppSelector } from "@/stores/hooks";
-import { useMemo } from "react";
-import { randomNumbers } from "@/utils/helper";
+import Chart from '@/components/Base/Chart';
+import { ChartData, ChartOptions } from 'chart.js/auto';
+import { getColor } from '@/utils/colors';
+import { selectColorScheme } from '@/stores/colorSchemeSlice';
+import { selectDarkMode } from '@/stores/darkModeSlice';
+import { useAppSelector } from '@/stores/hooks';
+import { useMemo } from 'react';
+import { randomNumbers } from '@/utils/helper';
 
-interface MainProps extends React.ComponentPropsWithoutRef<"canvas"> {
-  width?: number | "auto";
-  height?: number | "auto";
+interface MainProps extends React.ComponentPropsWithoutRef<'canvas'> {
+  width?: number | 'auto';
+  height?: number | 'auto';
 }
 
-function Main({ width = "auto", height = "auto", className = "" }: MainProps) {
+function Main({ width = 'auto', height = 'auto', className = '' }: MainProps) {
   const props = {
     width: width,
     height: height,
@@ -23,39 +23,24 @@ function Main({ width = "auto", height = "auto", className = "" }: MainProps) {
 
   const data: ChartData = useMemo(() => {
     return {
-      labels: [
-        "Jan",
-        "Feb",
-        "Mar",
-        "Apr",
-        "May",
-        "Jun",
-        "Jul",
-        "Aug",
-        "Sep",
-        "Oct",
-        "Nov",
-        "Dec",
-      ],
+      labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
       datasets: [
         {
-          label: "Html Template",
+          label: 'Html Template',
           barPercentage: 0.5,
           barThickness: 6,
           maxBarThickness: 8,
           minBarLength: 2,
-          backgroundColor: colorScheme ? getColor("primary") : "",
+          backgroundColor: colorScheme ? getColor('primary') : '',
           data: randomNumbers(-100, 100, 12),
         },
         {
-          label: "VueJs Template",
+          label: 'VueJs Template',
           barPercentage: 0.5,
           barThickness: 6,
           maxBarThickness: 8,
           minBarLength: 2,
-          backgroundColor: darkMode
-            ? getColor("darkmode.200")
-            : getColor("slate.300"),
+          backgroundColor: darkMode ? getColor('darkmode.200') : getColor('slate.300'),
           data: randomNumbers(-100, 100, 12),
         },
       ],
@@ -68,7 +53,7 @@ function Main({ width = "auto", height = "auto", className = "" }: MainProps) {
       plugins: {
         legend: {
           labels: {
-            color: getColor("slate.500", 0.8),
+            color: getColor('slate.500', 0.8),
           },
         },
       },
@@ -79,7 +64,7 @@ function Main({ width = "auto", height = "auto", className = "" }: MainProps) {
             font: {
               size: 12,
             },
-            color: getColor("slate.500", 0.8),
+            color: getColor('slate.500', 0.8),
           },
           grid: {
             display: false,
@@ -94,15 +79,13 @@ function Main({ width = "auto", height = "auto", className = "" }: MainProps) {
             font: {
               size: 12,
             },
-            color: getColor("slate.500", 0.8),
+            color: getColor('slate.500', 0.8),
             callback: function (value) {
-              return "$" + value;
+              return '$' + value;
             },
           },
           grid: {
-            color: darkMode
-              ? getColor("slate.500", 0.3)
-              : getColor("slate.300"),
+            color: darkMode ? getColor('slate.500', 0.3) : getColor('slate.300'),
           },
           border: {
             dash: [2, 2],
@@ -115,7 +98,7 @@ function Main({ width = "auto", height = "auto", className = "" }: MainProps) {
 
   return (
     <Chart
-      type="bar"
+      type='bar'
       width={props.width}
       height={props.height}
       data={data}

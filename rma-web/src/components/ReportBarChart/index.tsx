@@ -1,17 +1,17 @@
-import Chart, { ChartElement } from "@/components/Base/Chart";
-import { ChartData, ChartOptions } from "chart.js/auto";
-import { getColor } from "@/utils/colors";
-import { selectColorScheme } from "@/stores/colorSchemeSlice";
-import { selectDarkMode } from "@/stores/darkModeSlice";
-import { useAppSelector } from "@/stores/hooks";
-import { useMemo, useEffect, useRef } from "react";
+import Chart, { ChartElement } from '@/components/Base/Chart';
+import { ChartData, ChartOptions } from 'chart.js/auto';
+import { getColor } from '@/utils/colors';
+import { selectColorScheme } from '@/stores/colorSchemeSlice';
+import { selectDarkMode } from '@/stores/darkModeSlice';
+import { useAppSelector } from '@/stores/hooks';
+import { useMemo, useEffect, useRef } from 'react';
 
-interface MainProps extends React.ComponentPropsWithoutRef<"canvas"> {
-  width?: number | "auto";
-  height?: number | "auto";
+interface MainProps extends React.ComponentPropsWithoutRef<'canvas'> {
+  width?: number | 'auto';
+  height?: number | 'auto';
 }
 
-function Main({ width = "auto", height = "auto", className = "" }: MainProps) {
+function Main({ width = 'auto', height = 'auto', className = '' }: MainProps) {
   const props = {
     width: width,
     height: height,
@@ -34,12 +34,12 @@ function Main({ width = "auto", height = "auto", className = "" }: MainProps) {
   const reportBarChartColor = useMemo(() => {
     return reportBarChartData.map((data) => {
       if (data >= 8 && data <= 14) {
-        return colorScheme ? getColor("primary", 0.65) : "";
+        return colorScheme ? getColor('primary', 0.65) : '';
       } else if (data >= 15) {
-        return colorScheme ? getColor("primary") : "";
+        return colorScheme ? getColor('primary') : '';
       }
 
-      return colorScheme ? getColor("primary", 0.35) : "";
+      return colorScheme ? getColor('primary', 0.35) : '';
     });
   }, [colorScheme, darkMode]);
 
@@ -48,7 +48,7 @@ function Main({ width = "auto", height = "auto", className = "" }: MainProps) {
       labels: reportBarChartData,
       datasets: [
         {
-          label: "Html Template",
+          label: 'Html Template',
           barPercentage: 0.5,
           barThickness: 6,
           maxBarThickness: 8,
@@ -117,7 +117,7 @@ function Main({ width = "auto", height = "auto", className = "" }: MainProps) {
 
   return (
     <Chart
-      type="bar"
+      type='bar'
       width={props.width}
       height={props.height}
       data={data}

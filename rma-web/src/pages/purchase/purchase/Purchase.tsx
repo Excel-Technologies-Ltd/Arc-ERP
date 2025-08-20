@@ -1,20 +1,17 @@
-import _ from 'lodash';
 import { useState } from 'react';
 import Button from '@/components/Base/Button';
-import Pagination from '@/components/Base/Pagination';
-import { FormSelect } from '@/components/Base/Form';
-import Lucide from '@/components/Base/Lucide';
 import Table from '@/components/Base/Table';
 import AntInput from '@/components/Base/Form/FormInput/AntInput';
 import AntSelect from '@/components/Base/Form/FormSelect/AntSelect';
-import AntRangePicker from '@/components/DatePicker/AntRangePicker';
+import AntRangePicker from '@/components/Base/DatePicker/AntRangePicker';
 import { getPurchaseInvoiceList, getSupplierList } from '@/services/purchase/purchase';
 import { Link } from 'react-router-dom';
 import type { Dayjs } from 'dayjs';
 import { PURCHASE_SELECT_STATUS } from '@/constants/app-strings';
-import AntSpin from '@/components/Spin/AntSpin';
+import AntSpin from '@/components/Base/Spin/AntSpin';
 import AntEmpty from '@/components/Empty/Empty';
 import AntPagination from '@/components/Pagination/AntPagination';
+import { Progress } from 'antd';
 
 const Purchase = () => {
   const [supplierSearch, setSupplierSearch] = useState<string | null>(null);
@@ -39,6 +36,7 @@ const Purchase = () => {
     setSupplier(null);
     setDateRange(null);
   };
+
   return (
     <>
       <div className='grid grid-cols-12 gap-6 mt-5'>
@@ -125,7 +123,7 @@ const Purchase = () => {
                         <Table.Td className='box whitespace-nowrap rounded-l-none rounded-r-none border-x-0 shadow-[5px_3px_5px_#00000005] first:rounded-l-[0.6rem] first:border-l last:rounded-r-[0.6rem] last:border-r dark:bg-darkmode-600'>
                           {index + 1}
                         </Table.Td>
-                        <Table.Td className='box w-40 whitespace-nowrap rounded-l-none rounded-r-none border-x-0 shadow-[5px_3px_5px_#00000005] first:rounded-l-[0.6rem] first:border-l last:rounded-r-[0.6rem] last:border-r dark:bg-darkmode-600'>
+                        <Table.Td className='box whitespace-nowrap rounded-l-none rounded-r-none border-x-0 shadow-[5px_3px_5px_#00000005] first:rounded-l-[0.6rem] first:border-l last:rounded-r-[0.6rem] last:border-r dark:bg-darkmode-600'>
                           <Link
                             to={`view-purchase-invoice/${invoice.name}`}
                             className='underline decoration-dotted whitespace-nowrap'
@@ -133,13 +131,11 @@ const Purchase = () => {
                             {invoice.name}
                           </Link>
                         </Table.Td>
-                        <Table.Td className='box w-40 whitespace-nowrap rounded-l-none rounded-r-none border-x-0 shadow-[5px_3px_5px_#00000005] first:rounded-l-[0.6rem] first:border-l last:rounded-r-[0.6rem] last:border-r dark:bg-darkmode-600'>
-                          <a href='' className='font-medium whitespace-nowrap'>
-                            {invoice.status}
-                          </a>
+                        <Table.Td className='box whitespace-nowrap rounded-l-none rounded-r-none border-x-0 shadow-[5px_3px_5px_#00000005] first:rounded-l-[0.6rem] first:border-l last:rounded-r-[0.6rem] last:border-r dark:bg-darkmode-600'>
+                          <span className='text-orange-600'>{invoice.status}</span>
                         </Table.Td>
                         <Table.Td className='box whitespace-nowrap rounded-l-none rounded-r-none border-x-0 shadow-[5px_3px_5px_#00000005] first:rounded-l-[0.6rem] first:border-l last:rounded-r-[0.6rem] last:border-r dark:bg-darkmode-600'>
-                          {invoice.status}
+                          <Progress percent={50} showInfo={false} size='small' status='active' />
                         </Table.Td>
                         <Table.Td className='box whitespace-nowrap rounded-l-none rounded-r-none border-x-0 shadow-[5px_3px_5px_#00000005] first:rounded-l-[0.6rem] first:border-l last:rounded-r-[0.6rem] last:border-r dark:bg-darkmode-600'>
                           {invoice.posting_date}
@@ -169,32 +165,6 @@ const Purchase = () => {
         <div className='flex flex-wrap justify-between items-center col-span-12 intro-y sm:flex-row sm:flex-nowrap'>
           <div className='hidden xl:block text-slate-500'>Showing 1 to 10 of 150 entries</div>
           <AntPagination totalItems={150} />
-          {/* <Pagination className='w-full sm:w-auto'>
-            <Pagination.Link>
-              <Lucide icon='ChevronsLeft' className='w-4 h-4' />
-            </Pagination.Link>
-            <Pagination.Link>
-              <Lucide icon='ChevronLeft' className='w-4 h-4' />
-            </Pagination.Link>
-            <Pagination.Link>...</Pagination.Link>
-            <Pagination.Link>1</Pagination.Link>
-            <Pagination.Link active>2</Pagination.Link>
-            <Pagination.Link>3</Pagination.Link>
-            <Pagination.Link>...</Pagination.Link>
-            <Pagination.Link>
-              <Lucide icon='ChevronRight' className='w-4 h-4' />
-            </Pagination.Link>
-            <Pagination.Link>
-              <Lucide icon='ChevronsRight' className='w-4 h-4' />
-            </Pagination.Link>
-          </Pagination>
-
-          <FormSelect className='w-20 !box sm:mt-0'>
-            <option>10</option>
-            <option>25</option>
-            <option>35</option>
-            <option>50</option>
-          </FormSelect> */}
         </div>
         {/* END: Pagination */}
       </div>

@@ -1,4 +1,4 @@
-import { useFrappeGetDoc, useFrappeGetDocList } from 'frappe-react-sdk';
+import { type Filter, useFrappeGetDoc, useFrappeGetDocList } from 'frappe-react-sdk';
 import { PurchaseInvoice } from '@/types/Accounts/PurchaseInvoice';
 
 export interface PurchaseInvoiceFilters {
@@ -21,17 +21,13 @@ export const getPurchaseInvoiceList = ({
   status,
   supplier,
 }: PurchaseInvoiceFilters) => {
-  const conditions: Array<[string, 'like', string]> = [];
-
-  if (purchase_invoice_number) {
-    conditions.push(['name', 'like', `%${purchase_invoice_number}%`]);
-  }
-  if (status) {
-    conditions.push(['status', 'like', `%${status}%`]);
-  }
-  if (supplier) {
-    conditions.push(['supplier', 'like', `%${supplier}%`]);
-  }
+  const conditions: Filter[] = [
+    ...(purchase_invoice_number
+      ? [['name', 'like', `%${purchase_invoice_number}%`] as Filter]
+      : []),
+    ...(status ? [['status', 'like', `%${status}%`] as Filter] : []),
+    ...(supplier ? [['supplier', 'like', `%${supplier}%`] as Filter] : []),
+  ];
   return useFrappeGetDocList<PurchaseInvoice>('Purchase Invoice', {
     fields: ['*'],
     filters: conditions,

@@ -1,22 +1,17 @@
-import Chart from "@/components/Base/Chart";
-import { ChartData, ChartOptions } from "chart.js/auto";
-import { getColor } from "@/utils/colors";
-import { selectColorScheme } from "@/stores/colorSchemeSlice";
-import { useAppSelector } from "@/stores/hooks";
-import { useMemo } from "react";
+import Chart from '@/components/Base/Chart';
+import { ChartData, ChartOptions } from 'chart.js/auto';
+import { getColor } from '@/utils/colors';
+import { selectColorScheme } from '@/stores/colorSchemeSlice';
+import { useAppSelector } from '@/stores/hooks';
+import { useMemo } from 'react';
 
-interface MainProps extends React.ComponentPropsWithoutRef<"canvas"> {
-  width?: number | "auto";
-  height?: number | "auto";
+interface MainProps extends React.ComponentPropsWithoutRef<'canvas'> {
+  width?: number | 'auto';
+  height?: number | 'auto';
   lineColor?: string;
 }
 
-function Main({
-  width = "auto",
-  height = "auto",
-  lineColor = "",
-  className = "",
-}: MainProps) {
+function Main({ width = 'auto', height = 'auto', lineColor = '', className = '' }: MainProps) {
   const props = {
     width: width,
     height: height,
@@ -27,32 +22,17 @@ function Main({
 
   const data: ChartData = useMemo(() => {
     return {
-      labels: [
-        "Jan",
-        "Feb",
-        "Mar",
-        "Apr",
-        "May",
-        "Jun",
-        "Jul",
-        "Aug",
-        "Sep",
-        "Oct",
-        "Nov",
-        "Dec",
-      ],
+      labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
       datasets: [
         {
-          label: "# of Votes",
+          label: '# of Votes',
           data: [0, 200, 250, 200, 500, 450, 850, 1050, 950, 1100, 900, 1200],
           borderWidth: 2,
           borderDash: [2, 2],
           borderColor:
-            colorScheme && props.lineColor.length
-              ? props.lineColor
-              : getColor("slate.300"),
-          backgroundColor: "transparent",
-          pointBorderColor: "transparent",
+            colorScheme && props.lineColor.length ? props.lineColor : getColor('slate.300'),
+          backgroundColor: 'transparent',
+          pointBorderColor: 'transparent',
         },
       ],
     };
@@ -95,7 +75,7 @@ function Main({
 
   return (
     <Chart
-      type="line"
+      type='line'
       width={props.width}
       height={props.height}
       data={data}

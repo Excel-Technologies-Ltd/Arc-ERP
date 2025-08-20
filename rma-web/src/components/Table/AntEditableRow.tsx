@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useRef, useState } from 'react';
 import { Form } from 'antd';
 import type { FormInstance as AntFormInstance } from 'antd';
 import dayjs from 'dayjs';
-import AntDatePicker from '../DatePicker/AntDatePicker';
+import AntDatePicker from '../Base/DatePicker/AntDatePicker';
 import AntInput from '../Base/Form/FormInput/AntInput';
 
 const EditableContext = React.createContext<AntFormInstance<any> | null>(null);

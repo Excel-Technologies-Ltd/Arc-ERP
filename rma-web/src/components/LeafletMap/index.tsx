@@ -1,17 +1,17 @@
-import "@/assets/css/vendors/leaflet.css";
-import LeafletMapLoader, { Init } from "@/components/Base/LeafletMapLoader";
-import { getColor } from "@/utils/colors";
-import { selectDarkMode } from "@/stores/darkModeSlice";
-import { useAppSelector } from "@/stores/hooks";
-import location from "@/assets/json/location.json";
-import { selectColorScheme } from "@/stores/colorSchemeSlice";
+import '@/assets/css/vendors/leaflet.css';
+import LeafletMapLoader, { Init } from '@/components/Base/LeafletMapLoader';
+import { getColor } from '@/utils/colors';
+import { selectDarkMode } from '@/stores/darkModeSlice';
+import { useAppSelector } from '@/stores/hooks';
+import location from '@/assets/json/location.json';
+import { selectColorScheme } from '@/stores/colorSchemeSlice';
 
 type MainProps = {
-  width?: number | "auto";
-  height?: number | "auto";
-} & React.ComponentPropsWithoutRef<"div">;
+  width?: number | 'auto';
+  height?: number | 'auto';
+} & React.ComponentPropsWithoutRef<'div'>;
 
-function Main({ width = 0, height = 0, className = "" }: MainProps) {
+function Main({ width = 0, height = 0, className = '' }: MainProps) {
   const props = {
     width: width,
     height: height,
@@ -32,7 +32,7 @@ function Main({ width = 0, height = 0, className = "" }: MainProps) {
 
       leaflet
         .tileLayer(`https://b.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png`, {
-          attribution: "Map data &copy; OpenStreetMap contributors",
+          attribution: 'Map data &copy; OpenStreetMap contributors',
         })
         .addTo(map);
 
@@ -40,9 +40,7 @@ function Main({ width = 0, height = 0, className = "" }: MainProps) {
         maxClusterRadius: 30,
         iconCreateFunction: function (cluster) {
           const color =
-            darkMode && colorScheme
-              ? getColor("darkmode.100", 0.6)
-              : getColor("primary", 0.8);
+            darkMode && colorScheme ? getColor('darkmode.100', 0.6) : getColor('primary', 0.8);
           const mapMarkerRegionSvg =
             window.btoa(`<svg xmlns="http://www.w3.org/2000/svg" width="55.066" height="47.691" viewBox="0 0 55.066 47.691">
                   <g id="Group_15" data-name="Group 15" transform="translate(-319.467 -83.991)">
@@ -71,7 +69,7 @@ function Main({ width = 0, height = 0, className = "" }: MainProps) {
                     <div class="absolute inset-0 flex items-center justify-center ml-1.5 mb-0.5 font-medium text-white">${cluster.getChildCount()}</div>
                     <img class="w-full h-full" src="data:image/svg+xml;base64,${mapMarkerRegionSvg}">
                   </div>`,
-            className: "",
+            className: '',
             iconSize: leaflet.point(42, 42),
             iconAnchor: leaflet.point(20, 45),
           });
@@ -82,10 +80,7 @@ function Main({ width = 0, height = 0, className = "" }: MainProps) {
 
       map.addLayer(markers);
 
-      const color =
-        darkMode && colorScheme
-          ? getColor("darkmode.100")
-          : getColor("primary");
+      const color = darkMode && colorScheme ? getColor('darkmode.100') : getColor('primary');
       const mapMarkerSvg =
         window.btoa(`<svg xmlns="http://www.w3.org/2000/svg" width="20" height="31.063" viewBox="0 0 20 31.063">
                 <g id="Group_16" data-name="Group 16" transform="translate(-408 -150.001)">
@@ -113,13 +108,7 @@ function Main({ width = 0, height = 0, className = "" }: MainProps) {
     }
   };
 
-  return (
-    <LeafletMapLoader
-      init={init}
-      darkMode={darkMode}
-      className={props.className}
-    />
-  );
+  return <LeafletMapLoader init={init} darkMode={darkMode} className={props.className} />;
 }
 
 export default Main;

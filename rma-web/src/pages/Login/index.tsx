@@ -7,8 +7,8 @@ import z from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useFrappeAuth } from 'frappe-react-sdk';
 import { useNavigate } from 'react-router-dom';
-import { showErrorToast, showSuccessToast } from '@/components/Toast/Toast.utils';
 import AntInput from '@/components/Base/Form/FormInput/AntInput';
+import { useNotify } from '@/hooks/useNotify';
 
 const schema = z.object({
   username: z.string().min(1, 'User Name is Required!'),
@@ -20,6 +20,7 @@ type formTypes = z.infer<typeof schema>;
 function Main() {
   const { login } = useFrappeAuth();
   const navigate = useNavigate();
+  const notify = useNotify();
   const {
     control,
     handleSubmit,
@@ -39,10 +40,14 @@ function Main() {
     })
       .then((res) => {
         navigate('/');
-        showSuccessToast(res.message || 'Login Successfully');
+        notify.success({
+          message: res.message || 'Login Successfully',
+        });
       })
       .catch((err) => {
-        showErrorToast(err.message || 'Something Went Wrong!');
+        notify.error({
+          message: err.message || 'Something Went Wrong!',
+        });
       });
   };
   return (

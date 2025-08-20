@@ -1,9 +1,9 @@
-import "@/assets/css/vendors/litepicker.css";
-import { createRef, useEffect, useRef } from "react";
-import { setValue, init, reInit } from "./litepicker";
-import LitepickerJs from "litepicker";
-import { FormInput } from "@/components/Base/Form";
-import { ILPConfiguration } from "litepicker/dist/types/interfaces";
+import '@/assets/css/vendors/litepicker.css';
+import { createRef, useEffect, useRef } from 'react';
+import { setValue, init, reInit } from './litepicker';
+import LitepickerJs from 'litepicker';
+import { FormInput } from '@/components/Base/Form';
+import { ILPConfiguration } from 'litepicker/dist/types/interfaces';
 
 export interface LitepickerElement extends HTMLInputElement {
   litePickerInstance: LitepickerJs;
@@ -13,7 +13,7 @@ type LitepickerConfig = Partial<ILPConfiguration>;
 
 export interface LitepickerProps
   extends React.PropsWithChildren,
-    Omit<React.ComponentPropsWithoutRef<"input">, "onChange"> {
+    Omit<React.ComponentPropsWithoutRef<'input'>, 'onChange'> {
   options: {
     format?: string | undefined;
   } & LitepickerConfig;
@@ -28,7 +28,7 @@ export interface LitepickerProps
 
 function Litepicker({
   options = {},
-  value = "",
+  value = '',
   onChange = () => {},
   getRef = () => {},
   ...computedProps
@@ -66,7 +66,7 @@ function Litepicker({
   return (
     <FormInput
       ref={litepickerRef}
-      type="text"
+      type='text'
       value={props.value}
       onChange={(e) => {
         if (props.onChange) {

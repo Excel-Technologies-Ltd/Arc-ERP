@@ -10,14 +10,15 @@ import _ from 'lodash';
 import clsx from 'clsx';
 import { Transition } from '@headlessui/react';
 import { useFrappeAuth } from 'frappe-react-sdk';
-import { showSuccessToast } from '@/components/Toast/Toast.utils';
 import { useDispatch } from 'react-redux';
 import { resetPermissions } from '@/stores/permissionSlice';
+import { useNotify } from '@/hooks/useNotify';
 
 function Main(props: { layout?: 'side-menu' | 'simple-menu' | 'top-menu' }) {
   const { logout } = useFrappeAuth();
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const notify = useNotify();
 
   const [searchDropdown, setSearchDropdown] = useState(false);
   const showSearchDropdown = () => {
@@ -30,7 +31,9 @@ function Main(props: { layout?: 'side-menu' | 'simple-menu' | 'top-menu' }) {
   // handle logout
   const handleLogout = async () => {
     await logout().then(() => {
-      showSuccessToast('Log Out Successfully');
+      notify.success({
+        message: 'Log Out Successfully',
+      });
       dispatch(resetPermissions());
       navigate('/login');
     });

@@ -1,17 +1,17 @@
-import Chart from "@/components/Base/Chart";
-import { ChartData, ChartOptions } from "chart.js/auto";
-import { getColor } from "@/utils/colors";
-import { selectColorScheme } from "@/stores/colorSchemeSlice";
-import { selectDarkMode } from "@/stores/darkModeSlice";
-import { useAppSelector } from "@/stores/hooks";
-import { useMemo } from "react";
+import Chart from '@/components/Base/Chart';
+import { ChartData, ChartOptions } from 'chart.js/auto';
+import { getColor } from '@/utils/colors';
+import { selectColorScheme } from '@/stores/colorSchemeSlice';
+import { selectDarkMode } from '@/stores/darkModeSlice';
+import { useAppSelector } from '@/stores/hooks';
+import { useMemo } from 'react';
 
-interface MainProps extends React.ComponentPropsWithoutRef<"canvas"> {
-  width?: number | "auto";
-  height?: number | "auto";
+interface MainProps extends React.ComponentPropsWithoutRef<'canvas'> {
+  width?: number | 'auto';
+  height?: number | 'auto';
 }
 
-function Main({ width = "auto", height = "auto", className = "" }: MainProps) {
+function Main({ width = 'auto', height = 'auto', className = '' }: MainProps) {
   const props = {
     width: width,
     height: height,
@@ -22,36 +22,21 @@ function Main({ width = "auto", height = "auto", className = "" }: MainProps) {
 
   const data: ChartData = useMemo(() => {
     return {
-      labels: [
-        "Jan",
-        "Feb",
-        "Mar",
-        "Apr",
-        "May",
-        "Jun",
-        "Jul",
-        "Aug",
-        "Sep",
-        "Oct",
-        "Nov",
-        "Dec",
-      ],
+      labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
       datasets: [
         {
-          label: "Html Template",
+          label: 'Html Template',
           barThickness: 8,
           maxBarThickness: 6,
           data: [60, 150, 30, 200, 180, 50, 180, 120, 230, 180, 250, 270],
-          backgroundColor: colorScheme ? getColor("primary") : "",
+          backgroundColor: colorScheme ? getColor('primary') : '',
         },
         {
-          label: "VueJs Template",
+          label: 'VueJs Template',
           barThickness: 8,
           maxBarThickness: 6,
           data: [50, 135, 40, 180, 190, 60, 150, 90, 250, 170, 240, 250],
-          backgroundColor: darkMode
-            ? getColor("darkmode.400")
-            : getColor("slate.300"),
+          backgroundColor: darkMode ? getColor('darkmode.400') : getColor('slate.300'),
         },
       ],
     };
@@ -71,7 +56,7 @@ function Main({ width = "auto", height = "auto", className = "" }: MainProps) {
             font: {
               size: 11,
             },
-            color: getColor("slate.500", 0.8),
+            color: getColor('slate.500', 0.8),
           },
           grid: {
             display: false,
@@ -85,9 +70,7 @@ function Main({ width = "auto", height = "auto", className = "" }: MainProps) {
             display: false,
           },
           grid: {
-            color: darkMode
-              ? getColor("darkmode.300", 0.8)
-              : getColor("slate.300"),
+            color: darkMode ? getColor('darkmode.300', 0.8) : getColor('slate.300'),
           },
           border: {
             dash: [2, 2],
@@ -100,7 +83,7 @@ function Main({ width = "auto", height = "auto", className = "" }: MainProps) {
 
   return (
     <Chart
-      type="bar"
+      type='bar'
       width={props.width}
       height={props.height}
       data={data}
