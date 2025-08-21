@@ -4,6 +4,7 @@ import colorSchemeReducer from './colorSchemeSlice';
 import menuReducer from './menuSlice';
 import themeReducer from './themeSlice';
 import permissionReducer from './permissionSlice';
+import modalReducer from './modalSlice';
 
 export const store = configureStore({
   reducer: {
@@ -12,6 +13,7 @@ export const store = configureStore({
     menu: menuReducer,
     theme: themeReducer,
     permission: permissionReducer,
+    modal: modalReducer,
   },
 });
 

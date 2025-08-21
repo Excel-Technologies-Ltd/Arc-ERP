@@ -9,6 +9,7 @@ import {
   URLSalesInvoiceList,
   URLSalesReturn,
   URLPurchaseDetails,
+  URLCustomerProfile,
 } from './routes.url';
 import PrivateGuard from '@/guard/PrivateGuard';
 import PublicGuard from '@/guard/PublicGuard';
@@ -25,8 +26,10 @@ const SalesInvoiceList = Loadable(
   lazy(() => import('../pages/sales/sales-invoice-list/SalesInvoiceList'))
 );
 const SalesReturn = Loadable(lazy(() => import('../pages/sales/sales-return/SalesReturn')));
-
 const ViewPurchase = Loadable(lazy(() => import('../pages/purchase/veiw-purchase/ViewPurchase')));
+const CustomerProfile = Loadable(
+  lazy(() => import('../pages/Customer/customer-profile/CustomerProfile'))
+);
 
 const routes = [
   {
@@ -60,6 +63,10 @@ const routes = [
           {
             path: URLSalesReturn(),
             element: <SalesReturn />,
+          },
+          {
+            path: URLCustomerProfile(),
+            element: <CustomerProfile />,
           },
         ],
       },
