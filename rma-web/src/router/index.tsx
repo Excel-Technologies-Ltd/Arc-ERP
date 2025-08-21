@@ -16,7 +16,7 @@ import { lazy } from 'react';
 import Loadable from '@/shared/loadable/Loadable';
 
 // Lazy Components
-const DashboardOverview3 = Loadable(lazy(() => import('../pages/DashboardOverview3')));
+const DashboardOverview = Loadable(lazy(() => import('../pages/DashboardOverview')));
 const Purchase = Loadable(lazy(() => import('../pages/purchase/purchase/Purchase')));
 const AddSalesInvoice = Loadable(
   lazy(() => import('../pages/sales/add-sales-invoice/AddSalesInvoice'))
@@ -39,7 +39,7 @@ const routes = [
         children: [
           {
             path: '/',
-            element: <DashboardOverview3 />,
+            element: <DashboardOverview />,
           },
           {
             path: URLPurchase(),

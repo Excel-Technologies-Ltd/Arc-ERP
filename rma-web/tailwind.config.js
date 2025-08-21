@@ -196,6 +196,23 @@ module.exports = {
             '--color-primary': toRGB(colors.indigo['700']),
           },
         },
+        // Theme 4 colors
+        '.theme-5': {
+          '--color-theme-1': toRGB(colors.orange['800']),
+          '--color-theme-2': toRGB(colors.orange['900']),
+          '--color-primary': toRGB(colors.orange['900']),
+          '--color-secondary': toRGB(colors.slate['200']),
+          '--color-success': toRGB(colors.emerald['600']),
+          '--color-info': toRGB(colors.cyan['500']),
+          '--color-warning': toRGB(colors.yellow['500']),
+          '--color-pending': toRGB(colors.orange['600']),
+          '--color-danger': toRGB(colors.red['700']),
+          '--color-light': toRGB(colors.slate['100']),
+          '--color-dark': toRGB(colors.slate['800']),
+          '&.dark': {
+            '--color-primary': toRGB(colors.orange['700']),
+          },
+        },
       });
     }),
   ],

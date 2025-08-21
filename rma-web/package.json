@@ -40,6 +40,7 @@
     "leaflet": "^1.9.4",
     "leaflet.markercluster": "^1.5.3",
     "litepicker": "^2.0.12",
+    "lottie-react": "^2.4.1",
     "lucide": "^0.304.0",
     "lucide-react": "^0.307.0",
     "react": "^19.1.0",

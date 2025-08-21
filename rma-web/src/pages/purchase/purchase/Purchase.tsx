@@ -1,17 +1,16 @@
 import { useState } from 'react';
 import Button from '@/components/Base/Button';
-import Table from '@/components/Base/Table';
 import AntInput from '@/components/Base/Form/FormInput/AntInput';
 import AntSelect from '@/components/Base/Form/FormSelect/AntSelect';
 import AntRangePicker from '@/components/Base/DatePicker/AntRangePicker';
 import { getPurchaseInvoiceList, getSupplierList } from '@/services/purchase/purchase';
-import { Link } from 'react-router-dom';
 import type { Dayjs } from 'dayjs';
 import { PURCHASE_SELECT_STATUS } from '@/constants/app-strings';
-import AntSpin from '@/components/Base/Spin/AntSpin';
-import AntEmpty from '@/components/Empty/Empty';
 import AntPagination from '@/components/Pagination/AntPagination';
-import { Progress } from 'antd';
+import CustomTable from '@/components/Table/CustomTable';
+import { PurchaseInvoice } from '@/types/Accounts/PurchaseInvoice';
+import { TableColumn } from '@/types/Table/table-types';
+import { Link } from 'react-router-dom';
 
 const Purchase = () => {
   const [supplierSearch, setSupplierSearch] = useState<string | null>(null);
@@ -37,6 +36,64 @@ const Purchase = () => {
     setDateRange(null);
   };
 
+  const TableHeader: TableColumn<PurchaseInvoice>[] = [
+    {
+      key: 'sl',
+      title: 'SL',
+      render: (_, __, index) => <span>{index + 1}</span>,
+    },
+    {
+      key: 'name',
+      title: 'INVOICE NO',
+      render: (text) => (
+        <Link
+          to={`/purchase/view-purchase-invoice/${text}`}
+          className='underline decoration-dotted whitespace-nowrap'
+        >
+          {text}
+        </Link>
+      ),
+    },
+    {
+      key: 'status',
+      title: 'STATUS',
+      render: (status) => (
+        <span
+          className={`px-2 py-1 rounded-full text-xs ${
+            status === 'completed'
+              ? 'bg-green-100 text-green-800'
+              : status === 'pending'
+                ? 'bg-yellow-100 text-yellow-800'
+                : 'bg-red-100 text-red-800'
+          }`}
+        >
+          {status}
+        </span>
+      ),
+    },
+    {
+      key: 'progress',
+      title: 'PROGRESS',
+      render: () => (
+        <div className='w-full bg-gray-200 rounded-full h-1.5'>
+          <div
+            className='bg-orange-500 h-1.5 rounded-full'
+            style={{ width: `${Math.random() * 99}%` }}
+          ></div>
+        </div>
+      ),
+    },
+    { key: 'posting_date', title: 'POSTING DATE' },
+    { key: 'supplier', title: 'SUPPLIER' },
+    {
+      key: 'total',
+      title: 'TOTAL',
+      render: (total) => `$${Number(total).toFixed(2)}`,
+    },
+    { key: 'owner', title: 'CREATED BY' },
+    { key: 'owner', title: 'DELIVERED BY' },
+  ];
+
   return (
     <>
       <div className='grid grid-cols-12 gap-6 mt-5'>
@@ -47,24 +104,26 @@ const Purchase = () => {
             <AntInput
               placeholder='Purchase Invoice Number'
               type='text'
-              onChange={(e) => setPurchaseInvoiceNumber(e.target.value)}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                setPurchaseInvoiceNumber(e.target.value)
+              }
               value={purchaseInvoiceNumber ?? ''}
             />
             <AntSelect
               placeholder='Status'
               value={status ?? undefined}
-              onChange={(value) => setStatus(value)}
+              onChange={(value: string) => setStatus(value)}
               options={PURCHASE_SELECT_STATUS}
               showSearch={false}
             />
             <AntSelect
               placeholder='Select Supplier'
               value={supplier ?? undefined}
-              onChange={(value) => {
+              onChange={(value: string) => {
                 setSupplier(value);
                 setSupplierSearch(null);
               }}
-              onSearch={(value) => setSupplierSearch(value)}
+              onSearch={(value: string) => setSupplierSearch(value)}
               loading={isLoadingSuppliers}
               options={suppliers?.map((s) => ({
                 value: s.name,
@@ -90,75 +149,12 @@ const Purchase = () => {
         </div>
         {/* BEGIN: Data List */}
         <div className='col-span-12 overflow-auto intro-y 2xl:overflow-visible'>
-          <AntSpin isLoading={isLoadingPurchaseInvoices} tip='Loading'>
-            <Table className='border-spacing-y-[10px] border-separate'>
-              <Table.Thead>
-                <Table.Tr>
-                  <Table.Th className='border-b-0 whitespace-nowrap'>SL</Table.Th>
-                  <Table.Th className='border-b-0 whitespace-nowrap'>INVOICE NO</Table.Th>
-                  <Table.Th className='border-b-0 whitespace-nowrap'>STATUS</Table.Th>
-                  <Table.Th className='border-b-0 whitespace-nowrap'>PROGRESS</Table.Th>
-                  <Table.Th className='border-b-0 whitespace-nowrap'>POSTING DATE</Table.Th>
-                  <Table.Th className='border-b-0 whitespace-nowrap'>SUPPLIER</Table.Th>
-                  <Table.Th className='border-b-0 whitespace-nowrap text-right'>TOTAL</Table.Th>
-                  <Table.Th className='border-b-0 whitespace-nowrap text-center'>
-                    CREATED BY
-                  </Table.Th>
-                  <Table.Th className='border-b-0 whitespace-nowrap text-center'>
-                    DELIVERED BY
-                  </Table.Th>
-                </Table.Tr>
-              </Table.Thead>
-              <Table.Tbody>
-                {purchaseInvoices?.length === 0 ? (
-                  <Table.Tr>
-                    <Table.Td colSpan={12}>
-                      <AntEmpty description='No data found' />
-                    </Table.Td>
-                  </Table.Tr>
-                ) : (
-                  <>
-                    {purchaseInvoices?.map((invoice, index) => (
-                      <Table.Tr key={index} className='intro-x'>
-                        <Table.Td className='box whitespace-nowrap rounded-l-none rounded-r-none border-x-0 shadow-[5px_3px_5px_#00000005] first:rounded-l-[0.6rem] first:border-l last:rounded-r-[0.6rem] last:border-r dark:bg-darkmode-600'>
-                          {index + 1}
-                        </Table.Td>
-                        <Table.Td className='box whitespace-nowrap rounded-l-none rounded-r-none border-x-0 shadow-[5px_3px_5px_#00000005] first:rounded-l-[0.6rem] first:border-l last:rounded-r-[0.6rem] last:border-r dark:bg-darkmode-600'>
-                          <Link
-                            to={`view-purchase-invoice/${invoice.name}`}
-                            className='underline decoration-dotted whitespace-nowrap'
-                          >
-                            {invoice.name}
-                          </Link>
-                        </Table.Td>
-                        <Table.Td className='box whitespace-nowrap rounded-l-none rounded-r-none border-x-0 shadow-[5px_3px_5px_#00000005] first:rounded-l-[0.6rem] first:border-l last:rounded-r-[0.6rem] last:border-r dark:bg-darkmode-600'>
-                          <span className='text-orange-600'>{invoice.status}</span>
-                        </Table.Td>
-                        <Table.Td className='box whitespace-nowrap rounded-l-none rounded-r-none border-x-0 shadow-[5px_3px_5px_#00000005] first:rounded-l-[0.6rem] first:border-l last:rounded-r-[0.6rem] last:border-r dark:bg-darkmode-600'>
-                          <Progress percent={50} showInfo={false} size='small' status='active' />
-                        </Table.Td>
-                        <Table.Td className='box whitespace-nowrap rounded-l-none rounded-r-none border-x-0 shadow-[5px_3px_5px_#00000005] first:rounded-l-[0.6rem] first:border-l last:rounded-r-[0.6rem] last:border-r dark:bg-darkmode-600'>
-                          {invoice.posting_date}
-                        </Table.Td>
-                        <Table.Td className='box whitespace-nowrap rounded-l-none rounded-r-none border-x-0 shadow-[5px_3px_5px_#00000005] first:rounded-l-[0.6rem] first:border-l last:rounded-r-[0.6rem] last:border-r dark:bg-darkmode-600'>
-                          {invoice.supplier_name}
-                        </Table.Td>
-                        <Table.Td className='box whitespace-nowrap rounded-l-none rounded-r-none border-x-0 shadow-[5px_3px_5px_#00000005] first:rounded-l-[0.6rem] first:border-l last:rounded-r-[0.6rem] last:border-r dark:bg-darkmode-600 text-right'>
-                          {invoice?.total?.toLocaleString()}
-                        </Table.Td>
-                        <Table.Td className='box whitespace-nowrap rounded-l-none rounded-r-none border-x-0 shadow-[5px_3px_5px_#00000005] first:rounded-l-[0.6rem] first:border-l last:rounded-r-[0.6rem] last:border-r dark:bg-darkmode-600 text-center'>
-                          {invoice.owner}
-                        </Table.Td>
-                        <Table.Td className='box whitespace-nowrap rounded-l-none rounded-r-none border-x-0 shadow-[5px_3px_5px_#00000005] first:rounded-l-[0.6rem] first:border-l last:rounded-r-[0.6rem] last:border-r dark:bg-darkmode-600 text-center'>
-                          {invoice.modified_by}
-                        </Table.Td>
-                      </Table.Tr>
-                    ))}
-                  </>
-                )}
-              </Table.Tbody>
-            </Table>
-          </AntSpin>
+          <CustomTable<PurchaseInvoice>
+            data={purchaseInvoices || []}
+            tableHeader={TableHeader}
+            loading={isLoadingPurchaseInvoices}
+            showAction={false}
+          />
         </div>
         {/* END: Data List */}
         {/* BEGIN: Pagination */}

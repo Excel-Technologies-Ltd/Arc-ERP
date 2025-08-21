@@ -1,43 +1,28 @@
-import Button from '@/components/Base/Button';
+import { ActionRenderProps } from '@/types/Table/table-types';
 
-interface ActionsRendererProps {
-  onEdit?: (data: any) => void;
-  onDelete?: (id: string | number) => void;
-  item: any;
-  setSelectedId: (id: string | number | null) => void;
-  setDeleteConfirmationModal: (value: boolean) => void;
-  hideEditOnTable?: boolean;
-}
-
-const ActionRender = ({
+const ActionRender = <T,>({
   onEdit,
   onDelete,
+  hideEditOnTable,
   item,
   setSelectedId,
   setDeleteConfirmationModal,
-  hideEditOnTable,
-}: ActionsRendererProps) => {
+}: ActionRenderProps<T>) => {
+  const handleDelete = () => {
+    setSelectedId((item as any).name || (item as any).id);
+    setDeleteConfirmationModal(true);
+  };
+
   return (
-    <div className='flex items-center gap-2 justify-end'>
-      {!hideEditOnTable && onEdit && (
-        <Button size='sm' type='button' className='text-primary' onClick={() => onEdit(item)}>
+    <div className='flex items-center gap-2'>
+      {!hideEditOnTable && (
+        <button onClick={() => onEdit?.(item)} className='text-blue-600 hover:text-blue-800'>
           Edit
-        </Button>
+        </button>
       )}
-      {onDelete && (
-        <Button
-          size='sm'
-          variant='soft-danger'
-          type='button'
-          className='text-danger'
-          onClick={() => {
-            setSelectedId(item.oid);
-            setDeleteConfirmationModal(true);
-          }}
-        >
-          Delete
-        </Button>
-      )}
+      <button onClick={handleDelete} className='text-red-600 hover:text-red-800'>
+        Delete
+      </button>
     </div>
   );
 };

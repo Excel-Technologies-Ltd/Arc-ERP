@@ -1,3 +1,4 @@
+import LottieLoader from '@/components/Loader/LottieLoder';
 import { URLLogin } from '@/router/routes.url';
 import { getPermissionlist } from '@/services/Permissions/Permissions';
 import { resetPermissions, setPermissions } from '@/stores/permissionSlice';
@@ -20,7 +21,7 @@ function PrivateGuard() {
   } = getPermissionlist();
 
   if (isLoading || isValidating || isLoadingPermissionList) {
-    return <div>Loading...</div>;
+    return <LottieLoader />;
   }
 
   if (isErrorPermissionList) {

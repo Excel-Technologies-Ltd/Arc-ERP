@@ -80,19 +80,9 @@ export const EditableCell = <T extends Record<string, any>>({
   if (editable) {
     let inputNode;
     if (inputType === 'date') {
-      inputNode = (
-        <AntDatePicker
-          ref={inputRef}
-          onBlur={save}
-          format='YYYY-MM-DD'
-          onChange={save}
-          size='small'
-        />
-      );
+      inputNode = <AntDatePicker onBlur={save} format='YYYY-MM-DD' onChange={save} size='small' />;
     } else {
-      inputNode = (
-        <AntInput ref={inputRef} onPressEnter={save} onBlur={save} size='small' type='text' />
-      );
+      inputNode = <AntInput onPressEnter={save} onBlur={save} size='small' type='text' />;
     }
 
     childNode = editing ? (
