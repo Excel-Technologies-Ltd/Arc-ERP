@@ -1,3 +1,9 @@
+import { AllowedToTransactWith } from '../Accounts/AllowedToTransactWith'
+import { CustomerCreditLimit } from './CustomerCreditLimit'
+import { BrandWiseAllocations } from '../ExcelERPNext/BrandWiseAllocations'
+import { ExcelCustomerCreditHistory } from '../ExcelERPNext/ExcelCustomerCreditHistory'
+import { PartyAccount } from '../Accounts/PartyAccount'
+import { SalesTeam } from './SalesTeam'
 
 export interface Customer{
 	name: string
@@ -63,7 +69,7 @@ export interface Customer{
 	/**	Represents Company : Link - Company	*/
 	represents_company?: string
 	/**	Allowed To Transact With : Table - Allowed To Transact With	*/
-	companies?: any
+	companies?: AllowedToTransactWith[]
 	/**	Market Segment : Link - Market Segment	*/
 	market_segment?: string
 	/**	Industry : Link - Industry Type	*/
@@ -107,17 +113,17 @@ export interface Customer{
 	/**	Remaining Balance : Currency	*/
 	excel_remaining_balance?: number
 	/**	Credit Limit : Table - Customer Credit Limit	*/
-	credit_limits?: any
+	credit_limits?: CustomerCreditLimit[]
 	/**	Brand Wise Allocations : Table - Brand Wise Allocations	*/
-	custom_brand_wise_allocations?: any
+	custom_brand_wise_allocations?: BrandWiseAllocations[]
 	/**	Other Brands Limit : Currency	*/
 	custom_other_brands_limit?: number
 	/**	Source : Data	*/
 	custom_source?: string
 	/**	Customer Credit History : Table - Excel Customer Credit History	*/
-	excel_customer_credit_history?: any
+	excel_customer_credit_history?: ExcelCustomerCreditHistory[]
 	/**	Receivable Accounts : Table - Party Account - Mention if a non-standard receivable account	*/
-	accounts?: any
+	accounts?: PartyAccount[]
 	/**	Loyalty Program : Link - Loyalty Program	*/
 	loyalty_program?: string
 	/**	Loyalty Program Tier : Data	*/
@@ -131,7 +137,7 @@ export interface Customer{
 	/**	Sales Supervisor : Data	*/
 	excel_sales_supervisor?: string
 	/**	Sales Team : Table - Sales Team	*/
-	sales_team: any
+	sales_team: SalesTeam[]
 	/**	Sales Partner : Link - Sales Partner	*/
 	default_sales_partner?: string
 	/**	Commission Rate : Float	*/

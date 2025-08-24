@@ -5,6 +5,9 @@ import TableBody from './TableBody';
 import ActionRender from './prompts/ActionRender';
 import DeleteModal from './prompts/DeleteModal';
 import { TableColumn, TableRowData } from '@/types/Table/table-types';
+import AntPagination from '../Pagination/AntPagination';
+import { transformCellData } from './prompts/CustomTable.utils';
+import { useSearchParams } from 'react-router-dom';
 
 interface ReusableTableProps<T> {
   data: T[];
@@ -14,6 +17,7 @@ interface ReusableTableProps<T> {
   loading: boolean;
   showAction?: boolean;
   hideEditOnTable?: boolean;
+  totalItems?: number;
 }
 
 const CustomTable = <T extends Record<string, any>>({
@@ -22,34 +26,19 @@ const CustomTable = <T extends Record<string, any>>({
   onEdit,
   tableHeader = [],
   loading = false,
-  showAction = true,
+  showAction = false,
   hideEditOnTable = false,
+  totalItems = 0,
 }: ReusableTableProps<T>) => {
   const [deleteConfirmationModal, setDeleteConfirmationModal] = useState<boolean>(false);
   const [selectedId, setSelectedId] = useState<string | number | null>(null);
+  const [searchParams] = useSearchParams();
+  const pageSize = Number(searchParams.get('pageSize')) || 10;
+  const limit_start = Number(searchParams.get('limit_start')) || 0;
 
   if (loading) return <div>Loading...</div>;
   if (!data || data?.length === 0)
     return <h1 className='text-center text-2xl mt-5 intro-y'>No data found</h1>;
-
-  // Function to transform cell data with render function support
-  const transformCellData = (item: T, header: TableColumn<T>, index: number): TableRowData => {
-    let content: string | number | JSX.Element;
-
-    if (header.render) {
-      // Use the render function if provided
-      const cellValue = item[header.key as keyof T];
-      content = header.render(cellValue, item, index);
-    } else {
-      // Default behavior - use the key to get the value
-      content = (item[header.key as keyof T] as string | number) || '-';
-    }
-
-    return {
-      title: content,
-      width: header.width,
-    };
-  };
 
   return (
     <>
@@ -84,6 +73,14 @@ const CustomTable = <T extends Record<string, any>>({
             ))}
           </Table.Tbody>
         </Table>
+        {/* BEGIN: Pagination */}
+        <div className='flex flex-wrap justify-between items-center intro-y sm:flex-row sm:flex-nowrap mt-3'>
+          <div className='hidden xl:block text-slate-500'>
+            Showing {limit_start + 1} to {limit_start + pageSize} of {totalItems} entries
+          </div>
+          <AntPagination totalItems={totalItems || 0} />
+        </div>
+        {/* END: Pagination */}
       </div>
 
       {/* Delete Confirmation Modal */}

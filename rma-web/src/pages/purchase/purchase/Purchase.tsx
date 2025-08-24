@@ -6,7 +6,6 @@ import AntRangePicker from '@/components/Base/DatePicker/AntRangePicker';
 import { getPurchaseInvoiceList, getSupplierList } from '@/services/purchase/purchase';
 import type { Dayjs } from 'dayjs';
 import { PURCHASE_SELECT_STATUS } from '@/constants/app-strings';
-import AntPagination from '@/components/Pagination/AntPagination';
 import CustomTable from '@/components/Table/CustomTable';
 import { PurchaseInvoice } from '@/types/Accounts/PurchaseInvoice';
 import { TableColumn } from '@/types/Table/table-types';
@@ -23,7 +22,11 @@ const Purchase = () => {
 
   // API Call to get suppliers based on search
   const { data: suppliers, isLoading: isLoadingSuppliers } = getSupplierList(supplierSearch);
-  const { data: purchaseInvoices, isLoading: isLoadingPurchaseInvoices } = getPurchaseInvoiceList({
+  const {
+    data: purchaseInvoices,
+    isLoading: isLoadingPurchaseInvoices,
+    total,
+  } = getPurchaseInvoiceList({
     purchase_invoice_number: purchaseInvoiceNumber ?? '',
     status: status ?? '',
     supplier: supplier ?? '',
@@ -154,15 +157,10 @@ const Purchase = () => {
             tableHeader={TableHeader}
             loading={isLoadingPurchaseInvoices}
             showAction={false}
+            totalItems={total}
           />
         </div>
         {/* END: Data List */}
-        {/* BEGIN: Pagination */}
-        <div className='flex flex-wrap justify-between items-center col-span-12 intro-y sm:flex-row sm:flex-nowrap'>
-          <div className='hidden xl:block text-slate-500'>Showing 1 to 10 of 150 entries</div>
-          <AntPagination totalItems={150} />
-        </div>
-        {/* END: Pagination */}
       </div>
     </>
   );

@@ -4,7 +4,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "vite",
+    "dev": "vite --base=rma-web/",
     "build": "vite build --base=/assets/excel_rma/rma-web/ && yarn copy-html-entry",
     "lint": "eslint .",
     "preview": "vite preview",

@@ -1,43 +1,24 @@
-import dayjs from 'dayjs';
+import { TableColumn, TableRowData } from '@/types/Table/table-types';
 
-//Trnsform data showing in table
-export const TransformTableData = ({ item, header }: { item: any; header: any }) => {
-  const value = item[header.key];
+// Function to transform cell data with render function support
+export const transformCellData = <T extends Record<string, any>>(
+  item: T,
+  header: TableColumn<T>,
+  index: number
+): TableRowData => {
+  let content: string | number | JSX.Element;
 
-  if (header?.key === 'completeStatus') {
-    return item?.isCompleted ? 'Resolved' : 'Pending';
+  if (header.render) {
+    // Use the render function if provided
+    const cellValue = item[header.key as keyof T];
+    content = header.render(cellValue, item, index);
+  } else {
+    // Default behavior - use the key to get the value
+    content = (item[header.key as keyof T] as string | number) || '-';
   }
 
-  if (value === null || value === undefined) {
-    return '--';
-  }
-
-  //Date Showing using dayjs format
-  if (header?.key?.toLowerCase()?.includes('date')) {
-    if (value) {
-      return dayjs(value)?.format('DD-MM-YYYY');
-    }
-    return '--';
-  }
-
-  //Check if the value is an array and then map the array
-  if (Array.isArray(value)) {
-    return value.map((item) => item?.fullname || item?.expenseCategoryDescription || '').join(', ');
-  }
-
-  //length set in description
-  if (header?.key === 'description') {
-    return value?.length > 80 ? `${value?.substring(0, 80)}...` : value;
-  }
-
-  //Check if the value is an object and show a Perticular value
-  if (typeof value === 'object') {
-    if (header?.key === 'userAccount') {
-      return value?.firstname + ' ' + value?.surname;
-    }
-    return value?.vehicleName || value?.formName;
-  }
-
-  //Default Showing
-  return value;
+  return {
+    title: content,
+    width: header.width,
+  };
 };

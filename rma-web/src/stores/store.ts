@@ -5,6 +5,7 @@ import menuReducer from './menuSlice';
 import themeReducer from './themeSlice';
 import permissionReducer from './permissionSlice';
 import modalReducer from './modalSlice';
+import paginationReducer from './paginationSlice';
 
 export const store = configureStore({
   reducer: {
@@ -14,6 +15,7 @@ export const store = configureStore({
     theme: themeReducer,
     permission: permissionReducer,
     modal: modalReducer,
+    pagination: paginationReducer,
   },
 });
 
