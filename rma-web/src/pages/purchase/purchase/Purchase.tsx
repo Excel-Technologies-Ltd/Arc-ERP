@@ -3,13 +3,13 @@ import Button from '@/components/Base/Button';
 import AntInput from '@/components/Base/Form/FormInput/AntInput';
 import AntSelect from '@/components/Base/Form/FormSelect/AntSelect';
 import AntRangePicker from '@/components/Base/DatePicker/AntRangePicker';
-import { getPurchaseInvoiceList, getSupplierList } from '@/services/purchase/purchase';
+import { getPurchaseInvoiceList } from '@/services/purchase/purchase';
 import type { Dayjs } from 'dayjs';
 import { PURCHASE_SELECT_STATUS } from '@/constants/app-strings';
 import CustomTable from '@/components/Table/CustomTable';
 import { PurchaseInvoice } from '@/types/Accounts/PurchaseInvoice';
-import { TableColumn } from '@/types/Table/table-types';
-import { Link } from 'react-router-dom';
+import { PurchaseTableColumn } from './TableColumn';
+import { getSupplierList } from '@/services/common/commonApi';
 
 const Purchase = () => {
   const [supplierSearch, setSupplierSearch] = useState<string | null>(null);
@@ -39,63 +39,8 @@ const Purchase = () => {
     setDateRange(null);
   };
 
-  const TableHeader: TableColumn<PurchaseInvoice>[] = [
-    {
-      key: 'sl',
-      title: 'SL',
-      render: (_, __, index) => <span>{index + 1}</span>,
-    },
-    {
-      key: 'name',
-      title: 'INVOICE NO',
-      render: (text) => (
-        <Link
-          to={`/purchase/view-purchase-invoice/${text}`}
-          className='underline decoration-dotted whitespace-nowrap'
-        >
-          {text}
-        </Link>
-      ),
-    },
-    {
-      key: 'status',
-      title: 'STATUS',
-      render: (status) => (
-        <span
-          className={`px-2 py-1 rounded-full text-xs ${
-            status === 'completed'
-              ? 'bg-green-100 text-green-800'
-              : status === 'pending'
-                ? 'bg-yellow-100 text-yellow-800'
-                : 'bg-red-100 text-red-800'
-          }`}
-        >
-          {status}
-        </span>
-      ),
-    },
-    {
-      key: 'progress',
-      title: 'PROGRESS',
-      render: () => (
-        <div className='w-full bg-gray-200 rounded-full h-1.5'>
-          <div
-            className='bg-orange-500 h-1.5 rounded-full'
-            style={{ width: `${Math.random() * 99}%` }}
-          ></div>
-        </div>
-      ),
-    },
-    { key: 'posting_date', title: 'POSTING DATE' },
-    { key: 'supplier', title: 'SUPPLIER' },
-    {
-      key: 'total',
-      title: 'TOTAL',
-      render: (total) => `$${Number(total).toFixed(2)}`,
-    },
-    { key: 'owner', title: 'CREATED BY' },
-    { key: 'owner', title: 'DELIVERED BY' },
-  ];
+  // Table Column
+  const Column = PurchaseTableColumn();
 
   return (
     <>
@@ -154,7 +99,7 @@ const Purchase = () => {
         <div className='col-span-12 overflow-auto intro-y 2xl:overflow-visible'>
           <CustomTable<PurchaseInvoice>
             data={purchaseInvoices || []}
-            tableHeader={TableHeader}
+            tableHeader={Column}
             loading={isLoadingPurchaseInvoices}
             showAction={false}
             totalItems={total}

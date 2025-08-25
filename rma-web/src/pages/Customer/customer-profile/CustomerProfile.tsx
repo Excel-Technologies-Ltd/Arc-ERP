@@ -1,27 +1,34 @@
-import Button from '@/components/Base/Button';
 import AntModal from '@/components/Modal/AntModal';
-import AntPagination from '@/components/Pagination/AntPagination';
 import CustomTable from '@/components/Table/CustomTable';
 import { getCustomerDocument, getCustomerList } from '@/services/customer/customer';
-import { handleModal } from '@/stores/modalSlice';
-import { BrandWiseAllocations } from '@/types/ExcelERPNext/BrandWiseAllocations';
-import { Customer } from '@/types/Selling/Customer';
-import { TableColumn } from '@/types/Table/table-types';
-import { formatCurrency } from '@/utils/helper';
 import { useEffect, useState } from 'react';
-import { useDispatch } from 'react-redux';
+import { CustomerProfileTableColumn } from './TableColumn';
+import CustomerDetails from './CustomerDetails';
+import AntInput from '@/components/Base/Form/FormInput/AntInput';
+import AntSelect from '@/components/Base/Form/FormSelect/AntSelect';
+import Button from '@/components/Base/Button';
+import { getTerritoryList } from '@/services/common/commonApi';
 
 const CustomerProfile = () => {
-  const dispatch = useDispatch();
   const [customerName, setCustomerName] = useState<string>('');
+  const [searchCustomerName, setSearchCustomerName] = useState<string | null>(null);
+  const [searchBranchName, setSearchBranchName] = useState<string | null>(null);
 
   // Api Call
-  const { data: customerList, isLoading: isLoadingCustomerList, total } = getCustomerList();
+  const {
+    data: customerList,
+    isLoading: isLoadingCustomerList,
+    total,
+  } = getCustomerList({
+    customer_name: searchCustomerName ?? '',
+    territory: searchBranchName ?? '',
+  });
   const {
     data: customerDocument,
     isLoading: isLoadingCustomerDocument,
     mutate,
   } = getCustomerDocument(customerName);
+  const { data: branchList, isLoading: isLoadingBranchList } = getTerritoryList(searchBranchName);
 
   useEffect(() => {
     if (customerName) {
@@ -30,56 +37,48 @@ const CustomerProfile = () => {
   }, [customerName, mutate]);
 
   // Table Column
-  const Column: TableColumn<Customer>[] = [
-    {
-      key: 'Sl',
-      title: 'SL',
-      render: (_, __, index) => <span>{index + 1}</span>,
-    },
-    {
-      key: 'customer_name',
-      title: 'Customer Name',
-    },
-    {
-      key: 'territory',
-      title: 'Territory Name',
-    },
-    {
-      key: 'excel_remaining_balance',
-      title: 'Credit Limit',
-      render: (value) => formatCurrency(value),
-    },
-    {
-      key: 'current_outstanding',
-      title: 'Current Outstanding',
-      render: (value) => formatCurrency(value),
-    },
-    {
-      key: 'custom_other_brands_limit',
-      title: 'Remaining Credit',
-      render: (value) => formatCurrency(value),
-    },
-    {
-      key: 'brand_wise_limit',
-      title: 'Brand Wise Limit',
-      render: (_, record) => {
-        return (
-          <Button
-            variant='secondary'
-            size='sm'
-            onClick={() => {
-              setCustomerName(record.customer_name);
-              dispatch(handleModal({ type: 'brand-wise-limit', isOpen: true }));
-            }}
-          >
-            Details
-          </Button>
-        );
-      },
-    },
-  ];
+  const Column = CustomerProfileTableColumn(setCustomerName);
+
+  const handleClear = () => {
+    setSearchCustomerName(null);
+    setSearchBranchName(null);
+  };
+
   return (
     <>
+      <div className='flex flex-wrap items-center col-span-12 mt-5 intro-y xl:flex-nowrap gap-3'>
+        <h2 className='text-lg font-medium intro-y whitespace-nowrap'>Customer Profile</h2>
+        <div className='flex w-full gap-2 flex-wrap lg:flex-nowrap'>
+          <AntInput
+            placeholder='Customer Name'
+            type='text'
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+              setSearchCustomerName(e.target.value)
+            }
+            value={searchCustomerName ?? ''}
+          />
+          <AntSelect
+            placeholder='Select Branch'
+            value={searchBranchName ?? undefined}
+            onChange={(value: string) => {
+              setSearchBranchName(value);
+            }}
+            onSearch={(value: string) => setSearchBranchName(value)}
+            loading={isLoadingBranchList}
+            options={branchList?.map((b) => ({
+              value: b.name,
+              label: b.territory_name,
+            }))}
+            notFoundText='No Branch Found'
+          />
+          <div className='flex items-center gap-2'>
+            <Button variant='outline-primary'>Search</Button>
+            <Button onClick={handleClear} variant='outline-primary'>
+              Clear
+            </Button>
+          </div>
+        </div>
+      </div>
       <div className='mt-5'>
         <CustomTable
           tableHeader={Column || []}
@@ -98,54 +97,7 @@ const CustomerProfile = () => {
         loading={isLoadingCustomerDocument}
         width={800}
       >
-        <div className='bg-white dark:bg-darkmode rounded-lg'>
-          <div className='flex justify-between items-center my-4'>
-            <div className='text-lg font-semibold'>
-              Total Remaining Balance:{' '}
-              <span className='text-lg font-bold'>
-                {formatCurrency(customerDocument?.excel_remaining_balance || 0)}
-              </span>
-            </div>
-            <div className='text-lg font-semibold'>
-              Brand Wise Allocated Limit:{' '}
-              <span className='text-lg font-bold'>
-                {formatCurrency(
-                  customerDocument?.custom_brand_wise_allocations?.reduce(
-                    (acc, item) => acc + item.limit,
-                    0
-                  ) || 0
-                )}
-              </span>
-            </div>
-          </div>
-
-          <div className='overflow-x-auto rounded-lg border'>
-            <table className='min-w-full table-auto'>
-              <thead className='bg-primary text-white'>
-                <tr>
-                  <th className='px-6 py-3 text-left'>Brand Name</th>
-                  <th className='px-6 py-3 text-left'>Limit Amount</th>
-                </tr>
-              </thead>
-              <tbody className='bg-gray-50'>
-                {customerDocument?.custom_brand_wise_allocations?.map(
-                  (item: BrandWiseAllocations) => (
-                    <tr key={item.name}>
-                      <td className='px-6 py-4 text-left'>{item.brand}</td>
-                      <td className='px-6 py-4 text-left'>{formatCurrency(item.limit)}</td>
-                    </tr>
-                  )
-                )}
-                <tr>
-                  <td className='px-6 py-4 text-left'>Others</td>
-                  <td className='px-6 py-4 text-left'>
-                    {formatCurrency(customerDocument?.custom_other_brands_limit || 0)}
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
+        <CustomerDetails customerDocument={customerDocument} />
       </AntModal>
     </>
   );

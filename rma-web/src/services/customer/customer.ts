@@ -1,12 +1,27 @@
 import { parsePaginationParams } from '@/components/Pagination/pagination.utils';
 import { Customer } from '@/types/Selling/Customer';
-import { useFrappeGetDoc, useFrappeGetDocCount, useFrappeGetDocList } from 'frappe-react-sdk';
+import {
+  Filter,
+  useFrappeGetDoc,
+  useFrappeGetDocCount,
+  useFrappeGetDocList,
+} from 'frappe-react-sdk';
 import { useSearchParams } from 'react-router-dom';
 
+export interface CustomerFilters {
+  customer_name?: string;
+  territory?: string;
+}
+
 // Api Call to get customer list
-export const getCustomerList = () => {
+export const getCustomerList = ({ customer_name, territory }: CustomerFilters) => {
   const [searchParams] = useSearchParams();
   const { limit_start, pageSize } = parsePaginationParams(searchParams);
+
+  const conditions: Filter[] = [
+    ...(customer_name ? [['name', 'like', `%${customer_name}%`] as Filter] : []),
+    ...(territory ? [['territory', 'like', `%${territory}%`] as Filter] : []),
+  ];
 
   // get Customer Get Data
   const {
@@ -22,6 +37,7 @@ export const getCustomerList = () => {
       'excel_remaining_balance',
       'custom_other_brands_limit',
     ],
+    filters: conditions,
     orderBy: {
       field: 'name',
       order: 'asc',
@@ -36,7 +52,7 @@ export const getCustomerList = () => {
     isLoading: isLoadingCustomercount,
     isValidating: isValidatingCustomercount,
     error: errorCustomercount,
-  } = useFrappeGetDocCount('Customer');
+  } = useFrappeGetDocCount('Customer', conditions);
 
   // return data
   return {
