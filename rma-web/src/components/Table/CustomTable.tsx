@@ -8,6 +8,7 @@ import { TableColumn, TableRowData } from '@/types/Table/table-types';
 import AntPagination from '../Pagination/AntPagination';
 import { transformCellData } from './prompts/CustomTable.utils';
 import { useSearchParams } from 'react-router-dom';
+import AntEmpty from '../Empty/Empty';
 
 interface ReusableTableProps<T> {
   data: T[];
@@ -37,8 +38,7 @@ const CustomTable = <T extends Record<string, any>>({
   const limit_start = Number(searchParams.get('limit_start')) || 0;
 
   if (loading) return <div>Loading...</div>;
-  if (!data || data?.length === 0)
-    return <h1 className='text-center text-2xl mt-5 intro-y'>No data found</h1>;
+  if (!data || data?.length === 0) return <AntEmpty />;
 
   return (
     <>

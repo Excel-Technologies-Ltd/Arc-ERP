@@ -7,7 +7,11 @@ interface AntEmptyProps extends EmptyProps {
   description?: React.ReactNode;
 }
 
-const AntEmpty: React.FC<AntEmptyProps> = ({ image = 'default', description, ...rest }) => {
+const AntEmpty: React.FC<AntEmptyProps> = ({
+  image = 'default',
+  description = 'No Data Found',
+  ...rest
+}) => {
   let emptyImage: React.ReactNode;
 
   // Determine which image to show based on the 'image' prop

@@ -44,7 +44,7 @@ export const CustomerProfileTableColumn = (setCustomerName: (name: string) => vo
         render: (_, record) => {
           return (
             <Button
-              variant='secondary'
+              variant='outline-primary'
               size='sm'
               onClick={() => {
                 setCustomerName(record.customer_name);

@@ -79,7 +79,6 @@ const Purchase = () => {
               }))}
               notFoundText='No Supplier Found'
             />
-            {/* <DatePicker.RangePicker allowClear={true} size='large' className='w-full' /> */}
             <AntRangePicker
               allowClear={true}
               value={dateRange}

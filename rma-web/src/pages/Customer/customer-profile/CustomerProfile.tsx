@@ -13,6 +13,7 @@ const CustomerProfile = () => {
   const [customerName, setCustomerName] = useState<string>('');
   const [searchCustomerName, setSearchCustomerName] = useState<string | null>(null);
   const [searchBranchName, setSearchBranchName] = useState<string | null>(null);
+  const [selectedBranchName, setSelectedBranchName] = useState<string | null>(null);
 
   // Api Call
   const {
@@ -21,7 +22,7 @@ const CustomerProfile = () => {
     total,
   } = getCustomerList({
     customer_name: searchCustomerName ?? '',
-    territory: searchBranchName ?? '',
+    territory: selectedBranchName ?? '',
   });
   const {
     data: customerDocument,
@@ -59,9 +60,10 @@ const CustomerProfile = () => {
           />
           <AntSelect
             placeholder='Select Branch'
-            value={searchBranchName ?? undefined}
+            value={selectedBranchName ?? undefined}
             onChange={(value: string) => {
-              setSearchBranchName(value);
+              setSelectedBranchName(value);
+              setSearchBranchName(null);
             }}
             onSearch={(value: string) => setSearchBranchName(value)}
             loading={isLoadingBranchList}
