@@ -5,8 +5,6 @@ import {
   FormattedMenu,
   linkTo,
   nestedMenu,
-  enter,
-  leave,
   forceActiveMenuContext,
   forceActiveMenu,
 } from './side-menu';
@@ -18,22 +16,29 @@ import MobileMenu from '@/components/MobileMenu';
 import { nestedMenuWithPermissions } from '@/utils/menuUtils';
 import useUserPermissions from '@/hooks/useUserPermissions';
 import sideMenu from '@/main/side-menu';
+import { toRaw } from '@/utils/helper';
+import { UserRoles } from '@/utils/permissionUtils';
 
 function Main() {
   const navigate = useNavigate();
   const location = useLocation();
+  // Avoid expensive logs / renders
   const userRoles = useUserPermissions();
   const [formattedMenu, setFormattedMenu] = useState<Array<FormattedMenu | 'divider'>>([]);
-  const menu = () => nestedMenuWithPermissions(sideMenu, location, userRoles);
+  const menu = () => nestedMenuWithPermissions(toRaw(sideMenu), location, userRoles as UserRoles);
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
 
+  // Recompute menu when route or user roles/permissions change
   useEffect(() => {
     setFormattedMenu(menu());
+  }, [location.pathname, userRoles]);
 
-    window.addEventListener('resize', () => {
-      setWindowWidth(window.innerWidth);
-    });
-  }, [location.pathname]);
+  // Manage resize listener with proper cleanup
+  useEffect(() => {
+    const handleResize = () => setWindowWidth(window.innerWidth);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   return (
     <forceActiveMenuContext.Provider

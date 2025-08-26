@@ -1,15 +1,11 @@
+import { useAppSelector } from '@/stores/hooks';
+import { selectPermissions } from '@/stores/permissionSlice';
 import { UserRoles } from '@/utils/permissionUtils';
+import { useMemo } from 'react';
 
 export const useUserPermissions = (): UserRoles => {
-  try {
-    const permissions = JSON.parse(localStorage.getItem('permissions') || '{}');
-    const roles = JSON.parse(localStorage.getItem('roles') || '[]');
-
-    return { roles, permissions };
-  } catch (error) {
-    console.error('Error parsing permissions:', error);
-    return { roles: [], permissions: {} };
-  }
+  const { roles, permissions } = useAppSelector(selectPermissions);
+  return useMemo(() => ({ roles, permissions }), [roles, permissions]);
 };
 
 export default useUserPermissions;

@@ -22,10 +22,11 @@ function Main(props: { layout?: 'side-menu' }) {
   // handle logout
   const handleLogout = async () => {
     await logout().then(() => {
+      dispatch(resetPermissions());
+
       notify.success({
         message: 'Log Out Successfully',
       });
-      dispatch(resetPermissions());
     });
   };
 

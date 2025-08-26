@@ -4,7 +4,7 @@ import { Location, nestedMenu } from '@/themes/Enigma/SideMenu/side-menu';
 
 // Map menu items to required permissions
 const menuPermissions: { [key: string]: { entity: string; action: keyof Permission } } = {
-  Purchase: { entity: 'Purchase', action: 'read' },
+  Purchase: { entity: 'Purchase Invoice', action: 'read' },
   'Add Sales Invoice': { entity: 'Sales Invoice', action: 'create' },
   'Sales Invoice List': { entity: 'Sales Invoice', action: 'read' },
   'Sales Return': { entity: 'Sales Return', action: 'read' },
@@ -58,7 +58,8 @@ export const filterMenuByPermissions = (
         return false;
       }
 
-      item.subMenu = filteredSubMenu;
+      // Avoid mutating original objects that may be reused
+      item.subMenu = filteredSubMenu.map((s) => ({ ...s }));
     }
 
     return true;

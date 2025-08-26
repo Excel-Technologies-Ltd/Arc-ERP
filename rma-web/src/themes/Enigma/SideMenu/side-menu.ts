@@ -45,7 +45,7 @@ const findActiveMenu = (subMenu: Menu[], location: Location): boolean => {
 
 const nestedMenu = (menu: Array<Menu | 'divider'>, location: Location, userRoles?: UserRoles) => {
   // Filter menu by permissions if userRoles provided
-  const menuToProcess = userRoles ? filterMenuByPermissions(menu, userRoles) : menu;
+  const menuToProcess = userRoles ? filterMenuByPermissions([...menu], userRoles) : menu;
 
   const formattedMenu: Array<FormattedMenu | 'divider'> = [];
   menuToProcess.forEach((item) => {
@@ -69,7 +69,7 @@ const nestedMenu = (menu: Array<Menu | 'divider'>, location: Location, userRoles
 
         // Nested menu
         const subMenu: Array<FormattedMenu> = [];
-        nestedMenu(menuItem.subMenu, location).map(
+        nestedMenu(menuItem.subMenu, location, userRoles).map(
           (menu) => typeof menu !== 'string' && subMenu.push(menu)
         );
         menuItem.subMenu = subMenu;

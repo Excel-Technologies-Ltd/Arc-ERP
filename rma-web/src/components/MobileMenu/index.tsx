@@ -22,12 +22,17 @@ function Main() {
   const [activeMobileMenu, setActiveMobileMenu] = useState(false);
   const scrollableRef = createRef<HTMLDivElement>();
 
+  // Initialize SimpleBar once
   useEffect(() => {
     if (scrollableRef.current) {
       new SimpleBar(scrollableRef.current);
     }
+  }, []);
+
+  // Recompute menu when route or user roles/permissions change
+  useEffect(() => {
     setFormattedMenu(menu());
-  }, [location.pathname]);
+  }, [location.pathname, userRoles]);
 
   return (
     <>

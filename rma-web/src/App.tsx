@@ -8,6 +8,7 @@ import { selectDarkMode } from './stores/darkModeSlice';
 
 const App = () => {
   const darkMode = useAppSelector(selectDarkMode);
+
   return (
     <>
       <ConfigProvider
