@@ -13,8 +13,11 @@ const App = () => {
       <ConfigProvider
         theme={{
           token: {
-            colorPrimary: darkMode ? '#164E63' : '#28334E',
-            colorBgBase: darkMode ? '#1B253B' : '#FFF',
+            colorPrimary: darkMode ? '#28334E' : '#28334E',
+            colorBgBase: darkMode ? '#28334E' : '#FFF',
+            colorBgElevated: darkMode ? '#28334E' : '#FFF',
+            colorBgLayout: darkMode ? '#28334E' : '#FFF',
+            colorBgContainer: darkMode ? '#1B253B' : '#FFF',
           },
           algorithm: darkMode ? theme.darkAlgorithm : theme.defaultAlgorithm,
           components: {

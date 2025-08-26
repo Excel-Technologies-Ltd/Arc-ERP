@@ -1,6 +1,5 @@
 import { useAppDispatch, useAppSelector } from '@/stores/hooks';
 import { selectColorScheme, setColorScheme, ColorSchemes } from '@/stores/colorSchemeSlice';
-import { selectTheme, setTheme, setLayout, Themes } from '@/stores/themeSlice';
 import { selectDarkMode, setDarkMode } from '@/stores/darkModeSlice';
 import { Slideover } from '@/components/Base/Headless';
 import Lucide from '@/components/Base/Lucide';

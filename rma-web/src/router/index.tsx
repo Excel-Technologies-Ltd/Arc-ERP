@@ -1,7 +1,4 @@
 import { createBrowserRouter } from 'react-router-dom';
-import Login from '../pages/Login';
-import ErrorPage from '../pages/ErrorPage';
-import Layout from '../themes';
 import {
   URLLogin,
   URLPurchase,
@@ -30,6 +27,9 @@ const ViewPurchase = Loadable(lazy(() => import('../pages/purchase/veiw-purchase
 const CustomerProfile = Loadable(
   lazy(() => import('../pages/Customer/customer-profile/CustomerProfile'))
 );
+const Layout = Loadable(lazy(() => import('../themes/Enigma/SideMenu/index')));
+const Login = Loadable(lazy(() => import('../pages/Login')));
+const ErrorPage = Loadable(lazy(() => import('../pages/ErrorPage')));
 
 const routes = [
   {

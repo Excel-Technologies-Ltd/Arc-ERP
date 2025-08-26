@@ -1,4 +1,4 @@
-import { type Menu } from '@/stores/menuSlice';
+import { type Menu } from '@/types/menu/menu.types';
 import {
   URLPurchase,
   URLSalesInvoiceList,

@@ -1,9 +1,6 @@
 import LottieLoader from '@/components/Loader/LottieLoder';
+import { useAuthWithPermissions } from '@/hooks/useAuthWithPermissions';
 import { URLLogin } from '@/router/routes.url';
-import { getPermissionlist } from '@/services/Permissions/Permissions';
-import { resetPermissions, setPermissions } from '@/stores/permissionSlice';
-import { useFrappeAuth } from 'frappe-react-sdk';
-import { useDispatch } from 'react-redux';
 import { Navigate, Outlet } from 'react-router-dom';
 
 /**
@@ -11,29 +8,20 @@ import { Navigate, Outlet } from 'react-router-dom';
  */
 function PrivateGuard() {
   // check if user is logged in
-  const { currentUser, isLoading, isValidating } = useFrappeAuth();
-  const dispatch = useDispatch();
+  const { currentUser, isLoading } = useAuthWithPermissions();
 
-  const {
-    data: permissionList,
-    isLoading: isLoadingPermissionList,
-    error: isErrorPermissionList,
-  } = getPermissionlist();
-
-  if (isLoading || isValidating || isLoadingPermissionList) {
+  // Show loader while checking authentication and permissions
+  if (isLoading) {
     return <LottieLoader />;
   }
 
-  if (isErrorPermissionList) {
-    dispatch(resetPermissions());
+  // Redirect to login if not authenticated
+  if (!currentUser) {
+    return <Navigate to={URLLogin()} replace />;
   }
 
-  if (permissionList) {
-    dispatch(setPermissions(permissionList.message));
-  }
-
-  // protected route
-  return currentUser ? <Outlet /> : <Navigate to={URLLogin()} />;
+  // Render protected routes
+  return <Outlet />;
 }
 
 // export private route

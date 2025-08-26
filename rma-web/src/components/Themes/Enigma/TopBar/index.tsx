@@ -15,7 +15,6 @@ import ThemeSwitcher from '@/components/ThemeSwitcher';
 
 function Main(props: { layout?: 'side-menu' }) {
   const { logout } = useFrappeAuth();
-  const navigate = useNavigate();
   const dispatch = useDispatch();
   const notify = useNotify();
   const [themeSwitcherSlideover, setThemeSwitcherSlideover] = useState(false);
@@ -27,7 +26,6 @@ function Main(props: { layout?: 'side-menu' }) {
         message: 'Log Out Successfully',
       });
       dispatch(resetPermissions());
-      navigate('/login');
     });
   };
 

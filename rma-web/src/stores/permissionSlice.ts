@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-interface PermissionActions {
+export interface PermissionActions {
   read: boolean;
   write: boolean;
   create: boolean;
@@ -13,7 +13,7 @@ interface PermissionActions {
   import: boolean;
 }
 
-interface PermissionsState {
+export interface PermissionsState {
   user: string;
   roles: string[];
   territory: string[];

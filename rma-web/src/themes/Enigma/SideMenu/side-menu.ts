@@ -1,9 +1,11 @@
 import { NavigateFunction } from 'react-router-dom';
-import { Menu } from '@/stores/menuSlice';
+import { Menu } from '@/types/menu/menu.types';
 import { slideUp, slideDown } from '@/utils/helper';
 import { createContext } from 'react';
+import { UserRoles } from '@/utils/permissionUtils';
+import { filterMenuByPermissions } from '@/utils/menuUtils';
 
-interface Location {
+export interface Location {
   pathname: string;
   forceActiveMenu?: string;
 }
@@ -41,9 +43,12 @@ const findActiveMenu = (subMenu: Menu[], location: Location): boolean => {
   return match;
 };
 
-const nestedMenu = (menu: Array<Menu | 'divider'>, location: Location) => {
+const nestedMenu = (menu: Array<Menu | 'divider'>, location: Location, userRoles?: UserRoles) => {
+  // Filter menu by permissions if userRoles provided
+  const menuToProcess = userRoles ? filterMenuByPermissions(menu, userRoles) : menu;
+
   const formattedMenu: Array<FormattedMenu | 'divider'> = [];
-  menu.forEach((item) => {
+  menuToProcess.forEach((item) => {
     if (typeof item !== 'string') {
       const menuItem: FormattedMenu = {
         icon: item.icon,

@@ -1,8 +1,6 @@
 import '@/assets/css/themes/enigma/side-nav.css';
 import { useState, useEffect } from 'react';
 import { Outlet, useLocation, useNavigate } from 'react-router-dom';
-import { selectMenu } from '@/stores/menuSlice';
-import { useAppSelector } from '@/stores/hooks';
 import {
   FormattedMenu,
   linkTo,
@@ -17,13 +15,16 @@ import Lucide from '@/components/Base/Lucide';
 import clsx from 'clsx';
 import TopBar from '@/components/Themes/Enigma/TopBar';
 import MobileMenu from '@/components/MobileMenu';
+import { nestedMenuWithPermissions } from '@/utils/menuUtils';
+import useUserPermissions from '@/hooks/useUserPermissions';
+import sideMenu from '@/main/side-menu';
 
 function Main() {
   const navigate = useNavigate();
   const location = useLocation();
+  const userRoles = useUserPermissions();
   const [formattedMenu, setFormattedMenu] = useState<Array<FormattedMenu | 'divider'>>([]);
-  const menuStore = useAppSelector(selectMenu('side-menu'));
-  const menu = () => nestedMenu(menuStore, location);
+  const menu = () => nestedMenuWithPermissions(sideMenu, location, userRoles);
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
 
   useEffect(() => {
@@ -32,14 +33,14 @@ function Main() {
     window.addEventListener('resize', () => {
       setWindowWidth(window.innerWidth);
     });
-  }, [menuStore, location.pathname]);
+  }, [location.pathname]);
 
   return (
     <forceActiveMenuContext.Provider
       value={{
         forceActiveMenu: (pathname) => {
           forceActiveMenu(location, pathname);
-          setFormattedMenu(menu());
+          setFormattedMenu(nestedMenu(sideMenu, location));
         },
       }}
     >

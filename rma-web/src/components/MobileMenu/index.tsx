@@ -3,22 +3,22 @@ import '@/assets/css/components/mobile-menu.css';
 import { useState, useEffect, createRef } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { toRaw } from '@/utils/helper';
-import { selectMenu } from '@/stores/menuSlice';
-import { selectTheme } from '@/stores/themeSlice';
-import { useAppSelector } from '@/stores/hooks';
-import { FormattedMenu, linkTo, nestedMenu } from './mobile-menu';
+import { FormattedMenu, linkTo } from './mobile-menu';
 import Lucide from '@/components/Base/Lucide';
 import logoUrl from '@/assets/images/logo.svg';
 import clsx from 'clsx';
 import SimpleBar from 'simplebar';
+import sideMenu from '@/main/side-menu';
+import useUserPermissions from '@/hooks/useUserPermissions';
+import { nestedMenuWithPermissions } from '@/utils/menuUtils';
+import { UserRoles } from '@/utils/permissionUtils';
 
 function Main() {
   const navigate = useNavigate();
   const location = useLocation();
+  const userRoles = useUserPermissions();
   const [formattedMenu, setFormattedMenu] = useState<Array<FormattedMenu | 'divider'>>([]);
-  const themeStore = useAppSelector(selectTheme);
-  const menuStore = useAppSelector(selectMenu(themeStore.layout));
-  const menu = () => nestedMenu(toRaw(menuStore), location);
+  const menu = () => nestedMenuWithPermissions(toRaw(sideMenu), location, userRoles as UserRoles);
   const [activeMobileMenu, setActiveMobileMenu] = useState(false);
   const scrollableRef = createRef<HTMLDivElement>();
 
@@ -27,7 +27,7 @@ function Main() {
       new SimpleBar(scrollableRef.current);
     }
     setFormattedMenu(menu());
-  }, [menuStore, location.pathname]);
+  }, [location.pathname]);
 
   return (
     <>

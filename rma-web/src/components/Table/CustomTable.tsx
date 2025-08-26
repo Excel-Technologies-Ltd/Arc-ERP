@@ -6,9 +6,9 @@ import ActionRender from './prompts/ActionRender';
 import DeleteModal from './prompts/DeleteModal';
 import { TableColumn, TableRowData } from '@/types/Table/table-types';
 import AntPagination from '../Pagination/AntPagination';
-import { transformCellData } from './prompts/CustomTable.utils';
 import { useSearchParams } from 'react-router-dom';
 import AntEmpty from '../Empty/Empty';
+import { transformCellData } from '@/utils/tableUtils';
 
 interface ReusableTableProps<T> {
   data: T[];
