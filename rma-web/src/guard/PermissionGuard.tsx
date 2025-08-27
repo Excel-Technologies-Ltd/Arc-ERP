@@ -1,5 +1,5 @@
-import { PermissionAction, usePermissions } from '@/hooks/permission/usePermissions';
-import { URLErrorPage, URLLogin } from '@/router/routes.url';
+import { PermissionAction, useConditionalRender } from '@/hooks/permission/usePermissions';
+import { URLErrorPage } from '@/router/routes.url';
 import { Navigate } from 'react-router-dom';
 
 interface PermissionGuardProps {
@@ -9,9 +9,9 @@ interface PermissionGuardProps {
 }
 
 const PermissionGuard = ({ entity, action, children }: PermissionGuardProps) => {
-  const { hasPermission } = usePermissions();
+  const permission = useConditionalRender(entity, action);
 
-  if (!hasPermission(entity, action)) {
+  if (!permission) {
     return <Navigate to={URLErrorPage()} />;
   }
 
