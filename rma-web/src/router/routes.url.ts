@@ -25,3 +25,6 @@ export const URLCustomerBrandLimit = () => '/customer-brand-limit';
 // Settings Urls
 export const URLServer = () => '/settings-server';
 export const URLItemPrice = () => '/settings-item-price';
+
+// Error URLS
+export const URLErrorPage = () => '/error-page';

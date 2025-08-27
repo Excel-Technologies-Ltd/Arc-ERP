@@ -1,6 +1,6 @@
 import { Menu } from '@/types/menu/menu.types';
 import { hasPermission, isAdmin, Permission, UserRoles } from './permissionUtils';
-import { Location, nestedMenu } from '@/themes/Enigma/SideMenu/side-menu';
+import { Location, nestedMenu } from '@/layout/side-menu/side-bar';
 
 // Map menu items to required permissions
 const menuPermissions: { [key: string]: { entity: string; action: keyof Permission } } = {

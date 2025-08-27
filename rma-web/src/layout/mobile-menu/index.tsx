@@ -8,8 +8,8 @@ import Lucide from '@/components/Base/Lucide';
 import logoUrl from '@/assets/images/logo.svg';
 import clsx from 'clsx';
 import SimpleBar from 'simplebar';
-import sideMenu from '@/main/side-menu';
-import useUserPermissions from '@/hooks/useUserPermissions';
+import sideMenu from '@/layout/side-menu/side-menu';
+import useUserPermissions from '@/hooks/permission/useUserPermissions';
 import { nestedMenuWithPermissions } from '@/utils/menuUtils';
 import { UserRoles } from '@/utils/permissionUtils';
 

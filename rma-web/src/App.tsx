@@ -5,9 +5,11 @@ import { ConfigProvider, App as AntApp, theme } from 'antd';
 import { NotificationProvider } from './components/Notification/NotificationProvider';
 import { useAppSelector } from './stores/hooks';
 import { selectDarkMode } from './stores/darkModeSlice';
+import useAuthCheck from './hooks/auth/useAuthCheck';
 
 const App = () => {
   const darkMode = useAppSelector(selectDarkMode);
+  const { isChecked } = useAuthCheck();
 
   return (
     <>
@@ -31,9 +33,13 @@ const App = () => {
       >
         <AntApp>
           <NotificationProvider>
-            <RouterProvider router={router}>
-              <ScrollToTop />
-            </RouterProvider>
+            {isChecked ? (
+              <div>Loading....</div>
+            ) : (
+              <RouterProvider router={router}>
+                <ScrollToTop />
+              </RouterProvider>
+            )}
           </NotificationProvider>
         </AntApp>
       </ConfigProvider>

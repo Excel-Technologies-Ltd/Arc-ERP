@@ -7,15 +7,15 @@ import {
   nestedMenu,
   forceActiveMenuContext,
   forceActiveMenu,
-} from './side-menu';
+} from './side-menu/side-bar';
 import Tippy from '@/components/Base/Tippy';
 import Lucide from '@/components/Base/Lucide';
 import clsx from 'clsx';
-import TopBar from '@/components/Themes/Enigma/TopBar';
-import MobileMenu from '@/components/MobileMenu';
+import TopBar from '@/layout/top-bar';
+import MobileMenu from '@/layout/mobile-menu';
 import { nestedMenuWithPermissions } from '@/utils/menuUtils';
-import useUserPermissions from '@/hooks/useUserPermissions';
-import sideMenu from '@/main/side-menu';
+import useUserPermissions from '@/hooks/permission/useUserPermissions';
+import sideMenu from '@/layout/side-menu/side-menu';
 import { toRaw } from '@/utils/helper';
 import { UserRoles } from '@/utils/permissionUtils';
 

@@ -1,5 +1,5 @@
-import ThemeSwitcher from '@/components/ThemeSwitcher';
-import EnigmaSideMenu from './Enigma/SideMenu';
+import ThemeSwitcher from '@/themes/ThemeSwitcher';
+import EnigmaSideMenu from '../layout';
 
 function Main() {
   return (

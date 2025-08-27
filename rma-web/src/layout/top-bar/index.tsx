@@ -1,4 +1,4 @@
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import Lucide from '@/components/Base/Lucide';
 import logoUrl from '@/assets/images/logo.svg';
 import Breadcrumb from '@/components/Base/Breadcrumb';
@@ -11,7 +11,7 @@ import { useDispatch } from 'react-redux';
 import { resetPermissions } from '@/stores/permissionSlice';
 import { useNotify } from '@/hooks/useNotify';
 import { useState } from 'react';
-import ThemeSwitcher from '@/components/ThemeSwitcher';
+import ThemeSwitcher from '@/themes/ThemeSwitcher';
 
 function Main(props: { layout?: 'side-menu' }) {
   const { logout } = useFrappeAuth();
