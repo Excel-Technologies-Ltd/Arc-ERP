@@ -1,6 +1,6 @@
 import SummaryCard from '@/components/Cards/SummaryCard/SummaryCard';
 import AntCustomTable from '@/components/Table/AntCustomTable';
-import { type PurchaseInvoiceType } from '@/services/purchase/purchase';
+import { PurchaseInvoice } from '@/types/Accounts/PurchaseInvoice';
 import { type TableProps } from 'antd/es/table';
 
 interface DataType {
@@ -12,7 +12,7 @@ interface DataType {
   total: number;
 }
 
-const PurchaseDetails = ({ data }: { data: PurchaseInvoiceType }) => {
+const PurchaseDetails = ({ data }: { data: PurchaseInvoice }) => {
   // Table Columns
   const columns: TableProps<DataType>['columns'] = [
     {
@@ -61,8 +61,8 @@ const PurchaseDetails = ({ data }: { data: PurchaseInvoiceType }) => {
           columns={columns}
           data={data?.items?.map((invoice) => ({
             key: invoice.name,
-            item_group: invoice.item_group,
-            item_name: invoice.item_name,
+            item_group: invoice.item_group ?? '',
+            item_name: invoice.item_name ?? '',
             quantity: invoice.qty,
             rate: invoice.rate,
             total: invoice.amount,

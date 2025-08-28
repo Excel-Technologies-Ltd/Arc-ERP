@@ -13,6 +13,7 @@ ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
     socketPort='9000'
     swrConfig={{
       revalidateOnFocus: false,
+      shouldRetryOnError: false,
     }}
   >
     <Provider store={store}>
