@@ -49,15 +49,15 @@ const AddSalesForm = ({ control }: { control: Control<AddSalesFormData> }) => {
 
       {RenderController<AddSalesFormData>(
         control,
-        'branch_name',
+        'territory_name',
         <AntSelect
-          placeholder='Select Branch'
+          placeholder='Select Territory'
           options={Array.from({ length: 100 }, (_, i) => ({
-            value: `Branch ${i + 1}`,
-            label: `Branch ${i + 1}`,
+            value: `Territory ${i + 1}`,
+            label: `Territory ${i + 1}`,
           }))}
           loading={false}
-          notFoundText='No Branch Found'
+          notFoundText='No Territory Found'
         />
       )}
       {RenderController<AddSalesFormData>(

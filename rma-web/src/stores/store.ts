@@ -4,6 +4,7 @@ import colorSchemeReducer from './colorSchemeSlice';
 import permissionReducer from './permissionSlice';
 import modalReducer from './modalSlice';
 import paginationReducer from './paginationSlice';
+import drawerReducer from './drawerSlice';
 
 export const store = configureStore({
   reducer: {
@@ -12,6 +13,7 @@ export const store = configureStore({
     permission: permissionReducer,
     modal: modalReducer,
     pagination: paginationReducer,
+    drawer: drawerReducer,
   },
 });
 

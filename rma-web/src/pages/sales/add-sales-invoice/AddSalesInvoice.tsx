@@ -8,6 +8,9 @@ import AntCustomTable from '@/components/Table/AntCustomTable';
 import { useState } from 'react';
 import Button from '@/components/Base/Button';
 import { AddSalesTableColumns } from './AddSalesTableColumns';
+import AntDrawer from '@/components/Drawer/AntDrawer';
+import { useAppDispatch } from '@/stores/hooks';
+import { handleDrawer } from '@/stores/drawerSlice';
 
 export type AddSalesFormData = {
   customer_name: string;
@@ -15,7 +18,7 @@ export type AddSalesFormData = {
   customer_address: string;
   warehouse_name: string;
   due_date: Dayjs | undefined;
-  branch_name: string;
+  territory_name: string;
   remarks: string;
 };
 
@@ -29,10 +32,10 @@ export interface TableDataType {
 
 const AddSalesInvoice = () => {
   const notify = useNotify();
+  const dispatch = useAppDispatch();
   const [tableData, setTableData] = useState<TableDataType[]>([]);
   const {
     control,
-    watch,
     reset,
     handleSubmit: submitForm,
   } = useForm<AddSalesFormData>({
@@ -75,9 +78,18 @@ const AddSalesInvoice = () => {
     <div>
       {/* Details Section */}
       <div className='flex justify-between items-center mt-5'>
-        <h2 className='text-2xl font-bold'>Details</h2>
+        <h2 className='text-2xl text-primary font-bold'>Details</h2>
         <div className='flex gap-2 items-center'>
-          <div className='text-lg font-semibold'>Remaining Balance : 0</div>
+          <div className='text-lg text-primary font-semibold'>Remaining Balance : 0</div>
+          <AntButton
+            label='Limit Details'
+            icon={<ClearOutlined />}
+            color='cyan'
+            variant='solid'
+            onClick={() => {
+              dispatch(handleDrawer({ type: 'limit-details', isOpen: true }));
+            }}
+          />
           <AntButton
             label='Clear'
             icon={<ClearOutlined />}
@@ -98,7 +110,7 @@ const AddSalesInvoice = () => {
 
       {/* Table Section */}
       <AntCustomTable<TableDataType>
-        className='mt-5 drop-shadow-md'
+        className='mt-5 drop-shadow-md intro-y'
         columns={[
           ...(AddSalesTableColumns || []),
           {
@@ -133,6 +145,36 @@ const AddSalesInvoice = () => {
         scroll={{ y: 400 }}
         pagination={false}
       />
+
+      <AntDrawer title='Brand Wise Credit Limit'>
+        <div className='bg-white rounded-lg shadow-md overflow-hidden'>
+          {/* Table Header */}
+          <div className='grid grid-cols-12 bg-gray-50 px-4 py-3 border-b border-gray-200 font-semibold text-gray-700'>
+            <div className='col-span-5'>Brand</div>
+            <div className='col-span-3'>Limit</div>
+            <div className='col-span-4 text-right'>Invoice Amount</div>
+          </div>
+
+          {/* Table Body */}
+          <div className='divide-y divide-gray-100'>
+            {Array.from({ length: 50 }).map((item: unknown, index: number) => (
+              <div
+                key={index}
+                className='grid grid-cols-12 px-4 py-3 items-center hover:bg-gray-50 transition-colors duration-150'
+              >
+                <div className='col-span-5 flex items-center'>
+                  <div className='font-medium text-gray-900'>Brand Name {index + 1}</div>
+                </div>
+                <div className='col-span-3 font-medium text-gray-700'>$1,000,000</div>
+                <div className='col-span-4 text-right'>
+                  <span className='font-medium text-green-600'>$850,000</span>
+                  <div className='text-xs text-gray-500 mt-1'>Due: 05/15/2023</div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </AntDrawer>
     </div>
   );
 };

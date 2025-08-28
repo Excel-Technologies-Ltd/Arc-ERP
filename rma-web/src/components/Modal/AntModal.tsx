@@ -1,10 +1,9 @@
-import { useAppSelector } from '@/stores/hooks';
+import { useAppDispatch, useAppSelector } from '@/stores/hooks';
 import { handleModal, selectModal } from '@/stores/modalSlice';
 import { Modal, type ModalProps } from 'antd';
-import { useDispatch } from 'react-redux';
 
 const AntModal = (props: ModalProps) => {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const { isOpen } = useAppSelector(selectModal);
   const handleClose = () => {
     dispatch(handleModal({ type: '', isOpen: false }));

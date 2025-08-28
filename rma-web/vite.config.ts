@@ -29,7 +29,6 @@ export default defineConfig({
       'simplebar/dist/simplebar.css': fileURLToPath(
         new URL('./node_modules/simplebar/dist/simplebar.css', import.meta.url)
       ),
-      // "tom-select/src": "tom-select",
     },
   },
 });
