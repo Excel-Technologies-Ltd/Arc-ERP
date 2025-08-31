@@ -1,42 +1,25 @@
-import dayjs, { Dayjs } from 'dayjs';
+import dayjs from 'dayjs';
 import { useForm } from 'react-hook-form';
-import AddSalesForm from './AddSalesForm';
 import AntButton from '@/components/Base/Button/AntButton';
 import { ClearOutlined, DeleteOutlined, PlusOutlined, SendOutlined } from '@ant-design/icons';
 import { useNotify } from '@/hooks/useNotify';
 import AntCustomTable from '@/components/Table/AntCustomTable';
 import { useState } from 'react';
 import Button from '@/components/Base/Button';
-import { AddSalesTableColumns } from './AddSalesTableColumns';
 import AntDrawer from '@/components/Drawer/AntDrawer';
 import { useAppDispatch } from '@/stores/hooks';
 import { handleDrawer } from '@/stores/drawerSlice';
-
-export type AddSalesFormData = {
-  customer_name: string;
-  posting_date: Dayjs | undefined;
-  customer_address: string;
-  warehouse_name: string;
-  due_date: Dayjs | undefined;
-  territory_name: string;
-  remarks: string;
-};
-
-export interface TableDataType {
-  item_name: string;
-  available_stock: number | string;
-  quantity: number;
-  rate: number;
-  total: number;
-}
+import { AddSalesFormData, AddSalesItemTableDataType } from '@/types/pages/sales';
+import { AddSalesDetailsForm, AddSalesTableColumns } from '@/features/sales';
 
 const AddSalesInvoice = () => {
   const notify = useNotify();
   const dispatch = useAppDispatch();
-  const [tableData, setTableData] = useState<TableDataType[]>([]);
+  const [tableData, setTableData] = useState<AddSalesItemTableDataType[]>([]);
   const {
     control,
     reset,
+    watch,
     handleSubmit: submitForm,
   } = useForm<AddSalesFormData>({
     mode: 'onChange',
@@ -47,6 +30,7 @@ const AddSalesInvoice = () => {
       posting_date: dayjs(),
     },
   });
+  const { customer_name } = watch();
 
   const handleClear = () => {
     reset();
@@ -60,7 +44,7 @@ const AddSalesInvoice = () => {
   };
 
   const handleAddItem = () => {
-    const newItem: TableDataType = {
+    const newItem: AddSalesItemTableDataType = {
       item_name: `Item ${tableData.length + 1}`,
       available_stock: 'First Select Item Name',
       quantity: Math.ceil(Math.random() * 10),
@@ -70,7 +54,7 @@ const AddSalesInvoice = () => {
     setTableData([...tableData, newItem]);
   };
 
-  const handleDeleteItem = (record: TableDataType) => {
+  const handleDeleteItem = (record: AddSalesItemTableDataType) => {
     setTableData(tableData.filter((item) => item !== record));
   };
 
@@ -86,6 +70,7 @@ const AddSalesInvoice = () => {
             icon={<ClearOutlined />}
             color='cyan'
             variant='solid'
+            disabled={!customer_name}
             onClick={() => {
               dispatch(handleDrawer({ type: 'limit-details', isOpen: true }));
             }}
@@ -106,10 +91,10 @@ const AddSalesInvoice = () => {
         </div>
       </div>
       {/* Form Section */}
-      <AddSalesForm control={control} />
+      <AddSalesDetailsForm control={control} />
 
       {/* Table Section */}
-      <AntCustomTable<TableDataType>
+      <AntCustomTable<AddSalesItemTableDataType>
         className='mt-5 drop-shadow-md intro-y'
         columns={[
           ...(AddSalesTableColumns || []),
@@ -117,7 +102,7 @@ const AddSalesInvoice = () => {
             title: 'Action',
             dataIndex: 'action',
             key: 'action',
-            render: (text, record) => (
+            render: (_, record) => (
               <Button onClick={() => handleDeleteItem(record)} variant='outline-danger' size='sm'>
                 <DeleteOutlined />
               </Button>
@@ -157,7 +142,7 @@ const AddSalesInvoice = () => {
 
           {/* Table Body */}
           <div className='divide-y divide-gray-100'>
-            {Array.from({ length: 50 }).map((item: unknown, index: number) => (
+            {Array.from({ length: 50 }).map((_, index: number) => (
               <div
                 key={index}
                 className='grid grid-cols-12 px-4 py-3 items-center hover:bg-gray-50 transition-colors duration-150'

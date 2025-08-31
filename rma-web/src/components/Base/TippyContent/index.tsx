@@ -1,10 +1,6 @@
-import "@/assets/css/vendors/tippy.css";
-import { createRef, useEffect } from "react";
-import tippy, {
-  Props,
-  roundArrow,
-  animateFill as animateFillPlugin,
-} from "tippy.js";
+import '@/assets/css/vendors/tippy.css';
+import { createRef, useEffect } from 'react';
+import tippy, { Props, roundArrow, animateFill as animateFillPlugin } from 'tippy.js';
 
 interface MainProps {
   to: string;
@@ -13,7 +9,7 @@ interface MainProps {
 }
 
 type TippyContentProps = React.PropsWithChildren<MainProps> &
-  Omit<React.ComponentPropsWithoutRef<"div">, keyof MainProps>;
+  Omit<React.ComponentPropsWithoutRef<'div'>, keyof MainProps>;
 
 const init = (el: HTMLElement, props: TippyContentProps) => {
   tippy(`[data-tooltip="${props.to}"]`, {
@@ -24,17 +20,17 @@ const init = (el: HTMLElement, props: TippyContentProps) => {
     popperOptions: {
       modifiers: [
         {
-          name: "preventOverflow",
+          name: 'preventOverflow',
           options: {
-            rootBoundary: "viewport",
+            rootBoundary: 'viewport',
           },
         },
       ],
     },
     animateFill: false,
-    animation: "shift-away",
-    theme: "light",
-    trigger: "click",
+    animation: 'shift-away',
+    theme: 'light',
+    trigger: 'click',
     ...props.options,
   });
 };
@@ -52,7 +48,7 @@ function TippyContent(props: TippyContentProps) {
     }
   }, [props.children]);
 
-  const { to, options, getRef, ...computedProps } = props;
+  const { ...computedProps } = props;
   return (
     <div {...computedProps} ref={tippyRef}>
       {props.children}

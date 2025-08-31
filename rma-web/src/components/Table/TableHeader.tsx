@@ -3,10 +3,9 @@ import Table from '../Base/Table';
 
 interface TableHeaderProps<T> {
   headers: TableColumn<T>[];
-  action?: boolean;
 }
 
-const TableHeader = <T,>({ headers, action }: TableHeaderProps<T>) => {
+const TableHeader = <T,>({ headers }: TableHeaderProps<T>) => {
   return (
     <Table.Thead>
       <Table.Tr>
@@ -19,7 +18,6 @@ const TableHeader = <T,>({ headers, action }: TableHeaderProps<T>) => {
             {header.title}
           </Table.Th>
         ))}
-        {action && <Table.Th className='border-b-0 whitespace-nowrap'>Action</Table.Th>}
       </Table.Tr>
     </Table.Thead>
   );

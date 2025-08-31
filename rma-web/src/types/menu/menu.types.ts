@@ -1,4 +1,4 @@
-import { icons } from '@/components/Base/Lucide';
+import { icons } from '@/components/Base/Lucide/icons';
 
 export interface Menu {
   icon: keyof typeof icons;

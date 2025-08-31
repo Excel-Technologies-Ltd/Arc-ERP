@@ -85,7 +85,7 @@ Table.Tbody = ({ className, ...props }: TbodyProps) => {
 
 type TrProps = React.PropsWithChildren & React.ComponentPropsWithoutRef<'tr'>;
 
-Table.Tr = ({ className, ...props }: TrProps) => {
+const TableTr = ({ className, ...props }: TrProps) => {
   const table = useContext(tableContext);
   return (
     <tr
@@ -105,7 +105,7 @@ Table.Tr = ({ className, ...props }: TrProps) => {
 
 type ThProps = React.PropsWithChildren & React.ComponentPropsWithoutRef<'th'>;
 
-Table.Th = ({ className, ...props }: ThProps) => {
+const TableTh = ({ className, ...props }: ThProps) => {
   const table = useContext(tableContext);
   const thead = useContext(theadContext);
   return (
@@ -128,7 +128,7 @@ Table.Th = ({ className, ...props }: ThProps) => {
 
 type TdProps = React.PropsWithChildren & React.ComponentPropsWithoutRef<'td'>;
 
-Table.Td = ({ className, ...props }: TdProps) => {
+const TableTd = ({ className, ...props }: TdProps) => {
   const table = useContext(tableContext);
   return (
     <td
@@ -145,5 +145,9 @@ Table.Td = ({ className, ...props }: TdProps) => {
     </td>
   );
 };
+
+Table.Tr = TableTr;
+Table.Th = TableTh;
+Table.Td = TableTd;
 
 export default Table;

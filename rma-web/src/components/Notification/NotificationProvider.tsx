@@ -1,5 +1,6 @@
-import React, { createContext, useMemo } from 'react';
+import React, { useMemo } from 'react';
 import { notification, type NotificationArgsProps } from 'antd';
+import { Ctx } from './NotificationContext';
 
 // Infer exact AntD types (safe & future-proof)
 type NotificationAPI = ReturnType<typeof notification.useNotification>[0];
@@ -17,8 +18,6 @@ export type NotifyType = {
   error: (args: NotifyPayload) => void;
   close: (key: React.Key) => void;
 };
-
-export const Ctx = createContext<NotifyType | null>(null);
 
 export const NotificationProvider: React.FC<React.PropsWithChildren> = ({ children }) => {
   // Best practice: ensure AntD context exists (App handles portals/config)

@@ -1,4 +1,5 @@
-import { Ctx, type NotifyType } from '@/components/Notification/NotificationProvider';
+import { Ctx } from '@/components/Notification/NotificationContext';
+import { type NotifyType } from '@/components/Notification/NotificationProvider';
 import { useContext } from 'react';
 
 export const useNotify = (): NotifyType => {

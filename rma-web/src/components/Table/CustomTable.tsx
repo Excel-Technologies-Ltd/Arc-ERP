@@ -1,10 +1,8 @@
-import { memo, useState } from 'react';
+import { memo } from 'react';
 import Table from '../Base/Table';
 import TableHeader from './TableHeader';
 import TableBody from './TableBody';
-import ActionRender from './prompts/ActionRender';
-import DeleteModal from './prompts/DeleteModal';
-import { TableColumn, TableRowData } from '@/types/Table/table-types';
+import { TableColumn } from '@/types/Table/table-types';
 import AntPagination from '../Pagination/AntPagination';
 import { useSearchParams } from 'react-router-dom';
 import AntEmpty from '../Empty/Empty';
@@ -12,27 +10,17 @@ import { transformCellData } from '@/utils/tableUtils';
 
 interface ReusableTableProps<T> {
   data: T[];
-  onDelete?: (id: string | number | null) => void;
-  onEdit?: (data: T) => void;
   tableHeader: TableColumn<T>[];
   loading: boolean;
-  showAction?: boolean;
-  hideEditOnTable?: boolean;
   totalItems?: number;
 }
 
 const CustomTable = <T extends Record<string, any>>({
   data,
-  onDelete,
-  onEdit,
   tableHeader = [],
   loading = false,
-  showAction = false,
-  hideEditOnTable = false,
   totalItems = 0,
 }: ReusableTableProps<T>) => {
-  const [deleteConfirmationModal, setDeleteConfirmationModal] = useState<boolean>(false);
-  const [selectedId, setSelectedId] = useState<string | number | null>(null);
   const [searchParams] = useSearchParams();
   const pageSize = Number(searchParams.get('pageSize')) || 10;
   const limit_start = Number(searchParams.get('limit_start')) || 0;
@@ -44,31 +32,12 @@ const CustomTable = <T extends Record<string, any>>({
     <>
       <div className='max-w-full relative'>
         <Table className='max-w-full border-spacing-y-[10px] border-separate'>
-          <TableHeader<T> headers={tableHeader} action={showAction} />
+          <TableHeader<T> headers={tableHeader} />
           <Table.Tbody>
             {data.map((item: T, index: number) => (
               <TableBody
                 key={index}
-                data={[
-                  ...tableHeader.map((header) => transformCellData(item, header, index)),
-                  ...(showAction
-                    ? [
-                        {
-                          title: (
-                            <ActionRender
-                              onEdit={onEdit}
-                              onDelete={onDelete}
-                              hideEditOnTable={hideEditOnTable}
-                              item={item}
-                              setSelectedId={setSelectedId}
-                              setDeleteConfirmationModal={setDeleteConfirmationModal}
-                            />
-                          ),
-                          width: '50px',
-                        } as TableRowData,
-                      ]
-                    : []),
-                ]}
+                data={[...tableHeader.map((header) => transformCellData(item, header, index))]}
               />
             ))}
           </Table.Tbody>
@@ -82,16 +51,6 @@ const CustomTable = <T extends Record<string, any>>({
         </div>
         {/* END: Pagination */}
       </div>
-
-      {/* Delete Confirmation Modal */}
-      {deleteConfirmationModal && (
-        <DeleteModal
-          deleteConfirmationModal={deleteConfirmationModal}
-          setDeleteConfirmationModal={setDeleteConfirmationModal}
-          onDelete={onDelete}
-          selectedId={selectedId}
-        />
-      )}
     </>
   );
 };

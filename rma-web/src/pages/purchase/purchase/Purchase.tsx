@@ -100,7 +100,6 @@ const Purchase = () => {
             data={purchaseInvoices || []}
             tableHeader={Column}
             loading={isLoadingPurchaseInvoices}
-            showAction={false}
             totalItems={total}
           />
         </div>

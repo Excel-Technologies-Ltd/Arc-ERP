@@ -122,7 +122,7 @@ const stringToHTML = (arg: string) => {
   return DOM.body.childNodes[0] as HTMLElement;
 };
 
-const slideUp = (el: HTMLElement, duration = 300, callback = (el: HTMLElement) => {}) => {
+const slideUp = (el: HTMLElement, duration = 300) => {
   el.style.transitionProperty = 'height, margin, padding';
   el.style.transitionDuration = duration + 'ms';
   el.style.height = el.offsetHeight + 'px';
@@ -143,16 +143,15 @@ const slideUp = (el: HTMLElement, duration = 300, callback = (el: HTMLElement) =
     el.style.removeProperty('overflow');
     el.style.removeProperty('transition-duration');
     el.style.removeProperty('transition-property');
-    callback(el);
   }, duration);
 };
 
-const slideDown = (el: HTMLElement, duration = 300, callback = (el: HTMLElement) => {}) => {
+const slideDown = (el: HTMLElement, duration = 300) => {
   el.style.removeProperty('display');
   let display = window.getComputedStyle(el).display;
   if (display === 'none') display = 'block';
   el.style.display = display;
-  let height = el.offsetHeight;
+  const height = el.offsetHeight;
   el.style.overflow = 'hidden';
   el.style.height = '0';
   el.style.paddingTop = '0';
@@ -172,7 +171,6 @@ const slideDown = (el: HTMLElement, duration = 300, callback = (el: HTMLElement)
     el.style.removeProperty('overflow');
     el.style.removeProperty('transition-duration');
     el.style.removeProperty('transition-property');
-    callback(el);
   }, duration);
 };
 

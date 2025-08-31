@@ -1,5 +1,5 @@
 import React from 'react';
-import { Input, type InputProps, type InputRef } from 'antd';
+import { Input, type InputProps } from 'antd';
 
 // Define a type for the input type
 type InputType = 'text' | 'password' | 'number';

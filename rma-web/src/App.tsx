@@ -1,6 +1,5 @@
 import { RouterProvider } from 'react-router-dom';
 import router from './router';
-import ScrollToTop from './components/Base/ScrollToTop';
 import { ConfigProvider, App as AntApp, theme } from 'antd';
 import { NotificationProvider } from './components/Notification/NotificationProvider';
 import { useAppSelector } from './stores/hooks';
@@ -36,9 +35,9 @@ const App = () => {
             {isChecked ? (
               <div>Loading....</div>
             ) : (
-              <RouterProvider router={router}>
-                <ScrollToTop />
-              </RouterProvider>
+              <>
+                <RouterProvider router={router} />
+              </>
             )}
           </NotificationProvider>
         </AntApp>

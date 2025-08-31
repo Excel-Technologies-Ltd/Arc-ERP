@@ -107,38 +107,38 @@ export const EditableCell = <T extends Record<string, any>>({
   return <td {...restProps}>{childNode}</td>;
 };
 
-interface EditableTableComponents {
-  body: {
-    row: typeof EditableRow;
-    cell: typeof EditableCell;
-  };
-}
+// interface EditableTableComponents {
+//   body: {
+//     row: typeof EditableRow;
+//     cell: typeof EditableCell;
+//   };
+// }
 
-export const editableTableComponents: EditableTableComponents = {
-  body: {
-    row: EditableRow,
-    cell: EditableCell,
-  },
-};
+// export const editableTableComponents: EditableTableComponents = {
+//   body: {
+//     row: EditableRow,
+//     cell: EditableCell,
+//   },
+// };
 
-export const makeEditable = <T extends Record<string, any>>(
-  columns: any[],
-  handleSave: (record: T) => void
-) => {
-  return columns.map((col) => {
-    if (!col.editable) {
-      return col;
-    }
-    return {
-      ...col,
-      onCell: (record: T) => ({
-        record,
-        editable: col.editable,
-        dataIndex: col.dataIndex,
-        title: col.title,
-        handleSave,
-        inputType: col.inputType || 'text',
-      }),
-    };
-  });
-};
+// export const makeEditable = <T extends Record<string, any>>(
+//   columns: any[],
+//   handleSave: (record: T) => void
+// ) => {
+//   return columns.map((col) => {
+//     if (!col.editable) {
+//       return col;
+//     }
+//     return {
+//       ...col,
+//       onCell: (record: T) => ({
+//         record,
+//         editable: col.editable,
+//         dataIndex: col.dataIndex,
+//         title: col.title,
+//         handleSave,
+//         inputType: col.inputType || 'text',
+//       }),
+//     };
+//   });
+// };

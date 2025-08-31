@@ -1,11 +1,11 @@
 import { Control } from 'react-hook-form';
-import { AddSalesFormData } from './AddSalesInvoice';
 import { RenderController } from '@/lib/hook-form/RenderController';
 import AntSelect from '@/components/Base/Form/FormSelect/AntSelect';
 import AntDatePicker from '@/components/Base/DatePicker/AntDatePicker';
 import AntInput from '@/components/Base/Form/FormInput/AntInput';
+import { AddSalesFormData } from '@/types/pages/sales';
 
-const AddSalesForm = ({ control }: { control: Control<AddSalesFormData> }) => {
+const AddSalesDetailsForm = ({ control }: { control: Control<AddSalesFormData> }) => {
   return (
     <div className='mt-5 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-2 w-full bg-white dark:bg-darkmode-800 p-5 rounded-md drop-shadow-md intro-y'>
       {RenderController<AddSalesFormData>(
@@ -82,4 +82,4 @@ const AddSalesForm = ({ control }: { control: Control<AddSalesFormData> }) => {
   );
 };
 
-export default AddSalesForm;
+export default AddSalesDetailsForm;
