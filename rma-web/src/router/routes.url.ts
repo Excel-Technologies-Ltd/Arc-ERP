@@ -10,6 +10,8 @@ export const URLPurchaseDetails = (invoiceNumber: string = ':invoice_number') =>
 export const URLAddSalesInvoice = () => '/sales/add-sales-invoice';
 export const URLSalesInvoiceList = () => '/sales/sales-invoice-list';
 export const URLSalesReturn = () => '/sales/sales-return';
+export const URLSalesDetails = (invoiceNumber: string = ':invoice_number') =>
+  `/sales/view-sales-invoice/${invoiceNumber}`;
 
 // Stock URLS
 export const URLAddStock = () => '/add-stock-entry';

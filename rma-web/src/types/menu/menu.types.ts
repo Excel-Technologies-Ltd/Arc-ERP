@@ -1,7 +1,6 @@
-import { icons } from '@/components/Base/Lucide/icons';
-
 export interface Menu {
-  icon: keyof typeof icons;
+  icon?: any;
+  icon2?: any;
   title: string;
   badge?: number;
   pathname?: string;

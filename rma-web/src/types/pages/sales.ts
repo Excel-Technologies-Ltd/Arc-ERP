@@ -17,3 +17,12 @@ export interface AddSalesItemTableDataType {
   rate: number;
   total: number;
 }
+
+export interface SalesInvoiceListFilterFormData {
+  invoice_number: string;
+  customer_name: string;
+  territory_name: string;
+  sales_person_name: string;
+  status: string;
+  date_range: [Dayjs, Dayjs];
+}

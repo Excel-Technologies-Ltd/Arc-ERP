@@ -9,7 +9,6 @@ import {
   forceActiveMenu,
 } from './side-menu/side-bar';
 import Tippy from '@/components/Base/Tippy';
-import Lucide from '@/components/Base/Lucide';
 import clsx from 'clsx';
 import TopBar from '@/layout/top-bar';
 import MobileMenu from '@/layout/mobile-menu';
@@ -18,6 +17,8 @@ import useUserPermissions from '@/hooks/permission/useUserPermissions';
 import sideMenu from '@/layout/side-menu/side-menu';
 import { toRaw } from '@/utils/helper';
 import { UserRoles } from '@/utils/permissionUtils';
+import { MdOutlineKeyboardArrowDown } from 'react-icons/md';
+import Lucide from '@/components/Base/Lucide';
 
 function Main() {
   const navigate = useNavigate();
@@ -83,7 +84,7 @@ function Main() {
                       className={clsx([menu.active ? 'side-menu side-menu--active' : 'side-menu'])}
                     >
                       <div className='side-menu__icon'>
-                        <Lucide icon={menu.icon} />
+                        {menu.icon2 ? menu.icon2 : menu.icon && <Lucide icon={menu.icon} />}
                       </div>
                       <div className='side-menu__title'>
                         {menu.title}
@@ -94,7 +95,7 @@ function Main() {
                               { 'transform rotate-180': menu.activeDropdown },
                             ])}
                           >
-                            <Lucide icon='ChevronDown' />
+                            <MdOutlineKeyboardArrowDown />
                           </div>
                         )}
                       </div>
@@ -126,7 +127,9 @@ function Main() {
                               ])}
                             >
                               <div className='side-menu__icon'>
-                                <Lucide icon={subMenu.icon} />
+                                {subMenu.icon2
+                                  ? subMenu.icon2
+                                  : subMenu.icon && <Lucide icon={subMenu.icon} />}
                               </div>
                               <div className='side-menu__title'>
                                 {subMenu.title}
@@ -139,7 +142,7 @@ function Main() {
                                       },
                                     ])}
                                   >
-                                    <Lucide icon='ChevronDown' />
+                                    <MdOutlineKeyboardArrowDown />
                                   </div>
                                 )}
                               </div>
@@ -173,7 +176,9 @@ function Main() {
                                       ])}
                                     >
                                       <div className='side-menu__icon'>
-                                        <Lucide icon={lastSubMenu.icon} />
+                                        {lastSubMenu.icon2
+                                          ? lastSubMenu.icon2
+                                          : lastSubMenu.icon && <Lucide icon={lastSubMenu.icon} />}
                                       </div>
                                       <div className='side-menu__title'>{lastSubMenu.title}</div>
                                     </Tippy>

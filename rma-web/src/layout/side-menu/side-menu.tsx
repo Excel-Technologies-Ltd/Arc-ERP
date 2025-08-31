@@ -15,12 +15,16 @@ import {
   URLItemPrice,
 } from '@/router/routes.url';
 
+import { FaHome } from 'react-icons/fa';
+
 const menu: Array<Menu | 'divider'> = [
   {
-    icon: 'Home',
+    icon: 'ShoppingBag',
+    icon2: <FaHome />,
     title: 'Home',
     pathname: '/',
   },
+  'divider',
   {
     icon: 'ShoppingBag',
     title: 'Purchase',

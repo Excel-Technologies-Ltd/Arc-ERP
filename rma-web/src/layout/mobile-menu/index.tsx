@@ -4,7 +4,6 @@ import { useState, useEffect, createRef } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { toRaw } from '@/utils/helper';
 import { FormattedMenu, linkTo } from './mobile-menu';
-import Lucide from '@/components/Base/Lucide';
 import logoUrl from '@/assets/images/logo.svg';
 import clsx from 'clsx';
 import SimpleBar from 'simplebar';
@@ -12,6 +11,8 @@ import sideMenu from '@/layout/side-menu/side-menu';
 import useUserPermissions from '@/hooks/permission/useUserPermissions';
 import { nestedMenuWithPermissions } from '@/utils/menuUtils';
 import { UserRoles } from '@/utils/permissionUtils';
+import { MdOutlineKeyboardArrowDown } from 'react-icons/md';
+import Lucide from '@/components/Base/Lucide';
 
 function Main() {
   const navigate = useNavigate();
@@ -51,8 +52,7 @@ function Main() {
             <img alt='Midone Tailwind HTML Admin Template' className='w-6' src={logoUrl} />
           </a>
           <a href='#' onClick={(e) => e.preventDefault()}>
-            <Lucide
-              icon='BarChart2'
+            <MdOutlineKeyboardArrowDown
               className='w-8 h-8 text-white transform -rotate-90'
               onClick={() => {
                 setActiveMobileMenu(!activeMobileMenu);
@@ -77,8 +77,7 @@ function Main() {
               'group-[.mobile-menu--active]:visible group-[.mobile-menu--active]:opacity-100',
             ])}
           >
-            <Lucide
-              icon='XCircle'
+            <MdOutlineKeyboardArrowDown
               className='w-8 h-8 text-white transform -rotate-90'
               onClick={() => {
                 setActiveMobileMenu(!activeMobileMenu);
@@ -102,7 +101,7 @@ function Main() {
                     }}
                   >
                     <div className='menu__icon'>
-                      <Lucide icon={menu.icon} />
+                      {menu.icon2 ? menu.icon2 : menu.icon && <Lucide icon={menu.icon} />}
                     </div>
                     <div className='menu__title'>
                       {menu.title}
@@ -113,7 +112,7 @@ function Main() {
                             menu.activeDropdown && 'transform rotate-180',
                           ])}
                         >
-                          <Lucide icon='ChevronDown' />
+                          <MdOutlineKeyboardArrowDown />
                         </div>
                       )}
                     </div>
@@ -137,7 +136,9 @@ function Main() {
                             }}
                           >
                             <div className='menu__icon'>
-                              <Lucide icon={subMenu.icon} />
+                              {subMenu.icon2
+                                ? subMenu.icon2
+                                : subMenu.icon && <Lucide icon={subMenu.icon} />}
                             </div>
                             <div className='menu__title'>
                               {subMenu.title}
@@ -148,7 +149,7 @@ function Main() {
                                     subMenu.activeDropdown && 'transform rotate-180',
                                   ])}
                                 >
-                                  <Lucide icon='ChevronDown' />
+                                  <MdOutlineKeyboardArrowDown />
                                 </div>
                               )}
                             </div>
@@ -174,7 +175,9 @@ function Main() {
                                     }}
                                   >
                                     <div className='menu__icon'>
-                                      <Lucide icon={lastSubMenu.icon} />
+                                      {lastSubMenu.icon2
+                                        ? lastSubMenu.icon2
+                                        : lastSubMenu.icon && <Lucide icon={lastSubMenu.icon} />}
                                     </div>
                                     <div className='menu__title'>{lastSubMenu.title}</div>
                                   </a>

@@ -1,3 +1,4 @@
+import { URLPurchaseDetails } from '@/router/routes.url';
 import { PurchaseInvoice } from '@/types/Accounts/PurchaseInvoice';
 import { TableColumn } from '@/types/Table/table-types';
 import { Link } from 'react-router-dom';
@@ -14,7 +15,7 @@ export const PurchaseTableColumn = () => {
       title: 'INVOICE NO',
       render: (text) => (
         <Link
-          to={`/purchase/view-purchase-invoice/${text}`}
+          to={`${URLPurchaseDetails(text.toString())}`}
           className='underline decoration-dotted whitespace-nowrap'
         >
           {text}

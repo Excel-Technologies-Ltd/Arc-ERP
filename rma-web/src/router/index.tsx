@@ -8,11 +8,12 @@ import {
   URLPurchaseDetails,
   URLCustomerProfile,
   URLErrorPage,
+  URLSalesDetails,
 } from './routes.url';
 import PrivateGuard from '@/guard/PrivateGuard';
 import PublicGuard from '@/guard/PublicGuard';
 import { lazy } from 'react';
-import Loadable from '@/shared/loadable/Loadable';
+import Loadable from '@/components/loadable/Loadable';
 import PermissionGuard from '@/guard/PermissionGuard';
 
 // Lazy Components
@@ -32,6 +33,9 @@ const CustomerProfile = Loadable(
 const Layout = Loadable(lazy(() => import('../layout/index')));
 const Login = Loadable(lazy(() => import('../pages/Login')));
 const ErrorPage = Loadable(lazy(() => import('../pages/ErrorPage')));
+const ViewSalesInvoice = Loadable(
+  lazy(() => import('../pages/sales/sales-invoice-list/view-sales-invoice/ViewSalesInvoice'))
+);
 
 const routes = [
   {
@@ -75,6 +79,14 @@ const routes = [
             element: (
               <PermissionGuard entity='Sales Invoice' action='read'>
                 <SalesInvoiceList />
+              </PermissionGuard>
+            ),
+          },
+          {
+            path: URLSalesDetails(),
+            element: (
+              <PermissionGuard entity='Sales Invoice' action='read'>
+                <ViewSalesInvoice />
               </PermissionGuard>
             ),
           },
