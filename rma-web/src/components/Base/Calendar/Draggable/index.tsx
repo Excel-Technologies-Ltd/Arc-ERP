@@ -1,10 +1,10 @@
-import { createRef, useEffect } from "react";
-import { Draggable as FullCalendarDraggable } from "@fullcalendar/interaction";
+import { createRef, useEffect } from 'react';
+import { Draggable as FullCalendarDraggable } from '@fullcalendar/interaction';
 
 export interface DraggableProps
   extends React.PropsWithChildren,
-    React.ComponentPropsWithoutRef<"div"> {
-  options: FullCalendarDraggable["settings"];
+    React.ComponentPropsWithoutRef<'div'> {
+  options: FullCalendarDraggable['settings'];
 }
 
 const init = (el: HTMLDivElement, props: DraggableProps) => {

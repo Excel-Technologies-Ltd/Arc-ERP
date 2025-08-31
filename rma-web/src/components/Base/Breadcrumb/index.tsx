@@ -1,10 +1,8 @@
-import clsx from "clsx";
-import { Link } from "react-router-dom";
-import { createContext, useContext } from "react";
+import clsx from 'clsx';
+import { Link } from 'react-router-dom';
+import { createContext, useContext } from 'react';
 
-interface BreadcrumbProps
-  extends React.PropsWithChildren,
-    React.ComponentPropsWithoutRef<"nav"> {
+interface BreadcrumbProps extends React.PropsWithChildren, React.ComponentPropsWithoutRef<'nav'> {
   light?: boolean;
   children: React.ReactElement | React.ReactElement[];
 }
@@ -22,11 +20,11 @@ function Breadcrumb({ className, light, children }: BreadcrumbProps) {
         light: light,
       }}
     >
-      <nav className={clsx(["flex", className])} aria-label="breadcrumb">
+      <nav className={clsx(['flex', className])} aria-label='breadcrumb'>
         <ol
           className={clsx([
-            "flex items-center text-primary dark:text-slate-300",
-            { "text-white/90": light },
+            'flex items-center text-primary dark:text-slate-300',
+            { 'text-white/90': light },
           ])}
         >
           {Array.isArray(children)
@@ -46,9 +44,7 @@ function Breadcrumb({ className, light, children }: BreadcrumbProps) {
   );
 }
 
-interface LinkProps
-  extends React.PropsWithChildren,
-    React.ComponentPropsWithoutRef<"li"> {
+interface LinkProps extends React.PropsWithChildren, React.ComponentPropsWithoutRef<'li'> {
   to?: string;
   active?: boolean;
   key?: number;
@@ -56,7 +52,7 @@ interface LinkProps
 
 Breadcrumb.Link = ({
   className,
-  to = "",
+  to = '',
   active = false,
   children,
   key = 0,
@@ -67,18 +63,16 @@ Breadcrumb.Link = ({
     <li
       className={clsx([
         className,
-        key > 0 && "relative ml-5 pl-0.5",
+        key > 0 && 'relative ml-5 pl-0.5',
         !breadcrumb.light &&
           key > 0 &&
           "before:content-[''] before:w-[14px] before:h-[14px] before:bg-chevron-black before:transform before:rotate-[-90deg] before:bg-[length:100%] before:-ml-[1.125rem] before:absolute before:my-auto before:inset-y-0",
         breadcrumb.light &&
           key > 0 &&
           "before:content-[''] before:w-[14px] before:h-[14px] before:bg-chevron-white before:transform before:rotate-[-90deg] before:bg-[length:100%] before:-ml-[1.125rem] before:absolute before:my-auto before:inset-y-0",
-        key > 0 && "dark:before:bg-bredcrumb-chevron-darkmode",
-        !breadcrumb.light &&
-          active &&
-          "text-slate-600 cursor-text dark:text-slate-400",
-        breadcrumb.light && active && "text-white/70",
+        key > 0 && 'dark:before:bg-bredcrumb-chevron-darkmode',
+        !breadcrumb.light && active && 'text-slate-600 cursor-text dark:text-slate-400',
+        breadcrumb.light && active && 'text-white/70',
       ])}
       {...attr}
     >

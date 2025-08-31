@@ -1,10 +1,10 @@
-import "@/assets/css/vendors/zoom-vanilla.css";
-import "zoom-vanilla.js/dist/zoom-vanilla.min.js";
+import '@/assets/css/vendors/zoom-vanilla.css';
+import 'zoom-vanilla.js/dist/zoom-vanilla.min.js';
 
-type ImageZoomProps = React.ComponentPropsWithoutRef<"img">;
+type ImageZoomProps = React.ComponentPropsWithoutRef<'img'>;
 
 function ImageZoom(props: ImageZoomProps) {
-  return <img data-action="zoom" {...props} />;
+  return <img data-action='zoom' {...props} />;
 }
 
 export default ImageZoom;
