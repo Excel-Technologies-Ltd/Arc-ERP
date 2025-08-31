@@ -1,7 +1,6 @@
 import { useParams } from 'react-router-dom';
 import { getPurchaseInvoiceDetails } from '@/services/purchase/purchase';
 import Button from '@/components/Base/Button';
-import Lucide from '@/components/Base/Lucide';
 import { Tag, Flex } from 'antd';
 import { useForm } from 'react-hook-form';
 import Serials from './serials/Serials';
@@ -70,34 +69,35 @@ const ViewPurchase = () => {
               <div className='text-base font-medium truncate'>Purchase Details</div>
             </div>
             <div className='flex items-center'>
-              <Lucide icon='Clipboard' className='w-4 h-4 mr-2 text-slate-500' />
-              Invoice:
+              {/* <Lucide icon='Clipboard' className='w-4 h-4 mr-2 text-slate-500' /> */}
+              Clipboard Invoice:
               <span className='ml-1 underline decoration-dotted'>
                 {purchaseInvoiceDetails?.name}
               </span>
             </div>
             <div className='flex items-center mt-3'>
-              <Lucide icon='Clipboard' className='w-4 h-4 mr-2 text-slate-500' />
-              Order:
+              {/* <Lucide icon='Clipboard' className='w-4 h-4 mr-2 text-slate-500' /> */}
+              Clipboard Order:
               <span className='ml-1 underline decoration-dotted'>
                 {purchaseInvoiceDetails?.items.map((i) => i.purchase_order).join(', ')}
               </span>
             </div>
 
             <div className='flex items-center mt-3'>
-              <Lucide icon='Calendar' className='w-4 h-4 mr-2 text-slate-500' />
-              Supplier: {purchaseInvoiceDetails?.supplier_name}
+              {/* <Lucide icon='Calendar' className='w-4 h-4 mr-2 text-slate-500' /> */}
+              Calendar Supplier: {purchaseInvoiceDetails?.supplier_name}
             </div>
             <div className='flex items-center mt-3'>
-              <Lucide icon='Calendar' className='w-4 h-4 mr-2 text-slate-500' />
-              Posting Date: {purchaseInvoiceDetails?.posting_date}
+              {/* <Lucide icon='Calendar' className='w-4 h-4 mr-2 text-slate-500' /> */}
+              Calendar Posting Date: {purchaseInvoiceDetails?.posting_date}
             </div>
             <div className='flex items-center mt-3'>
-              <Lucide icon='MapPin' className='w-4 h-4 mr-2 text-slate-500' />
-              Warehouse: {purchaseInvoiceDetails?.set_warehouse}
+              {/* <Lucide icon='MapPin' className='w-4 h-4 mr-2 text-slate-500' /> */}
+              MapPin Warehouse: {purchaseInvoiceDetails?.set_warehouse}
             </div>
             <div className='flex items-center mt-3'>
-              <Lucide icon='Clock' className='w-4 h-4 mr-2 text-slate-500' />
+              {/* <Lucide icon='Clock' className='w-4 h-4 mr-2 text-slate-500' /> */}
+              Clock
               <span className='mr-2'>Status:</span>
               <Flex gap='4px 0' wrap>
                 <Tag color='blue'>{purchaseInvoiceDetails?.status}</Tag>

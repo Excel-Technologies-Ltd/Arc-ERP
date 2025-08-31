@@ -2,7 +2,6 @@ import _ from 'lodash';
 import clsx from 'clsx';
 import fakerData from '@/utils/faker';
 import Button from '@/components/Base/Button';
-import Lucide from '@/components/Base/Lucide';
 import Tippy from '@/components/Base/Tippy';
 import ReportDonutChart from '@/components/ReportDonutChart';
 import ReportLineChart from '@/components/ReportLineChart';
@@ -19,7 +18,8 @@ function Main() {
             <div className='flex items-center h-10 intro-y'>
               <h2 className='mr-5 text-lg font-medium truncate'>General Report</h2>
               <a href='' className='flex items-center ml-auto text-primary'>
-                <Lucide icon='RefreshCcw' className='w-4 h-4 mr-3' /> Reload Data
+                {/* <Lucide icon='RefreshCcw' className='w-4 h-4 mr-3' /> */}
+                Reload Data
               </a>
             </div>
             <div className='grid grid-cols-12 gap-6 mt-5'>
@@ -32,7 +32,8 @@ function Main() {
                 >
                   <div className='p-5 box'>
                     <div className='flex'>
-                      <Lucide icon='ShoppingCart' className='w-[28px] h-[28px] text-primary' />
+                      {/* <Lucide icon='ShoppingCart' className='w-[28px] h-[28px] text-primary' /> */}
+                      ShoppingCart
                       <div className='ml-auto'>
                         <Tippy
                           as='div'
@@ -40,7 +41,7 @@ function Main() {
                           content='33% Higher than last month'
                         >
                           33%
-                          <Lucide icon='ChevronUp' className='w-4 h-4 ml-0.5' />
+                          {/* <Lucide icon='ChevronUp' className='w-4 h-4 ml-0.5' /> */}
                         </Tippy>
                       </div>
                     </div>
@@ -58,7 +59,8 @@ function Main() {
                 >
                   <div className='p-5 box'>
                     <div className='flex'>
-                      <Lucide icon='CreditCard' className='w-[28px] h-[28px] text-pending' />
+                      {/* <Lucide icon='CreditCard' className='w-[28px] h-[28px] text-pending' /> */}
+                      CreditCard
                       <div className='ml-auto'>
                         <Tippy
                           as='div'
@@ -66,7 +68,7 @@ function Main() {
                           content='2% Lower than last month'
                         >
                           2%
-                          <Lucide icon='ChevronDown' className='w-4 h-4 ml-0.5' />
+                          {/* <Lucide icon='ChevronDown' className='w-4 h-4 ml-0.5' /> */}
                         </Tippy>
                       </div>
                     </div>
@@ -84,14 +86,16 @@ function Main() {
                 >
                   <div className='p-5 box'>
                     <div className='flex'>
-                      <Lucide icon='Monitor' className='w-[28px] h-[28px] text-warning' />
+                      {/* <Lucide icon='Monitor' className='w-[28px] h-[28px] text-warning' /> */}
+                      Monitor
                       <div className='ml-auto'>
                         <Tippy
                           as='div'
                           className='cursor-pointer bg-success py-[3px] flex rounded-full text-white text-xs pl-2 pr-1 items-center font-medium'
                           content='12% Higher than last month'
                         >
-                          12% <Lucide icon='ChevronUp' className='w-4 h-4 ml-0.5' />
+                          12%
+                          {/* <Lucide icon='ChevronUp' className='w-4 h-4 ml-0.5' /> */}
                         </Tippy>
                       </div>
                     </div>
@@ -109,14 +113,16 @@ function Main() {
                 >
                   <div className='p-5 box'>
                     <div className='flex'>
-                      <Lucide icon='User' className='w-[28px] h-[28px] text-success' />
+                      {/* <Lucide icon='User' className='w-[28px] h-[28px] text-success' /> */}
+                      User
                       <div className='ml-auto'>
                         <Tippy
                           as='div'
                           className='cursor-pointer bg-success py-[3px] flex rounded-full text-white text-xs pl-2 pr-1 items-center font-medium'
                           content='22% Higher than last month'
                         >
-                          22% <Lucide icon='ChevronUp' className='w-4 h-4 ml-0.5' />
+                          22%
+                          {/* <Lucide icon='ChevronUp' className='w-4 h-4 ml-0.5' /> */}
                         </Tippy>
                       </div>
                     </div>
@@ -151,7 +157,8 @@ function Main() {
                 <Menu className='mt-5 md:ml-auto md:mt-0'>
                   <Menu.Button as={Button} variant='outline-secondary' className='font-normal'>
                     Filter by Category
-                    <Lucide icon='ChevronDown' className='w-4 h-4 ml-2' />
+                    {/* <Lucide icon='ChevronDown' className='w-4 h-4 ml-2' /> */}
+                    ChevronDown
                   </Menu.Button>
                   <Menu.Items className='w-40 h-32 overflow-y-auto'>
                     <Menu.Item>PC & Laptop</Menu.Item>
@@ -317,16 +324,19 @@ function Main() {
               <div className='flex items-center h-10 intro-x'>
                 <h2 className='mr-5 text-lg font-medium truncate'>Schedules</h2>
                 <a href='' className='flex items-center ml-auto truncate text-primary'>
-                  <Lucide icon='Plus' className='w-4 h-4 mr-1' /> Add New Schedules
+                  {/* <Lucide icon='Plus' className='w-4 h-4 mr-1' /> */}
+                  Plus Add New Schedules
                 </a>
               </div>
               <div className='mt-5'>
                 <div className='intro-x box'>
                   <div className='p-5'>
                     <div className='flex'>
-                      <Lucide icon='ChevronLeft' className='w-5 h-5 text-slate-500' />
+                      {/*   <Lucide icon='ChevronLeft' className='w-5 h-5 text-slate-500' /> */}
+                      ChevronLeft
                       <div className='mx-auto text-base font-medium'>April</div>
-                      <Lucide icon='ChevronRight' className='w-5 h-5 text-slate-500' />
+                      {/* <Lucide icon='ChevronRight' className='w-5 h-5 text-slate-500' /> */}
+                      ChevronRight
                     </div>
                     <div className='grid grid-cols-7 gap-4 mt-5 text-center'>
                       <div className='font-medium'>Su</div>

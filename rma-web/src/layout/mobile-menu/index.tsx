@@ -2,24 +2,23 @@ import '@/assets/css/vendors/simplebar.css';
 import '@/assets/css/components/mobile-menu.css';
 import { useState, useEffect, createRef } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { toRaw } from '@/utils/helper';
 import { FormattedMenu, linkTo } from './mobile-menu';
 import logoUrl from '@/assets/images/logo.svg';
 import clsx from 'clsx';
 import SimpleBar from 'simplebar';
-import sideMenu from '@/layout/side-menu/side-menu';
 import useUserPermissions from '@/hooks/permission/useUserPermissions';
 import { nestedMenuWithPermissions } from '@/utils/menuUtils';
 import { UserRoles } from '@/utils/permissionUtils';
 import { MdOutlineKeyboardArrowDown } from 'react-icons/md';
-import Lucide from '@/components/Base/Lucide';
+import MainMenu from '../side-menu/MainMenu';
 
 function Main() {
   const navigate = useNavigate();
   const location = useLocation();
+  const sideMenu = MainMenu();
   const userRoles = useUserPermissions();
   const [formattedMenu, setFormattedMenu] = useState<Array<FormattedMenu | 'divider'>>([]);
-  const menu = () => nestedMenuWithPermissions(toRaw(sideMenu), location, userRoles as UserRoles);
+  const menu = () => nestedMenuWithPermissions(sideMenu, location, userRoles as UserRoles);
   const [activeMobileMenu, setActiveMobileMenu] = useState(false);
   const scrollableRef = createRef<HTMLDivElement>();
 
@@ -100,9 +99,7 @@ function Main() {
                       setFormattedMenu([...formattedMenu]);
                     }}
                   >
-                    <div className='menu__icon'>
-                      {menu.icon2 ? menu.icon2 : menu.icon && <Lucide icon={menu.icon} />}
-                    </div>
+                    <div className='menu__icon'>{menu.icon}</div>
                     <div className='menu__title'>
                       {menu.title}
                       {menu.subMenu && (
@@ -135,11 +132,7 @@ function Main() {
                               setFormattedMenu([...formattedMenu]);
                             }}
                           >
-                            <div className='menu__icon'>
-                              {subMenu.icon2
-                                ? subMenu.icon2
-                                : subMenu.icon && <Lucide icon={subMenu.icon} />}
-                            </div>
+                            <div className='menu__icon'>{subMenu.icon}</div>
                             <div className='menu__title'>
                               {subMenu.title}
                               {subMenu.subMenu && (
@@ -174,11 +167,7 @@ function Main() {
                                       setFormattedMenu([...formattedMenu]);
                                     }}
                                   >
-                                    <div className='menu__icon'>
-                                      {lastSubMenu.icon2
-                                        ? lastSubMenu.icon2
-                                        : lastSubMenu.icon && <Lucide icon={lastSubMenu.icon} />}
-                                    </div>
+                                    <div className='menu__icon'>{lastSubMenu.icon}</div>
                                     <div className='menu__title'>{lastSubMenu.title}</div>
                                   </a>
                                 </li>

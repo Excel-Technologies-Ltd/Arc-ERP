@@ -1,3 +1,3 @@
-import * as lucideIcons from 'lucide-react';
+// import * as lucideIcons from 'lucide-react';
 
-export const { icons } = lucideIcons;
+// export const { icons } = lucideIcons;

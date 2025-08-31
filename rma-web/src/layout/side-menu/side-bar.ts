@@ -52,7 +52,6 @@ const nestedMenu = (menu: Array<Menu | 'divider'>, location: Location, userRoles
     if (typeof item !== 'string') {
       const menuItem: FormattedMenu = {
         icon: item.icon,
-        icon2: item.icon2,
         title: item.title,
         pathname: item.pathname,
         subMenu: item.subMenu,

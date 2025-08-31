@@ -2,7 +2,6 @@ import { useAppDispatch, useAppSelector } from '@/stores/hooks';
 import { selectColorScheme, setColorScheme, ColorSchemes } from '@/stores/colorSchemeSlice';
 import { selectDarkMode, setDarkMode } from '@/stores/darkModeSlice';
 import { Slideover } from '@/components/Base/Headless';
-import Lucide from '@/components/Base/Lucide';
 import clsx from 'clsx';
 
 function Main({
@@ -57,7 +56,7 @@ function Main({
               setThemeSwitcherSlideover && setThemeSwitcherSlideover(false);
             }}
           >
-            <Lucide className='w-3 h-3 sm:w-8 sm:h-8 stroke-[1]' icon='X' />
+            {/* <Lucide className='w-3 h-3 sm:w-8 sm:h-8 stroke-[1]' icon='X' /> */}X
           </a>
           <Slideover.Description className='p-0'>
             <div className='flex flex-col'>

@@ -14,19 +14,17 @@ import TopBar from '@/layout/top-bar';
 import MobileMenu from '@/layout/mobile-menu';
 import { nestedMenuWithPermissions } from '@/utils/menuUtils';
 import useUserPermissions from '@/hooks/permission/useUserPermissions';
-import sideMenu from '@/layout/side-menu/side-menu';
-import { toRaw } from '@/utils/helper';
 import { UserRoles } from '@/utils/permissionUtils';
 import { MdOutlineKeyboardArrowDown } from 'react-icons/md';
-import Lucide from '@/components/Base/Lucide';
+import MainMenu from './side-menu/MainMenu';
 
 function Main() {
   const navigate = useNavigate();
   const location = useLocation();
-  // Avoid expensive logs / renders
+  const sideMenu = MainMenu();
   const userRoles = useUserPermissions();
   const [formattedMenu, setFormattedMenu] = useState<Array<FormattedMenu | 'divider'>>([]);
-  const menu = () => nestedMenuWithPermissions(toRaw(sideMenu), location, userRoles as UserRoles);
+  const menu = () => nestedMenuWithPermissions(sideMenu, location, userRoles as UserRoles);
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
 
   // Recompute menu when route or user roles/permissions change
@@ -83,9 +81,7 @@ function Main() {
                       }}
                       className={clsx([menu.active ? 'side-menu side-menu--active' : 'side-menu'])}
                     >
-                      <div className='side-menu__icon'>
-                        {menu.icon2 ? menu.icon2 : menu.icon && <Lucide icon={menu.icon} />}
-                      </div>
+                      <div className='side-menu__icon'>{menu.icon}</div>
                       <div className='side-menu__title'>
                         {menu.title}
                         {menu.subMenu && (
@@ -126,11 +122,7 @@ function Main() {
                                 subMenu.active ? 'side-menu side-menu--active' : 'side-menu',
                               ])}
                             >
-                              <div className='side-menu__icon'>
-                                {subMenu.icon2
-                                  ? subMenu.icon2
-                                  : subMenu.icon && <Lucide icon={subMenu.icon} />}
-                              </div>
+                              <div className='side-menu__icon'>{subMenu.icon}</div>
                               <div className='side-menu__title'>
                                 {subMenu.title}
                                 {subMenu.subMenu && (
@@ -175,11 +167,7 @@ function Main() {
                                           : 'side-menu',
                                       ])}
                                     >
-                                      <div className='side-menu__icon'>
-                                        {lastSubMenu.icon2
-                                          ? lastSubMenu.icon2
-                                          : lastSubMenu.icon && <Lucide icon={lastSubMenu.icon} />}
-                                      </div>
+                                      <div className='side-menu__icon'>{lastSubMenu.icon}</div>
                                       <div className='side-menu__title'>{lastSubMenu.title}</div>
                                     </Tippy>
                                   </li>

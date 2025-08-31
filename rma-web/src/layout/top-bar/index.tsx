@@ -1,5 +1,4 @@
 import { Link } from 'react-router-dom';
-import Lucide from '@/components/Base/Lucide';
 import logoUrl from '@/assets/images/logo.svg';
 import Breadcrumb from '@/components/Base/Breadcrumb';
 import { Menu, Popover } from '@/components/Base/Headless';
@@ -12,6 +11,7 @@ import { resetPermissions } from '@/stores/permissionSlice';
 import { useNotify } from '@/hooks/useNotify';
 import { useState } from 'react';
 import ThemeSwitcher from '@/themes/ThemeSwitcher';
+import { CiSettings } from 'react-icons/ci';
 
 function Main(props: { layout?: 'side-menu' }) {
   const { logout } = useFrappeAuth();
@@ -80,7 +80,8 @@ function Main(props: { layout?: 'side-menu' }) {
           {/* END: Breadcrumb */}
 
           <button onClick={handleThemeSwitcher} className='mr-4 intro-x sm:mr-6'>
-            <Lucide icon='Settings' className='w-5 h-5 dark:text-slate-500 text-white/70' />
+            {/* <Lucide icon='Settings' className='w-5 h-5 dark:text-slate-500 text-white/70' /> */}
+            <CiSettings className='w-5 h-5 dark:text-slate-500 text-white/70' />
           </button>
 
           {/* BEGIN: Notifications */}
@@ -91,7 +92,8 @@ function Main(props: { layout?: 'side-menu' }) {
               before:content-[''] before:w-[8px] before:h-[8px] before:rounded-full before:absolute before:top-[-2px] before:right-0 before:bg-danger
             "
             >
-              <Lucide icon='Bell' className='w-5 h-5 dark:text-slate-500' />
+              {/* <Lucide icon='Bell' className='w-5 h-5 dark:text-slate-500' /> */}
+              bell
             </Popover.Button>
             <Popover.Panel className='w-[280px] sm:w-[350px] p-5 mt-2'>
               <div className='mb-5 font-medium'>Notifications</div>
@@ -143,20 +145,25 @@ function Main(props: { layout?: 'side-menu' }) {
               </Menu.Header>
               <Menu.Divider className='bg-white/[0.08]' />
               <Menu.Item className='hover:bg-white/5'>
-                <Lucide icon='User' className='w-4 h-4 mr-2' /> Profile
+                {/* <Lucide icon='User' className='w-4 h-4 mr-2' />  */}
+                Profile
               </Menu.Item>
               <Menu.Item className='hover:bg-white/5'>
-                <Lucide icon='FilePenLine' className='w-4 h-4 mr-2' /> Add Account
+                {/* <Lucide icon='FilePenLine' className='w-4 h-4 mr-2' />  */}
+                Add Account
               </Menu.Item>
               <Menu.Item className='hover:bg-white/5'>
-                <Lucide icon='Lock' className='w-4 h-4 mr-2' /> Reset Password
+                {/* <Lucide icon='Lock' className='w-4 h-4 mr-2' /> */}
+                Reset Password
               </Menu.Item>
               <Menu.Item className='hover:bg-white/5'>
-                <Lucide icon='HelpCircle' className='w-4 h-4 mr-2' /> Help
+                {/* <Lucide icon='HelpCircle' className='w-4 h-4 mr-2' /> */}
+                Help
               </Menu.Item>
               <Menu.Divider className='bg-white/[0.08]' />
               <Menu.Item className='hover:bg-white/5' onClick={handleLogout}>
-                <Lucide icon='ToggleRight' className='w-4 h-4 mr-2' /> Logout
+                {/* <Lucide icon='ToggleRight' className='w-4 h-4 mr-2' /> */}
+                Logout
               </Menu.Item>
             </Menu.Items>
           </Menu>

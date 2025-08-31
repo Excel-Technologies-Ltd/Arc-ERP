@@ -1,6 +1,5 @@
 export interface Menu {
-  icon?: any;
-  icon2?: any;
+  icon: React.ReactNode;
   title: string;
   badge?: number;
   pathname?: string;
