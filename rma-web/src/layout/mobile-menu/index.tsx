@@ -9,7 +9,7 @@ import SimpleBar from 'simplebar';
 import useUserPermissions from '@/hooks/permission/useUserPermissions';
 import { nestedMenuWithPermissions } from '@/utils/menuUtils';
 import { UserRoles } from '@/utils/permissionUtils';
-import { MdOutlineKeyboardArrowDown } from 'react-icons/md';
+import { MdOutlineKeyboardArrowDown } from '@/components/Base/Icons';
 import MainMenu from '../side-menu/MainMenu';
 
 function Main() {

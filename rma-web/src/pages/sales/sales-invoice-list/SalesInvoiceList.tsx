@@ -1,6 +1,6 @@
 import Button from '@/components/Base/Button';
 import CustomTable from '@/components/Table/CustomTable';
-import SalesListFilterForm from '@/features/sales/SalesListFilterForm';
+import { SalesListFilterForm } from '@/features/sales';
 import { URLSalesDetails } from '@/router/routes.url';
 import { SalesInvoice } from '@/types/Accounts/SalesInvoice';
 import { SalesInvoiceListFilterFormData } from '@/types/pages/sales';
@@ -13,10 +13,12 @@ const SalesInvoiceList = () => {
     mode: 'onChange',
   });
 
+  // Handle Clear
   const handleClear = () => {
     reset();
   };
 
+  // Table Column
   const Column: TableColumn<SalesInvoice>[] = [
     {
       key: 'sl',

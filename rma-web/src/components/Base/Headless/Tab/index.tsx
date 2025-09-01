@@ -70,7 +70,7 @@ Tab.Button = <C extends React.ElementType = 'a'>({
   React.ComponentPropsWithoutRef<C>) => {
   const tab = useContext(tabContext);
   const list = useContext(listContext);
-  const Component = as || 'a';
+  const Component = as || 'span';
 
   return (
     <Component

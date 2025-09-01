@@ -3,10 +3,10 @@ import AntSelect from '@/components/Base/Form/FormSelect/AntSelect';
 import { RenderController } from '@/lib/hook-form/RenderController';
 import { getWarehouseList } from '@/services/common/commonApi';
 import { Control } from 'react-hook-form';
-import { AssignSerialFormData } from '../ViewPurchase';
 import { Button as AntButton, Upload } from 'antd';
 import { UploadOutlined } from '@ant-design/icons';
 import AntInput from '@/components/Base/Form/FormInput/AntInput';
+import { AssignSerialFormData } from '@/types/pages/purchase';
 
 const SerialAssignForm = ({ control }: { control: Control<AssignSerialFormData> }) => {
   // Api Call

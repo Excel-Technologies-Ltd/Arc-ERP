@@ -2,7 +2,7 @@ import React from 'react';
 import { Button, ButtonProps } from 'antd';
 
 interface AntButtonProps extends ButtonProps {
-  label: string;
+  label?: string;
 }
 
 const AntButton: React.FC<AntButtonProps> = ({ label, ...props }) => {

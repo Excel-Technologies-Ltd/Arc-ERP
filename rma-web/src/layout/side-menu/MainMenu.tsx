@@ -1,5 +1,5 @@
 import { Menu } from '@/types/menu/menu.types';
-import { FaHome, FaShoppingBag } from 'react-icons/fa';
+import { FaHome, FaShoppingBag } from '@/components/Base/Icons';
 import {
   URLPurchase,
   URLSalesInvoiceList,

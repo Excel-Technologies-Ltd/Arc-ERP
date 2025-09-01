@@ -15,7 +15,7 @@ import MobileMenu from '@/layout/mobile-menu';
 import { nestedMenuWithPermissions } from '@/utils/menuUtils';
 import useUserPermissions from '@/hooks/permission/useUserPermissions';
 import { UserRoles } from '@/utils/permissionUtils';
-import { MdOutlineKeyboardArrowDown } from 'react-icons/md';
+import { MdOutlineKeyboardArrowDown } from '@/components/Base/Icons';
 import MainMenu from './side-menu/MainMenu';
 
 function Main() {

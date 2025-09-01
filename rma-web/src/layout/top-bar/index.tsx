@@ -1,6 +1,5 @@
 import { Link } from 'react-router-dom';
 import logoUrl from '@/assets/images/logo.svg';
-import Breadcrumb from '@/components/Base/Breadcrumb';
 import { Menu, Popover } from '@/components/Base/Headless';
 import fakerData from '@/utils/faker';
 import _ from 'lodash';
@@ -11,7 +10,8 @@ import { resetPermissions } from '@/stores/permissionSlice';
 import { useNotify } from '@/hooks/useNotify';
 import { useState } from 'react';
 import ThemeSwitcher from '@/themes/ThemeSwitcher';
-import { CiSettings } from 'react-icons/ci';
+import { CiSettings, IoIosNotificationsOutline } from '@/components/Base/Icons';
+import Breadcrumbs from './BreadCumbs';
 
 function Main(props: { layout?: 'side-menu' }) {
   const { logout } = useFrappeAuth();
@@ -65,22 +65,10 @@ function Main(props: { layout?: 'side-menu' }) {
           </Link>
           {/* END: Logo */}
           {/* BEGIN: Breadcrumb */}
-          <Breadcrumb
-            light
-            className={clsx([
-              'h-[45px] md:ml-10 md:border-l border-white/[0.08] dark:border-white/[0.08] mr-auto -intro-x',
-              'md:pl-6',
-            ])}
-          >
-            <Breadcrumb.Link to='/'>Application</Breadcrumb.Link>
-            <Breadcrumb.Link to='/' active={true}>
-              Dashboard
-            </Breadcrumb.Link>
-          </Breadcrumb>
+          <Breadcrumbs />
           {/* END: Breadcrumb */}
 
           <button onClick={handleThemeSwitcher} className='mr-4 intro-x sm:mr-6'>
-            {/* <Lucide icon='Settings' className='w-5 h-5 dark:text-slate-500 text-white/70' /> */}
             <CiSettings className='w-5 h-5 dark:text-slate-500 text-white/70' />
           </button>
 
@@ -92,8 +80,7 @@ function Main(props: { layout?: 'side-menu' }) {
               before:content-[''] before:w-[8px] before:h-[8px] before:rounded-full before:absolute before:top-[-2px] before:right-0 before:bg-danger
             "
             >
-              {/* <Lucide icon='Bell' className='w-5 h-5 dark:text-slate-500' /> */}
-              bell
+              <IoIosNotificationsOutline className='w-5 h-5 dark:text-slate-500' />
             </Popover.Button>
             <Popover.Panel className='w-[280px] sm:w-[350px] p-5 mt-2'>
               <div className='mb-5 font-medium'>Notifications</div>

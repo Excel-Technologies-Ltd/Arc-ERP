@@ -5,16 +5,10 @@ import { Tag, Flex } from 'antd';
 import { useForm } from 'react-hook-form';
 import Serials from './serials/Serials';
 import SerialAssignForm from './serials/SerialAssignForm';
-import dayjs, { type Dayjs } from 'dayjs';
+import dayjs from 'dayjs';
 import { useMemo } from 'react';
-
-export type AssignSerialFormData = {
-  warehouse: string | undefined;
-  date: Dayjs | undefined;
-  file: FileList | undefined;
-  fromRange: string;
-  toRange: string;
-};
+import { LiaFileInvoiceSolid } from '@/components/Base/Icons';
+import { AssignSerialFormData } from '@/types/pages/purchase';
 
 const mapApiToForm = (pi?: any): AssignSerialFormData => ({
   warehouse: pi?.set_warehouse ?? undefined,
@@ -69,35 +63,34 @@ const ViewPurchase = () => {
               <div className='text-base font-medium truncate'>Purchase Details</div>
             </div>
             <div className='flex items-center'>
-              {/* <Lucide icon='Clipboard' className='w-4 h-4 mr-2 text-slate-500' /> */}
-              Clipboard Invoice:
+              <LiaFileInvoiceSolid className='w-4 h-4 mr-2 text-slate-500' />
+              Invoice:
               <span className='ml-1 underline decoration-dotted'>
                 {purchaseInvoiceDetails?.name}
               </span>
             </div>
             <div className='flex items-center mt-3'>
-              {/* <Lucide icon='Clipboard' className='w-4 h-4 mr-2 text-slate-500' /> */}
-              Clipboard Order:
+              <LiaFileInvoiceSolid className='w-4 h-4 mr-2 text-slate-500' />
+              Order:
               <span className='ml-1 underline decoration-dotted'>
                 {purchaseInvoiceDetails?.items.map((i) => i.purchase_order).join(', ')}
               </span>
             </div>
 
             <div className='flex items-center mt-3'>
-              {/* <Lucide icon='Calendar' className='w-4 h-4 mr-2 text-slate-500' /> */}
-              Calendar Supplier: {purchaseInvoiceDetails?.supplier_name}
+              <LiaFileInvoiceSolid className='w-4 h-4 mr-2 text-slate-500' />
+              Supplier: {purchaseInvoiceDetails?.supplier_name}
             </div>
             <div className='flex items-center mt-3'>
-              {/* <Lucide icon='Calendar' className='w-4 h-4 mr-2 text-slate-500' /> */}
-              Calendar Posting Date: {purchaseInvoiceDetails?.posting_date}
+              <LiaFileInvoiceSolid className='w-4 h-4 mr-2 text-slate-500' />
+              Posting Date: {purchaseInvoiceDetails?.posting_date}
             </div>
             <div className='flex items-center mt-3'>
-              {/* <Lucide icon='MapPin' className='w-4 h-4 mr-2 text-slate-500' /> */}
-              MapPin Warehouse: {purchaseInvoiceDetails?.set_warehouse}
+              <LiaFileInvoiceSolid className='w-4 h-4 mr-2 text-slate-500' />
+              Warehouse: {purchaseInvoiceDetails?.set_warehouse}
             </div>
             <div className='flex items-center mt-3'>
-              {/* <Lucide icon='Clock' className='w-4 h-4 mr-2 text-slate-500' /> */}
-              Clock
+              <LiaFileInvoiceSolid className='w-4 h-4 mr-2 text-slate-500' />
               <span className='mr-2'>Status:</span>
               <Flex gap='4px 0' wrap>
                 <Tag color='blue'>{purchaseInvoiceDetails?.status}</Tag>

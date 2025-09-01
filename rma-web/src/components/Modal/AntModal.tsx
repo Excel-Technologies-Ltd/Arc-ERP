@@ -9,7 +9,7 @@ const AntModal = (props: ModalProps) => {
     dispatch(handleModal({ type: '', isOpen: false }));
   };
 
-  return <Modal footer={false} open={isOpen} centered onCancel={handleClose} {...props} />;
+  return <Modal open={isOpen} centered onCancel={handleClose} {...props} />;
 };
 
 export default AntModal;

@@ -91,6 +91,7 @@ const CustomerProfile = () => {
       </div>
 
       <AntModal
+        footer={false}
         title={
           <div className='text-xl font-semibold text-center border-b border-gray-200 pb-2'>
             Brand Wise Limit - {customerName}

@@ -46,7 +46,7 @@ const Serials = ({ data }: { data: PurchaseInvoice | undefined }) => {
   };
 
   return (
-    <div>
+    <>
       <div className='w-full'>
         <AntCustomTable<ProductDataType>
           columns={[
@@ -61,18 +61,21 @@ const Serials = ({ data }: { data: PurchaseInvoice | undefined }) => {
               ),
             },
           ]}
-          data={data?.items?.map((i) => ({
-            ...i,
-            key: i.name,
-            item_name: i.item_name,
-            quantity: i.qty,
-            assigned: 0,
-            remaining: 0,
-            has_serial: false,
-            warrenty_months: 12,
-          }))}
+          data={
+            data?.items?.map((i) => ({
+              ...i,
+              key: i.name,
+              item_name: i.item_name,
+              quantity: i.qty,
+              assigned: 0,
+              remaining: 0,
+              has_serial: false,
+              warrenty_months: 12,
+            })) || []
+          }
           loading={false}
           title={() => <div className='text-lg font-bold text-center'>Product Items</div>}
+          pagination={false}
         />
       </div>
 
@@ -107,11 +110,9 @@ const Serials = ({ data }: { data: PurchaseInvoice | undefined }) => {
           loading={false}
           title={() => <div className='text-lg font-bold text-center'>Serial Items</div>}
           size='small'
-          pagination={false}
-          scroll={{ y: 300 }}
         />
       </div>
-    </div>
+    </>
   );
 };
 

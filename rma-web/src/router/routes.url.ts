@@ -4,14 +4,14 @@ export const URLLogin = () => '/login';
 // Purchase URLS
 export const URLPurchase = () => '/purchase';
 export const URLPurchaseDetails = (invoiceNumber: string = ':invoice_number') =>
-  `/purchase/view-purchase-invoice/${invoiceNumber}`;
+  `${URLPurchase()}/${invoiceNumber}`;
 
 // Sales URLS
-export const URLAddSalesInvoice = () => '/sales/add-sales-invoice';
-export const URLSalesInvoiceList = () => '/sales/sales-invoice-list';
-export const URLSalesReturn = () => '/sales/sales-return';
+export const URLAddSalesInvoice = () => '/add-sales-invoice';
+export const URLSalesInvoiceList = () => '/sales-invoice-list';
+export const URLSalesReturn = () => '/sales-return';
 export const URLSalesDetails = (invoiceNumber: string = ':invoice_number') =>
-  `/sales/view-sales-invoice/${invoiceNumber}`;
+  `${URLSalesInvoiceList()}/${invoiceNumber}`;
 
 // Stock URLS
 export const URLAddStock = () => '/add-stock-entry';
