@@ -1,44 +1,33 @@
 import frappe
+
+PERMISSIONS = ["read", "write", "create", "delete", "submit", "cancel", "amend", "report", "export", "import"]
+
 @frappe.whitelist(allow_guest=True)
 def user_details_with_permission(doctypes=None):
-    if isinstance(doctypes, str):
-        doctypes = [doctypes]
+    # Normalize doctypes
     if not doctypes:
-        usable_doctype_list=frappe.get_doc("RMA Settings").doctype_list
-        doctypes=[ doctype.doctype_name for doctype in usable_doctype_list]
+        rma = frappe.get_cached_doc("RMA Settings")
+        doctypes = [row.doctype_name for row in (rma.doctype_list or [])]
+    elif isinstance(doctypes, str):
+        doctypes = [doctypes]
+
+    # Per-doctype permissions
     user_permissions = {}
-    
-    for doctype in doctypes:
+    for dt in doctypes:
         try:
-            permissions = {
-                "read": frappe.has_permission(doctype, "read") if frappe.has_permission(doctype, "read") else False,
-                "write": frappe.has_permission(doctype, "write") if frappe.has_permission(doctype, "write") else False,
-                "create": frappe.has_permission(doctype, "create") if frappe.has_permission(doctype, "create") else False,
-                "delete": frappe.has_permission(doctype, "delete") if frappe.has_permission(doctype, "delete") else False,
-                "submit": frappe.has_permission(doctype, "submit") if frappe.has_permission(doctype, "submit") else False,
-                "cancel": frappe.has_permission(doctype, "cancel") if frappe.has_permission(doctype, "cancel") else False,
-                "amend": frappe.has_permission(doctype, "amend") if frappe.has_permission(doctype, "amend") else False,
-                "report": frappe.has_permission(doctype, "report") if frappe.has_permission(doctype, "report") else False,
-                "export": frappe.has_permission(doctype, "export") if frappe.has_permission(doctype, "export") else False,
-                "import": frappe.has_permission(doctype, "import") if frappe.has_permission(doctype, "import") else False
-            }
-            
-            user_permissions[doctype] = permissions
-            
+            user_permissions[dt] = {p: bool(frappe.has_permission(dt, p)) for p in PERMISSIONS}
         except Exception as e:
-            user_permissions[doctype] = {
-                "error": str(e),
-                "has_access": False
-            }
-    # get roles
-    user_role = frappe.get_roles()
-    territory= frappe.db.get_list("Territory",pluck="name")
-    warehouse= frappe.db.get_list("Warehouse",pluck="name")
-    
+            user_permissions[dt] = {"error": str(e), "has_access": False}
+
+    # Extras (guarded by permissions where it makes sense)
+    roles = frappe.get_roles() if frappe.has_permission("Role", "read") else []
+    territories = frappe.db.get_list("Territory", pluck="name") if frappe.has_permission("Territory", "read") else []
+    warehouses = frappe.db.get_list("Warehouse", pluck="name") if frappe.has_permission("Warehouse", "read") else []
+
     return {
         "user": frappe.session.user,
-        "roles": user_role,
-        "territory": territory,
-        "warehouse": warehouse,
-        "permissions": user_permissions
+        "roles": roles,
+        "territory": territories,
+        "warehouse": warehouses,
+        "permissions": user_permissions,
     }

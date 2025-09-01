@@ -1,0 +1,1 @@
+import{ao as r}from"./index-BIiC1RfR.js";const i=()=>r("Warehouse",{fields:["name","warehouse_name"]}),s=e=>r("Territory",{fields:["name","territory_name"],filters:e?[["name","like",`%${e}%`]]:void 0}),a=e=>r("Supplier",{fields:["name","supplier_name"],filters:e?[["name","like",`%${e}%`]]:void 0});export{i as a,s as b,a as g};
