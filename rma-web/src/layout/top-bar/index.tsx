@@ -5,17 +5,17 @@ import fakerData from '@/utils/faker';
 import _ from 'lodash';
 import clsx from 'clsx';
 import { useFrappeAuth } from 'frappe-react-sdk';
-import { useDispatch } from 'react-redux';
 import { resetPermissions } from '@/stores/permissionSlice';
 import { useNotify } from '@/hooks/useNotify';
 import { CiDark, CiLight, IoIosNotificationsOutline } from '@/components/Base/Icons';
 import Breadcrumbs from './BreadCumbs';
-import { setDarkMode, selectDarkMode } from '@/stores/darkModeSlice';
-import { useAppSelector } from '@/stores/hooks';
+import { selectDarkMode } from '@/stores/darkModeSlice';
+import { useAppDispatch, useAppSelector } from '@/stores/hooks';
+import { switchDarkMode } from './toggle.animate';
 
 function Main(props: { layout?: 'side-menu' }) {
   const { logout } = useFrappeAuth();
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const notify = useNotify();
   const activeDarkMode = useAppSelector(selectDarkMode);
 
@@ -31,13 +31,10 @@ function Main(props: { layout?: 'side-menu' }) {
   };
 
   const setDarkModeClass = () => {
-    const el = document.querySelectorAll('html')[0];
+    const el = document.querySelectorAll('html')[0] as any;
     activeDarkMode ? el.classList.add('dark') : el.classList.remove('dark');
   };
-  const switchDarkMode = (darkMode: boolean) => {
-    dispatch(setDarkMode(darkMode));
-    setDarkModeClass();
-  };
+
   setDarkModeClass();
 
   return (
@@ -76,14 +73,14 @@ function Main(props: { layout?: 'side-menu' }) {
           {/* BEGIN: Dark Mode */}
           {!activeDarkMode ? (
             <button
-              onClick={() => switchDarkMode(!activeDarkMode)}
+              onClick={() => switchDarkMode(!activeDarkMode, dispatch, setDarkModeClass)}
               className='mr-4 intro-x sm:mr-6'
             >
               <CiLight className='w-5 h-5 dark:text-slate-500 text-white/70' />
             </button>
           ) : (
             <button
-              onClick={() => switchDarkMode(!activeDarkMode)}
+              onClick={() => switchDarkMode(!activeDarkMode, dispatch, setDarkModeClass)}
               className='mr-4 intro-x sm:mr-6'
             >
               <CiDark className='w-5 h-5 dark:text-slate-500 text-white/70' />
