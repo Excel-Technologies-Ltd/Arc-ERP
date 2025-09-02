@@ -9,6 +9,8 @@ import {
   URLCustomerProfile,
   URLErrorPage,
   URLSalesDetails,
+  URLAddStock,
+  URLStockEntrylist,
 } from './routes.url';
 import PrivateGuard from '@/guard/PrivateGuard';
 import PublicGuard from '@/guard/PublicGuard';
@@ -36,6 +38,8 @@ const ErrorPage = Loadable(lazy(() => import('../pages/ErrorPage')));
 const ViewSalesInvoice = Loadable(
   lazy(() => import('../pages/sales/sales-invoice-list/view-sales-invoice/ViewSalesInvoice'))
 );
+const AddStockEntry = Loadable(lazy(() => import('../pages/Stock/add-stock-entry')));
+const StockEntryList = Loadable(lazy(() => import('../pages/Stock/stock-entry-list')));
 
 const routes = [
   {
@@ -105,6 +109,14 @@ const routes = [
                 <CustomerProfile />
               </PermissionGuard>
             ),
+          },
+          {
+            path: URLAddStock(),
+            element: <AddStockEntry />,
+          },
+          {
+            path: URLStockEntrylist(),
+            element: <StockEntryList />,
           },
         ],
       },

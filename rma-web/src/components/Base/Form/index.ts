@@ -7,6 +7,7 @@ import FormLabel from './FormLabel';
 import FormSelect from './FormSelect';
 import FormSwitch from './FormSwitch';
 import InputGroup from './InputGroup';
+import AntUpload from './Upload/AntUpload';
 
 export {
   FormCheck,
@@ -18,4 +19,5 @@ export {
   FormSelect,
   FormSwitch,
   InputGroup,
+  AntUpload,
 };

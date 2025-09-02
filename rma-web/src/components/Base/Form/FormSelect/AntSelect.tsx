@@ -14,7 +14,6 @@ const AntSelect: React.FC<AntSelectProps> = (props) => {
     className = 'w-full',
     loading = false,
     notFoundText = 'No options',
-    options,
     ...rest
   } = props;
   return (
@@ -28,7 +27,6 @@ const AntSelect: React.FC<AntSelectProps> = (props) => {
       filterOption={(input, option) =>
         (option?.label as string)?.toLowerCase().includes(input.toLowerCase())
       }
-      options={options}
       {...rest}
     />
   );

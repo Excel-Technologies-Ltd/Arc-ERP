@@ -5,7 +5,7 @@ import type { DatePickerProps } from 'antd/es/date-picker';
 type DatePickerRef = React.ElementRef<typeof DatePicker>;
 
 const AntDatePicker = React.forwardRef<DatePickerRef, DatePickerProps>(
-  ({ size = 'large', allowClear = true, className = 'w-full', ...rest }, ref) => {
+  ({ size = 'large', allowClear = true, className = 'w-full h-max', ...rest }, ref) => {
     return (
       <DatePicker ref={ref} size={size} allowClear={allowClear} className={className} {...rest} />
     );

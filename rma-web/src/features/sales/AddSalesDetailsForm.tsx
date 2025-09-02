@@ -23,7 +23,6 @@ const AddSalesDetailsForm = ({ control }: { control: Control<AddSalesFormData> }
             value: `Customer ${i + 1}`,
             label: `Customer ${i + 1}`,
           }))}
-          loading={false}
           notFoundText='No Customer Found'
         />
       )}
@@ -42,7 +41,6 @@ const AddSalesDetailsForm = ({ control }: { control: Control<AddSalesFormData> }
             value: `Warehouse ${i + 1}`,
             label: `Warehouse ${i + 1}`,
           }))}
-          loading={false}
           notFoundText='No Warehouse Found'
         />
       )}
@@ -56,7 +54,6 @@ const AddSalesDetailsForm = ({ control }: { control: Control<AddSalesFormData> }
             value: `Territory ${i + 1}`,
             label: `Territory ${i + 1}`,
           }))}
-          loading={false}
           notFoundText='No Territory Found'
         />
       )}
@@ -69,7 +66,6 @@ const AddSalesDetailsForm = ({ control }: { control: Control<AddSalesFormData> }
             value: `Address ${i + 1}`,
             label: `Address ${i + 1}`,
           }))}
-          loading={false}
           notFoundText='No Address Found Found'
         />
       )}

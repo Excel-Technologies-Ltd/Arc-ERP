@@ -3,10 +3,9 @@ import AntSelect from '@/components/Base/Form/FormSelect/AntSelect';
 import { RenderController } from '@/lib/hook-form/RenderController';
 import { getWarehouseList } from '@/services/common/commonApi';
 import { Control } from 'react-hook-form';
-import { Button as AntButton, Upload } from 'antd';
-import { UploadOutlined } from '@ant-design/icons';
 import AntInput from '@/components/Base/Form/FormInput/AntInput';
 import { AssignSerialFormData } from '@/types/pages/purchase';
+import { AntUpload } from '@/components/Base/Form';
 
 const SerialAssignForm = ({ control }: { control: Control<AssignSerialFormData> }) => {
   // Api Call
@@ -38,34 +37,12 @@ const SerialAssignForm = ({ control }: { control: Control<AssignSerialFormData> 
       {RenderController<AssignSerialFormData>(
         control,
         'file',
-        <div>
-          <Upload
-            maxCount={1}
-            style={{
-              width: '100%',
-            }}
-            beforeUpload={(file) => {
-              console.log('Uploaded file:', file);
-              // Return false to prevent default upload behavior
-              return false;
-            }}
-            onChange={(info) => {
-              if (info.file.status === 'done') {
-                console.log('File uploaded successfully:', info.file);
-              }
-            }}
-          >
-            <AntButton
-              style={{
-                color: 'gray',
-                width: '100%',
-              }}
-              icon={<UploadOutlined />}
-            >
-              Upload Your File
-            </AntButton>
-          </Upload>
-        </div>
+        <AntUpload
+          beforeUpload={(file) => {
+            console.log('Uploaded file:', file);
+            return false;
+          }}
+        />
       )}
       {RenderController<AssignSerialFormData>(
         control,
