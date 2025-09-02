@@ -4,6 +4,7 @@ import { MdOutlineKeyboardArrowDown } from 'react-icons/md';
 import { FaHome, FaShoppingBag } from 'react-icons/fa';
 import { CiSettings } from 'react-icons/ci';
 import { IoIosNotificationsOutline } from 'react-icons/io';
+import { CiLight, CiDark } from 'react-icons/ci';
 
 export {
   LiaFileInvoiceSolid,
@@ -14,4 +15,6 @@ export {
   FaShoppingBag,
   CiSettings,
   IoIosNotificationsOutline,
+  CiLight,
+  CiDark,
 };

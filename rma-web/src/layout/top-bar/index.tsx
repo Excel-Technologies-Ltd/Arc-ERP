@@ -8,16 +8,16 @@ import { useFrappeAuth } from 'frappe-react-sdk';
 import { useDispatch } from 'react-redux';
 import { resetPermissions } from '@/stores/permissionSlice';
 import { useNotify } from '@/hooks/useNotify';
-import { useState } from 'react';
-import ThemeSwitcher from '@/themes/ThemeSwitcher';
-import { CiSettings, IoIosNotificationsOutline } from '@/components/Base/Icons';
+import { CiDark, CiLight, IoIosNotificationsOutline } from '@/components/Base/Icons';
 import Breadcrumbs from './BreadCumbs';
+import { setDarkMode, selectDarkMode } from '@/stores/darkModeSlice';
+import { useAppSelector } from '@/stores/hooks';
 
 function Main(props: { layout?: 'side-menu' }) {
   const { logout } = useFrappeAuth();
   const dispatch = useDispatch();
   const notify = useNotify();
-  const [themeSwitcherSlideover, setThemeSwitcherSlideover] = useState(false);
+  const activeDarkMode = useAppSelector(selectDarkMode);
 
   // handle logout
   const handleLogout = async () => {
@@ -30,10 +30,15 @@ function Main(props: { layout?: 'side-menu' }) {
     });
   };
 
-  const handleThemeSwitcher = (event: React.MouseEvent) => {
-    event.preventDefault();
-    setThemeSwitcherSlideover(true);
+  const setDarkModeClass = () => {
+    const el = document.querySelectorAll('html')[0];
+    activeDarkMode ? el.classList.add('dark') : el.classList.remove('dark');
   };
+  const switchDarkMode = (darkMode: boolean) => {
+    dispatch(setDarkMode(darkMode));
+    setDarkModeClass();
+  };
+  setDarkModeClass();
 
   return (
     <>
@@ -68,10 +73,23 @@ function Main(props: { layout?: 'side-menu' }) {
           <Breadcrumbs />
           {/* END: Breadcrumb */}
 
-          <button onClick={handleThemeSwitcher} className='mr-4 intro-x sm:mr-6'>
-            <CiSettings className='w-5 h-5 dark:text-slate-500 text-white/70' />
-          </button>
-
+          {/* BEGIN: Dark Mode */}
+          {!activeDarkMode ? (
+            <button
+              onClick={() => switchDarkMode(!activeDarkMode)}
+              className='mr-4 intro-x sm:mr-6'
+            >
+              <CiLight className='w-5 h-5 dark:text-slate-500 text-white/70' />
+            </button>
+          ) : (
+            <button
+              onClick={() => switchDarkMode(!activeDarkMode)}
+              className='mr-4 intro-x sm:mr-6'
+            >
+              <CiDark className='w-5 h-5 dark:text-slate-500 text-white/70' />
+            </button>
+          )}
+          {/* END: Dark Mode */}
           {/* BEGIN: Notifications */}
           <Popover className='mr-4 intro-x sm:mr-6'>
             <Popover.Button
@@ -131,25 +149,12 @@ function Main(props: { layout?: 'side-menu' }) {
                 </div>
               </Menu.Header>
               <Menu.Divider className='bg-white/[0.08]' />
-              <Menu.Item className='hover:bg-white/5'>
-                {/* <Lucide icon='User' className='w-4 h-4 mr-2' />  */}
-                Profile
-              </Menu.Item>
-              <Menu.Item className='hover:bg-white/5'>
-                {/* <Lucide icon='FilePenLine' className='w-4 h-4 mr-2' />  */}
-                Add Account
-              </Menu.Item>
-              <Menu.Item className='hover:bg-white/5'>
-                {/* <Lucide icon='Lock' className='w-4 h-4 mr-2' /> */}
-                Reset Password
-              </Menu.Item>
-              <Menu.Item className='hover:bg-white/5'>
-                {/* <Lucide icon='HelpCircle' className='w-4 h-4 mr-2' /> */}
-                Help
-              </Menu.Item>
+              <Menu.Item className='hover:bg-white/5'>Profile</Menu.Item>
+              <Menu.Item className='hover:bg-white/5'>Add Account</Menu.Item>
+              <Menu.Item className='hover:bg-white/5'>Reset Password</Menu.Item>
+              <Menu.Item className='hover:bg-white/5'>Help</Menu.Item>
               <Menu.Divider className='bg-white/[0.08]' />
               <Menu.Item className='hover:bg-white/5' onClick={handleLogout}>
-                {/* <Lucide icon='ToggleRight' className='w-4 h-4 mr-2' /> */}
                 Logout
               </Menu.Item>
             </Menu.Items>
@@ -157,13 +162,6 @@ function Main(props: { layout?: 'side-menu' }) {
           {/* END: Account Menu */}
         </div>
       </div>
-
-      {themeSwitcherSlideover && (
-        <ThemeSwitcher
-          themeSwitcherSlideover={themeSwitcherSlideover}
-          setThemeSwitcherSlideover={setThemeSwitcherSlideover}
-        />
-      )}
     </>
   );
 }

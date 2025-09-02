@@ -1,7 +1,6 @@
 import Chart from '@/components/Base/Chart';
 import { ChartData, ChartOptions } from 'chart.js/auto';
 import { getColor } from '@/utils/colors';
-import { selectColorScheme } from '@/stores/colorSchemeSlice';
 import { selectDarkMode } from '@/stores/darkModeSlice';
 import { useAppSelector } from '@/stores/hooks';
 import { useMemo } from 'react';
@@ -17,7 +16,6 @@ function Main({ width = 'auto', height = 'auto', className = '' }: MainProps) {
     height: height,
     className: className,
   };
-  const colorScheme = useAppSelector(selectColorScheme);
   const darkMode = useAppSelector(selectDarkMode);
 
   const data: ChartData = useMemo(() => {
@@ -28,8 +26,7 @@ function Main({ width = 'auto', height = 'auto', className = '' }: MainProps) {
           label: '# of Votes',
           data: [0, 200, 250, 200, 700, 550, 650, 1050, 950, 1100, 900, 1200],
           borderWidth: 2,
-          borderColor: colorScheme ? getColor('primary', 0.8) : '',
-
+          borderColor: getColor('primary', 0.8),
           backgroundColor: 'transparent',
           pointBorderColor: 'transparent',
           tension: 0.4,
@@ -46,7 +43,7 @@ function Main({ width = 'auto', height = 'auto', className = '' }: MainProps) {
         },
       ],
     };
-  }, [colorScheme, darkMode]);
+  }, [darkMode]);
 
   const options: ChartOptions = useMemo(() => {
     return {
@@ -91,7 +88,7 @@ function Main({ width = 'auto', height = 'auto', className = '' }: MainProps) {
         },
       },
     };
-  }, [colorScheme, darkMode]);
+  }, [darkMode]);
 
   return (
     <Chart
