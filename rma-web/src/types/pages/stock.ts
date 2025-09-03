@@ -14,4 +14,6 @@ export type AddStockFormData = {
   to_range: string;
   source_warehouse: string;
   target_warehouse: string;
+  items: any[];
+  transferSerials: any[];
 };
