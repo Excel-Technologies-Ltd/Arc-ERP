@@ -55,7 +55,7 @@ function Main() {
         ])}
       >
         <MobileMenu />
-        <TopBar layout='side-menu' />
+        <TopBar />
         <div className='flex overflow-hidden'>
           {/* BEGIN: Side Menu */}
           <nav className='side-nav w-[100px] xl:w-[260px] px-5 pb-16 overflow-x-hidden z-50 pt-32 -mt-4 hidden md:block'>

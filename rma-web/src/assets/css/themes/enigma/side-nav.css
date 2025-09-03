@@ -60,7 +60,7 @@
             animation-fill-mode: forwards;
             animation-delay: calc($i * 0.1s);
           }
-          & > a {
+          /* & > a {
             &:not(.side-menu--active) {
               opacity: 0;
               transform: translateX(50px);
@@ -68,7 +68,7 @@
               animation-fill-mode: forwards;
               animation-delay: calc($i * 0.1s);
             }
-          }
+          } */
         }
       }
       ul {
@@ -181,10 +181,6 @@
               &:not(.side-menu--active) {
                 color: theme('colors.slate.600');
               }
-              &:hover {
-              }
-              .side-menu__icon {
-              }
             }
             & > ul {
               background-color: theme('colors.white' / 4%);
@@ -219,10 +215,6 @@
                   }
                   &:not(.side-menu--active) {
                     color: theme('colors.slate.600');
-                  }
-                  &:hover {
-                  }
-                  .side-menu__icon {
                   }
                 }
               }

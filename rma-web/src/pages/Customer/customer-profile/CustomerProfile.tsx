@@ -8,6 +8,7 @@ import AntInput from '@/components/Base/Form/FormInput/AntInput';
 import AntSelect from '@/components/Base/Form/FormSelect/AntSelect';
 import AntButton from '@/components/Base/Button/AntButton';
 import { getTerritoryList } from '@/services/common/commonApi';
+import { ClearOutlined, SearchOutlined } from '@ant-design/icons';
 
 const CustomerProfile = () => {
   const [customerName, setCustomerName] = useState<string>('');
@@ -74,8 +75,10 @@ const CustomerProfile = () => {
             notFoundText='No Branch Found'
           />
           <div className='flex items-center gap-2'>
-            <AntButton>Search</AntButton>
-            <AntButton onClick={handleClear}>Clear</AntButton>
+            <AntButton icon={<SearchOutlined />}>Search</AntButton>
+            <AntButton icon={<ClearOutlined />} onClick={handleClear}>
+              Clear
+            </AntButton>
           </div>
         </div>
       </div>

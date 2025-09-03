@@ -1,12 +1,7 @@
+import { toTitle } from '@/utils/helper';
+import { Breadcrumb } from 'antd';
 import React from 'react';
-import { useLocation } from 'react-router-dom';
-import clsx from 'clsx';
-import Breadcrumb from '@/components/Base/Breadcrumb';
-
-const toTitle = (s: string) =>
-  decodeURIComponent(s)
-    .replace(/[-_]+/g, ' ')
-    .replace(/\b\w/g, (c) => c.toUpperCase());
+import { Link, useLocation } from 'react-router-dom';
 
 const Breadcrumbs: React.FC = () => {
   const { pathname } = useLocation();
@@ -24,26 +19,19 @@ const Breadcrumbs: React.FC = () => {
     }));
   }, [pathname]);
 
-  const last = items.length - 1;
-
   return (
-    <Breadcrumb
-      light
-      className={clsx(
-        'h-[45px] md:ml-10 md:border-l border-white/[0.08] dark:border-white/[0.08] mr-auto -intro-x',
-        'md:pl-6'
-      )}
-    >
-      {items.map((item, idx) => (
-        <Breadcrumb.Link
-          key={idx}
-          to={idx === last ? undefined : item.path} // disable last link
-          active={idx === last}
-        >
-          {item.label}
-        </Breadcrumb.Link>
-      ))}
-    </Breadcrumb>
+    <div className='relative h-full md:ml-10 md:border-l border-white/[0.08] dark:border-white/[0.08] mr-auto -intro-x md:pl-6'>
+      <Breadcrumb
+        separator={<span className='text-white/70 dark:text-slate-500'>{'>'}</span>}
+        items={items.map((item) => ({
+          title: (
+            <Link to={item.path}>
+              <span className='text-white/70 dark:text-slate-500'>{item.label}</span>
+            </Link>
+          ),
+        }))}
+      />
+    </div>
   );
 };
 

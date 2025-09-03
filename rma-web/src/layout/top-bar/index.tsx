@@ -13,7 +13,7 @@ import { selectDarkMode } from '@/stores/darkModeSlice';
 import { useAppDispatch, useAppSelector } from '@/stores/hooks';
 import { switchDarkMode } from './toggle.animate';
 
-function Main(props: { layout?: 'side-menu' }) {
+function Main() {
   const { logout } = useFrappeAuth();
   const dispatch = useAppDispatch();
   const notify = useNotify();
@@ -48,22 +48,9 @@ function Main(props: { layout?: 'side-menu' }) {
       >
         <div className='flex items-center h-full'>
           {/* BEGIN: Logo */}
-          <Link
-            to='/'
-            className={clsx([
-              '-intro-x hidden md:flex',
-              props.layout == 'side-menu' && 'xl:w-[180px]',
-            ])}
-          >
+          <Link to='/' className={clsx(['-intro-x hidden md:flex xl:w-[180px]'])}>
             <img alt='Enigma Tailwind HTML Admin Template' className='w-6' src={logoUrl} />
-            <span
-              className={clsx([
-                'ml-3 text-lg text-white',
-                props.layout == 'side-menu' && 'hidden xl:block',
-              ])}
-            >
-              Rma Web
-            </span>
+            <span className={clsx(['ml-3 text-lg text-white hidden xl:block'])}>Rma Web</span>
           </Link>
           {/* END: Logo */}
           {/* BEGIN: Breadcrumb */}

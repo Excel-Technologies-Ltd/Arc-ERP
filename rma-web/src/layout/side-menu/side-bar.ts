@@ -1,7 +1,6 @@
 import { NavigateFunction } from 'react-router-dom';
-import { Menu } from '@/types/menu/menu.types';
-import { slideUp, slideDown } from '@/utils/helper';
 import { createContext } from 'react';
+import { Menu } from '@/types/menu/menu.types';
 import { UserRoles } from '@/utils/permissionUtils';
 import { filterMenuByPermissions } from '@/utils/menuUtils';
 
@@ -16,90 +15,62 @@ export interface FormattedMenu extends Menu {
   subMenu?: FormattedMenu[];
 }
 
-const forceActiveMenu = (location: Location, pathname: string) => {
-  location.forceActiveMenu = pathname;
-};
-
-const forceActiveMenuContext = createContext<{
+export const forceActiveMenuContext = createContext<{
   forceActiveMenu: (pathname: string) => void;
 }>({
   forceActiveMenu: () => {},
 });
 
-// Setup side menu
-const findActiveMenu = (subMenu: Menu[], location: Location): boolean => {
-  let match = false;
-  subMenu.forEach((item) => {
-    if (
-      ((location.forceActiveMenu !== undefined && item.pathname === location.forceActiveMenu) ||
-        (location.forceActiveMenu === undefined && item.pathname === location.pathname)) &&
-      !item.ignore
-    ) {
-      match = true;
-    } else if (!match && item.subMenu) {
-      match = findActiveMenu(item.subMenu, location);
-    }
-  });
-  return match;
+export const forceActiveMenu = (location: Location, pathname: string) => {
+  location.forceActiveMenu = pathname;
 };
 
-const nestedMenu = (menu: Array<Menu | 'divider'>, location: Location, userRoles?: UserRoles) => {
+// Check if a menu item is active based on pathname or forceActiveMenu
+const isMenuItemActive = (item: Menu, location: Location): boolean => {
+  const { pathname, forceActiveMenu } = location;
+  const currentPath = forceActiveMenu ?? pathname;
+  return (
+    !item.ignore && (item.pathname === currentPath || currentPath.startsWith(item.pathname + '/'))
+  );
+};
+
+// Recursively find if any submenu item is active
+const findActiveMenu = (subMenu: Menu[], location: Location): boolean =>
+  subMenu.some(
+    (item) =>
+      isMenuItemActive(item, location) || (item.subMenu && findActiveMenu(item.subMenu, location))
+  );
+
+export const nestedMenu = (
+  menu: Array<Menu | 'divider'>,
+  location: Location,
+  userRoles?: UserRoles
+): Array<FormattedMenu | 'divider'> => {
   // Filter menu by permissions if userRoles provided
   const menuToProcess = userRoles ? filterMenuByPermissions([...menu], userRoles) : menu;
 
-  const formattedMenu: Array<FormattedMenu | 'divider'> = [];
-  menuToProcess.forEach((item) => {
-    if (typeof item !== 'string') {
-      const menuItem: FormattedMenu = {
-        icon: item.icon,
-        title: item.title,
-        pathname: item.pathname,
-        subMenu: item.subMenu,
-        ignore: item.ignore,
-      };
-      menuItem.active =
-        ((location.forceActiveMenu !== undefined &&
-          menuItem.pathname === location.forceActiveMenu) ||
-          (location.forceActiveMenu === undefined && menuItem.pathname === location.pathname) ||
-          (menuItem.subMenu && findActiveMenu(menuItem.subMenu, location))) &&
-        !menuItem.ignore;
-
-      if (menuItem.subMenu) {
-        menuItem.activeDropdown = findActiveMenu(menuItem.subMenu, location);
-
-        // Nested menu
-        const subMenu: Array<FormattedMenu> = [];
-        nestedMenu(menuItem.subMenu, location, userRoles).map(
-          (menu) => typeof menu !== 'string' && subMenu.push(menu)
-        );
-        menuItem.subMenu = subMenu;
-      }
-
-      formattedMenu.push(menuItem);
-    } else {
-      formattedMenu.push(item);
-    }
-  });
-
-  return formattedMenu;
+  return menuToProcess.map((item) =>
+    item === 'divider'
+      ? item
+      : {
+          ...item,
+          active:
+            isMenuItemActive(item, location) ||
+            (item.subMenu && findActiveMenu(item.subMenu, location)),
+          subMenu: item.subMenu
+            ? nestedMenu(item.subMenu, location, userRoles).filter(
+                (subItem): subItem is FormattedMenu => subItem !== 'divider'
+              )
+            : undefined,
+          activeDropdown: item.subMenu ? findActiveMenu(item.subMenu, location) : undefined,
+        }
+  );
 };
 
-const linkTo = (menu: FormattedMenu, navigate: NavigateFunction) => {
+export const linkTo = (menu: FormattedMenu, navigate: NavigateFunction) => {
   if (menu.subMenu) {
     menu.activeDropdown = !menu.activeDropdown;
-  } else {
-    if (menu.pathname !== undefined) {
-      navigate(menu.pathname);
-    }
+  } else if (menu.pathname) {
+    navigate(menu.pathname);
   }
 };
-
-const enter = (el: HTMLElement) => {
-  slideDown(el, 300);
-};
-
-const leave = (el: HTMLElement) => {
-  slideUp(el, 300);
-};
-
-export { nestedMenu, linkTo, enter, leave, forceActiveMenuContext, forceActiveMenu };

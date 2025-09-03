@@ -5,6 +5,7 @@ import { URLSalesDetails } from '@/router/routes.url';
 import { SalesInvoice } from '@/types/Accounts/SalesInvoice';
 import { SalesInvoiceListFilterFormData } from '@/types/pages/sales';
 import { TableColumn } from '@/types/Table/table-types';
+import { ClearOutlined, SearchOutlined } from '@ant-design/icons';
 import { useForm } from 'react-hook-form';
 import { Link } from 'react-router-dom';
 
@@ -101,8 +102,10 @@ const SalesInvoiceList = () => {
           className='w-full flex flex-col lg:flex-row items-center gap-2'
         />
         <div className='flex items-center gap-2'>
-          <AntButton>Search</AntButton>
-          <AntButton onClick={handleClear}>Clear</AntButton>
+          <AntButton icon={<SearchOutlined />}>Search</AntButton>
+          <AntButton icon={<ClearOutlined />} onClick={handleClear}>
+            Clear
+          </AntButton>
         </div>
       </div>
 

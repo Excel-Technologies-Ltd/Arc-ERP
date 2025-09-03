@@ -26,3 +26,10 @@ export interface SalesInvoiceListFilterFormData {
   status: string;
   date_range: [Dayjs, Dayjs];
 }
+
+export interface StockAvailabilityListFilterFormData {
+  item_name: string;
+  warehouse_name: string;
+  item_group: string;
+  brand_name: string;
+}

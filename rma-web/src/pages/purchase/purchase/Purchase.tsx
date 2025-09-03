@@ -10,6 +10,7 @@ import { PurchaseInvoice } from '@/types/Accounts/PurchaseInvoice';
 import { PurchaseTableColumn } from './TableColumn';
 import { getSupplierList } from '@/services/common/commonApi';
 import AntButton from '@/components/Base/Button/AntButton';
+import { ClearOutlined, SearchOutlined } from '@ant-design/icons';
 
 const Purchase = () => {
   const [supplierSearch, setSupplierSearch] = useState<string | null>(null);
@@ -87,8 +88,10 @@ const Purchase = () => {
               onChange={(value) => setDateRange(value as [Dayjs, Dayjs])}
             />
             <div className='flex items-center gap-2'>
-              <AntButton>Search</AntButton>
-              <AntButton onClick={handleClear}>Clear</AntButton>
+              <AntButton icon={<SearchOutlined />}>Search</AntButton>
+              <AntButton icon={<ClearOutlined />} onClick={handleClear}>
+                Clear
+              </AntButton>
             </div>
           </div>
         </div>

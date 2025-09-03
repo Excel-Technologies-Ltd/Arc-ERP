@@ -86,7 +86,6 @@ const AddStockEntry = ({ id }: { id?: string | undefined }) => {
     appendTransferSerials,
     remove,
   });
-
   const TransferSerialColumns = SerialTableColumn({
     removeTransferSerials,
   });

@@ -1,6 +1,5 @@
 import { NavigateFunction } from 'react-router-dom';
 import { Dispatch, SetStateAction } from 'react';
-import { slideUp, slideDown } from '@/utils/helper';
 import { Menu } from '@/types/menu/menu.types';
 
 interface Location {
@@ -84,12 +83,4 @@ const linkTo = (
   }
 };
 
-const enter = (el: HTMLElement) => {
-  slideDown(el, 300);
-};
-
-const leave = (el: HTMLElement) => {
-  slideUp(el, 300);
-};
-
-export { nestedMenu, linkTo, enter, leave };
+export { nestedMenu, linkTo };

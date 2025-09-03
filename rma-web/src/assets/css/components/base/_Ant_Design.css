@@ -30,23 +30,4 @@
   .table-responsive-container .ant-table {
     min-width: 600px; /* Minimum width to ensure table doesn't get too narrow */
   }
-
-  /* Style the scrollbar for better UX */
-  /* .table-responsive-container::-webkit-scrollbar {
-    height: 8px;
-  }
-
-  .table-responsive-container::-webkit-scrollbar-track {
-    background: #f1f1f1;
-    border-radius: 10px;
-  }
-
-  .table-responsive-container::-webkit-scrollbar-thumb {
-    background: #888;
-    border-radius: 10px;
-  }
-
-  .table-responsive-container::-webkit-scrollbar-thumb:hover {
-    background: #555;
-  } */
 }
