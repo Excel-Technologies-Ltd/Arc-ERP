@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import Button from '@/components/Base/Button';
 import AntInput from '@/components/Base/Form/FormInput/AntInput';
 import AntSelect from '@/components/Base/Form/FormSelect/AntSelect';
 import AntRangePicker from '@/components/Base/DatePicker/AntRangePicker';
@@ -10,6 +9,7 @@ import CustomTable from '@/components/Table/CustomTable';
 import { PurchaseInvoice } from '@/types/Accounts/PurchaseInvoice';
 import { PurchaseTableColumn } from './TableColumn';
 import { getSupplierList } from '@/services/common/commonApi';
+import AntButton from '@/components/Base/Button/AntButton';
 
 const Purchase = () => {
   const [supplierSearch, setSupplierSearch] = useState<string | null>(null);
@@ -87,10 +87,8 @@ const Purchase = () => {
               onChange={(value) => setDateRange(value as [Dayjs, Dayjs])}
             />
             <div className='flex items-center gap-2'>
-              <Button variant='outline-primary'>Search</Button>
-              <Button onClick={handleClear} variant='outline-primary'>
-                Clear
-              </Button>
+              <AntButton>Search</AntButton>
+              <AntButton onClick={handleClear}>Clear</AntButton>
             </div>
           </div>
         </div>

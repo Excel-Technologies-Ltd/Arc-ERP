@@ -8,6 +8,8 @@ import FormSelect from './FormSelect';
 import FormSwitch from './FormSwitch';
 import InputGroup from './InputGroup';
 import AntUpload from './Upload/AntUpload';
+import AntInput from './FormInput/AntInput';
+import AntSelect from './FormSelect/AntSelect';
 
 export {
   FormCheck,
@@ -20,4 +22,6 @@ export {
   FormSwitch,
   InputGroup,
   AntUpload,
+  AntInput,
+  AntSelect,
 };

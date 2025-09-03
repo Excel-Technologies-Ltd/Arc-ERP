@@ -6,7 +6,7 @@ import { CustomerProfileTableColumn } from './TableColumn';
 import CustomerDetails from './CustomerDetails';
 import AntInput from '@/components/Base/Form/FormInput/AntInput';
 import AntSelect from '@/components/Base/Form/FormSelect/AntSelect';
-import Button from '@/components/Base/Button';
+import AntButton from '@/components/Base/Button/AntButton';
 import { getTerritoryList } from '@/services/common/commonApi';
 
 const CustomerProfile = () => {
@@ -74,10 +74,8 @@ const CustomerProfile = () => {
             notFoundText='No Branch Found'
           />
           <div className='flex items-center gap-2'>
-            <Button variant='outline-primary'>Search</Button>
-            <Button onClick={handleClear} variant='outline-primary'>
-              Clear
-            </Button>
+            <AntButton>Search</AntButton>
+            <AntButton onClick={handleClear}>Clear</AntButton>
           </div>
         </div>
       </div>

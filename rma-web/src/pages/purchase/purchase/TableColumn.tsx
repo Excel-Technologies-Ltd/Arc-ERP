@@ -16,7 +16,7 @@ export const PurchaseTableColumn = () => {
       render: (text) => (
         <Link
           to={`${URLPurchaseDetails(text.toString())}`}
-          className='underline decoration-dotted whitespace-nowrap'
+          className='underline decoration-dotted whitespace-nowrap text-info dark:text-light font-semibold'
         >
           {text}
         </Link>

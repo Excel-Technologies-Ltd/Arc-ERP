@@ -1,21 +1,14 @@
 import AntButton from '@/components/Base/Button/AntButton';
-import AntInput from '@/components/Base/Form/FormInput/AntInput';
 import AntSelect from '@/components/Base/Form/FormSelect/AntSelect';
 import AntCustomTable from '@/components/Table/AntCustomTable';
-import { AddStockForm } from '@/features/stock';
+import { AddStockForm, ItemTableColumns, SerialTableColumn } from '@/features/stock';
 import { useNotify } from '@/hooks/useNotify';
 import { AddStockFormData } from '@/types/pages/stock';
-import {
-  ClearOutlined,
-  DeleteOutlined,
-  PlusOutlined,
-  SaveOutlined,
-  SendOutlined,
-} from '@ant-design/icons';
-import { Tag, type TableProps } from 'antd';
+import { ClearOutlined, DeleteOutlined, SaveOutlined, SendOutlined } from '@ant-design/icons';
 import { useFieldArray, useForm } from 'react-hook-form';
 
-const AddStockEntry = () => {
+const AddStockEntry = ({ id }: { id?: string | undefined }) => {
+  console.log(id);
   const notify = useNotify();
   const {
     control,
@@ -63,95 +56,6 @@ const AddStockEntry = () => {
     });
   };
 
-  const ItemColumns: TableProps<any>['columns'] = [
-    { key: 'item_name', title: 'Item Name', dataIndex: 'item_name' },
-    { key: 'available_stock', title: 'Available Stock', dataIndex: 'available_stock' },
-    { key: 'assigned', title: 'Assigned', dataIndex: 'assigned' },
-    {
-      key: 'qty',
-      title: 'Qty',
-      dataIndex: 'qty',
-      render: (_, __, index) => (
-        <AntInput
-          type='number'
-          placeholder='Enter Quantity'
-          onChange={(e) => {
-            handleItemChange(index, 'qty', e.target.value);
-          }}
-          size='small'
-        />
-      ),
-    },
-    {
-      key: 'has_serial',
-      title: 'Has Serial',
-      dataIndex: 'has_serial',
-      render: (_, record) => (
-        <Tag color={record.has_serial ? 'green' : 'red'}>{record.has_serial ? 'Yes' : 'No'}</Tag>
-      ),
-    },
-    {
-      key: 'add_serials',
-      title: 'Add Serials',
-      dataIndex: 'add_serials',
-      render: () => (
-        <AntButton
-          size='middle'
-          icon={<PlusOutlined />}
-          onClick={() =>
-            appendTransferSerials({
-              source_warehouse: 'Baridhara Warehouse',
-              item_name: 'Tp Link',
-              quantity: '10',
-              serials: '1234567890',
-              warranty_date: '10/10/2025',
-            })
-          }
-        />
-      ),
-    },
-    {
-      key: 'actions',
-      title: 'Actions',
-      dataIndex: 'actions',
-      render: (_, record) => (
-        <div className='flex gap-2'>
-          <AntButton
-            size='small'
-            icon={<DeleteOutlined />}
-            color='danger'
-            variant='solid'
-            onClick={() => handleRemoveItem(record.id)}
-          />
-        </div>
-      ),
-    },
-  ];
-
-  const TransferSerialColumns: TableProps<any>['columns'] = [
-    { key: 'source_warehouse', title: 'Source Warehouse', dataIndex: 'source_warehouse' },
-    { key: 'item_name', title: 'Item Name', dataIndex: 'item_name' },
-    { key: 'quantity', title: 'Quantity', dataIndex: 'quantity' },
-    { key: 'serials', title: 'Serials', dataIndex: 'serials' },
-    { key: 'warranty_date', title: 'Warranty Date', dataIndex: 'warranty_date' },
-    {
-      key: 'actions',
-      title: 'Actions',
-      dataIndex: 'actions',
-      render: (_, record) => (
-        <div className='flex gap-2'>
-          <AntButton
-            size='small'
-            icon={<DeleteOutlined />}
-            color='danger'
-            variant='solid'
-            onClick={() => removeTransferSerials(record.id)}
-          />
-        </div>
-      ),
-    },
-  ];
-
   const handleAddItem = (itemValue: string) => {
     const newItem: any = {
       id: Date.now().toString(),
@@ -166,10 +70,6 @@ const AddStockEntry = () => {
     append(newItem);
   };
 
-  const handleRemoveItem = (index: number) => {
-    remove(index);
-  };
-
   const handleItemChange = (index: number, field: keyof any, value: any) => {
     const currentItems = getValues('items');
     const updatedItems = [...currentItems];
@@ -180,6 +80,17 @@ const AddStockEntry = () => {
     setValue('items', updatedItems);
   };
 
+  // Table Columns
+  const ItemColumns = ItemTableColumns({
+    handleItemChange,
+    appendTransferSerials,
+    remove,
+  });
+
+  const TransferSerialColumns = SerialTableColumn({
+    removeTransferSerials,
+  });
+
   return (
     <div className='intro-y'>
       {/* Details Section */}
@@ -188,10 +99,13 @@ const AddStockEntry = () => {
         <div className='flex gap-2 items-center'>
           <div className='text-lg text-primary font-semibold'>Total : {total}</div>
           <AntButton label='Save' icon={<SaveOutlined />} color='orange' variant='solid' />
+          {id && (
+            <AntButton label='Delete' icon={<DeleteOutlined />} color='danger' variant='solid' />
+          )}
           <AntButton
             label='Clear'
             icon={<ClearOutlined />}
-            color='red'
+            color='danger'
             variant='solid'
             onClick={handleClear}
           />

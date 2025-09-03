@@ -1,4 +1,4 @@
-import Button from '@/components/Base/Button';
+import AntButton from '@/components/Base/Button/AntButton';
 import { useAppDispatch } from '@/stores/hooks';
 import { handleModal } from '@/stores/modalSlice';
 import { Customer } from '@/types/Selling/Customer';
@@ -6,9 +6,11 @@ import { TableColumn } from '@/types/Table/table-types';
 import { formatCurrency } from '@/utils/helper';
 import { useMemo } from 'react';
 
-export const CustomerProfileTableColumn = (setCustomerName: (name: string) => void) => {
+export const CustomerProfileTableColumn = (
+  setCustomerName: (name: string) => void
+): TableColumn<Customer>[] => {
   const dispatch = useAppDispatch();
-  const Column: TableColumn<Customer>[] = useMemo(
+  return useMemo(
     () => [
       {
         key: 'Sl',
@@ -43,22 +45,20 @@ export const CustomerProfileTableColumn = (setCustomerName: (name: string) => vo
         title: 'Brand Wise Limit',
         render: (_, record) => {
           return (
-            <Button
-              variant='outline-primary'
-              size='sm'
+            <AntButton
+              size='small'
+              type='primary'
               onClick={() => {
                 setCustomerName(record.customer_name);
                 dispatch(handleModal({ type: 'brand-wise-limit', isOpen: true }));
               }}
             >
               Details
-            </Button>
+            </AntButton>
           );
         },
       },
     ],
     [setCustomerName, dispatch]
   );
-
-  return Column;
 };

@@ -1,4 +1,4 @@
-import Button from '@/components/Base/Button';
+import AntButton from '@/components/Base/Button/AntButton';
 import CustomTable from '@/components/Table/CustomTable';
 import { SalesListFilterForm } from '@/features/sales';
 import { URLSalesDetails } from '@/router/routes.url';
@@ -32,7 +32,7 @@ const SalesInvoiceList = () => {
       render: (text) => (
         <Link
           to={`${URLSalesDetails(text.toString())}`}
-          className='underline decoration-dotted whitespace-nowrap'
+          className='underline decoration-dotted whitespace-nowrap text-info dark:text-light font-semibold'
         >
           {text}
         </Link>
@@ -101,10 +101,8 @@ const SalesInvoiceList = () => {
           className='w-full flex flex-col lg:flex-row items-center gap-2'
         />
         <div className='flex items-center gap-2'>
-          <Button variant='outline-primary'>Search</Button>
-          <Button onClick={handleClear} variant='outline-primary'>
-            Clear
-          </Button>
+          <AntButton>Search</AntButton>
+          <AntButton onClick={handleClear}>Clear</AntButton>
         </div>
       </div>
 

@@ -17,3 +17,12 @@ export type AddStockFormData = {
   items: any[];
   transferSerials: any[];
 };
+
+export type StockEntryListFilterFormData = {
+  stock_id: string;
+  status: string;
+  from_warehouse: string;
+  to_warehouse: string;
+  stock_entry_type: StockEntryType;
+  date_range: [Dayjs, Dayjs];
+};

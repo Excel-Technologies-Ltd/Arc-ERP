@@ -14,8 +14,10 @@ export const URLSalesDetails = (invoiceNumber: string = ':invoice_number') =>
   `${URLSalesInvoiceList()}/${invoiceNumber}`;
 
 // Stock URLS
-export const URLAddStock = () => '/add-stock-entry';
+export const URLAddStock = () => `/add-stock-entry`;
 export const URLStockEntrylist = () => '/stock-entry-list';
+export const URLStockEntryDetails = (stockEntryId: string = ':stock_entry_id') =>
+  `${URLStockEntrylist()}/${stockEntryId}`;
 export const URLStockAvailability = () => '/stock-availability';
 export const URLStockSerial = () => '/stock-serial';
 export const URLStockLedger = () => '/stock-ledger';
