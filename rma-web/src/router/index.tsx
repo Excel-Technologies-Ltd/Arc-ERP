@@ -13,6 +13,8 @@ import {
   URLStockEntrylist,
   URLStockEntryDetails,
   URLStockAvailability,
+  URLStockSerial,
+  URLStockLedger,
 } from './routes.url';
 import PrivateGuard from '@/guard/PrivateGuard';
 import PublicGuard from '@/guard/PublicGuard';
@@ -46,6 +48,8 @@ const StockEntryDetails = Loadable(
   lazy(() => import('../pages/Stock/stock-entry-list/stock-entry-view'))
 );
 const StockAvailability = Loadable(lazy(() => import('../pages/Stock/stock-availability')));
+const SerialQuantity = Loadable(lazy(() => import('../pages/Stock/serial-quantity')));
+const StockLadger = Loadable(lazy(() => import('../pages/Stock/ladger')));
 
 const routes = [
   {
@@ -131,6 +135,14 @@ const routes = [
           {
             path: URLStockAvailability(),
             element: <StockAvailability />,
+          },
+          {
+            path: URLStockSerial(),
+            element: <SerialQuantity />,
+          },
+          {
+            path: URLStockLedger(),
+            element: <StockLadger />,
           },
         ],
       },

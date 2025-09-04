@@ -26,3 +26,18 @@ export type StockEntryListFilterFormData = {
   stock_entry_type: StockEntryType;
   date_range: [Dayjs, Dayjs];
 };
+
+export type StockSerialQuantityFilterFormData = {
+  item_name: string;
+  warehouse_name: string;
+};
+
+export type StockLadgerFilterFormData = {
+  item_name: string;
+  warehouse_name: string;
+  voucher_no: string;
+  item_group: string;
+  voucher_type: string;
+  brand_name: string;
+  date_range: [Dayjs, Dayjs];
+};

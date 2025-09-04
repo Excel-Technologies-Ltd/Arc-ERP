@@ -71,7 +71,7 @@ const MainMenu = () => {
         {
           icon: <FaHome />,
           pathname: URLStockSerial(),
-          title: 'Stock Serial',
+          title: 'Serial Quantity',
         },
         {
           icon: <FaHome />,
