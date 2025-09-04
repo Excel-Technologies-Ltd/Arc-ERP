@@ -6,7 +6,7 @@ type CustomerType = {
   customerDocument: Customer | undefined;
 };
 
-const CustomerDetails = ({ customerDocument }: CustomerType) => {
+const CustomerDetailsModal = ({ customerDocument }: CustomerType) => {
   return (
     <>
       <div className='bg-white dark:bg-darkmode rounded-lg'>
@@ -61,4 +61,4 @@ const CustomerDetails = ({ customerDocument }: CustomerType) => {
   );
 };
 
-export default CustomerDetails;
+export default CustomerDetailsModal;

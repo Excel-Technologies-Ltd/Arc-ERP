@@ -15,6 +15,7 @@ import {
   URLStockAvailability,
   URLStockSerial,
   URLStockLedger,
+  URLCustomerBrandLimit,
 } from './routes.url';
 import PrivateGuard from '@/guard/PrivateGuard';
 import PublicGuard from '@/guard/PublicGuard';
@@ -50,6 +51,9 @@ const StockEntryDetails = Loadable(
 const StockAvailability = Loadable(lazy(() => import('../pages/Stock/stock-availability')));
 const SerialQuantity = Loadable(lazy(() => import('../pages/Stock/serial-quantity')));
 const StockLadger = Loadable(lazy(() => import('../pages/Stock/ladger')));
+const CustomerBrandLimitLadger = Loadable(
+  lazy(() => import('../pages/Customer/brand-limit-ladger'))
+);
 
 const routes = [
   {
@@ -119,6 +123,10 @@ const routes = [
                 <CustomerProfile />
               </PermissionGuard>
             ),
+          },
+          {
+            path: URLCustomerBrandLimit(),
+            element: <CustomerBrandLimitLadger />,
           },
           {
             path: URLAddStock(),

@@ -14,6 +14,9 @@ const AntRangePicker = React.forwardRef<RangePickerRef, RangePickerProps>(
         allowClear={allowClear}
         className={className}
         {...rest}
+        style={{
+          minWidth: '260px',
+        }}
         classNames={{
           popup: {
             root: 'single-month-picker',

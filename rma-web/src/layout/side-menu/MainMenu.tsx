@@ -92,7 +92,7 @@ const MainMenu = () => {
         {
           icon: <FaHome />,
           pathname: URLCustomerBrandLimit(),
-          title: 'Customer Brand Limit',
+          title: 'Brand Limit Ladger',
         },
       ],
     },

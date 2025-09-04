@@ -2,13 +2,12 @@ import AntModal from '@/components/Modal/AntModal';
 import CustomTable from '@/components/Table/CustomTable';
 import { getCustomerDocument, getCustomerList } from '@/services/customer/customer';
 import { useEffect, useState } from 'react';
-import { CustomerProfileTableColumn } from './TableColumn';
-import CustomerDetails from './CustomerDetails';
 import AntInput from '@/components/Base/Form/FormInput/AntInput';
 import AntSelect from '@/components/Base/Form/FormSelect/AntSelect';
 import AntButton from '@/components/Base/Button/AntButton';
 import { getTerritoryList } from '@/services/common/commonApi';
 import { ClearOutlined, SearchOutlined } from '@ant-design/icons';
+import { CustomerDetailsModal, CustomerProfileTableColumns } from '@/features/customer';
 
 const CustomerProfile = () => {
   const [customerName, setCustomerName] = useState<string>('');
@@ -30,8 +29,10 @@ const CustomerProfile = () => {
     isLoading: isLoadingCustomerDocument,
     mutate,
   } = getCustomerDocument(customerName);
-  const { data: branchList, isLoading: isLoadingBranchList } = getTerritoryList(searchBranchName);
+  const { data: territoryList, isLoading: isLoadingTerritoryList } =
+    getTerritoryList(searchBranchName);
 
+  // Recall Customer Document when customer name changes
   useEffect(() => {
     if (customerName) {
       mutate(); // Trigger the customer document fetch
@@ -39,8 +40,9 @@ const CustomerProfile = () => {
   }, [customerName, mutate]);
 
   // Table Column
-  const Column = CustomerProfileTableColumn(setCustomerName);
+  const Column = CustomerProfileTableColumns(setCustomerName);
 
+  // Clear Functions
   const handleClear = () => {
     setSearchCustomerName(null);
     setSearchBranchName(null);
@@ -60,19 +62,19 @@ const CustomerProfile = () => {
             value={searchCustomerName ?? ''}
           />
           <AntSelect
-            placeholder='Select Branch'
+            placeholder='Select Territory'
             value={selectedBranchName ?? undefined}
             onChange={(value: string) => {
               setSelectedBranchName(value);
               setSearchBranchName(null);
             }}
             onSearch={(value: string) => setSearchBranchName(value)}
-            loading={isLoadingBranchList}
-            options={branchList?.map((b) => ({
+            loading={isLoadingTerritoryList}
+            options={territoryList?.map((b) => ({
               value: b.name,
               label: b.territory_name,
             }))}
-            notFoundText='No Branch Found'
+            notFoundText='No Territory Found'
           />
           <div className='flex items-center gap-2'>
             <AntButton icon={<SearchOutlined />}>Search</AntButton>
@@ -101,7 +103,7 @@ const CustomerProfile = () => {
         loading={isLoadingCustomerDocument}
         width={800}
       >
-        <CustomerDetails customerDocument={customerDocument} />
+        <CustomerDetailsModal customerDocument={customerDocument} />
       </AntModal>
     </>
   );

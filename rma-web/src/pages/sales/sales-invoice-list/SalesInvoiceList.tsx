@@ -97,10 +97,7 @@ const SalesInvoiceList = () => {
     <>
       <div className='flex flex-col lg:flex-row items-center gap-2 justify-between mt-5 intro-y'>
         <h2 className='text-lg font-medium whitespace-nowrap'>Sales Invoices</h2>
-        <SalesListFilterForm
-          control={control}
-          className='w-full flex flex-col lg:flex-row items-center gap-2'
-        />
+        <SalesListFilterForm control={control} />
         <div className='flex items-center gap-2'>
           <AntButton icon={<SearchOutlined />}>Search</AntButton>
           <AntButton icon={<ClearOutlined />} onClick={handleClear}>
