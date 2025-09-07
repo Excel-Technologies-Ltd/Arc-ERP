@@ -2,11 +2,11 @@ import React from 'react';
 import { Input, type InputProps } from 'antd';
 
 // Define a type for the input type
-type InputType = 'text' | 'password' | 'number';
+// type InputType = 'text' | 'password' | 'number';
 
 // Interface for the props
 interface AntInputProps extends InputProps {
-  type: InputType;
+  type: string;
   label?: string;
   errors?: boolean;
 }

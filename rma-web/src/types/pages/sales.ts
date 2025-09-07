@@ -1,5 +1,13 @@
 import { Dayjs } from 'dayjs';
 
+export interface AddSalesItemTableDataType {
+  item_name?: string;
+  available_stock: number | string;
+  quantity?: number;
+  rate?: number;
+  total?: number;
+}
+
 export type AddSalesFormData = {
   customer_name: string;
   posting_date: Dayjs | undefined;
@@ -9,14 +17,6 @@ export type AddSalesFormData = {
   territory_name: string;
   remarks: string;
 };
-
-export interface AddSalesItemTableDataType {
-  item_name: string;
-  available_stock: number | string;
-  quantity: number;
-  rate: number;
-  total: number;
-}
 
 export interface SalesInvoiceListFilterFormData {
   invoice_number: string;

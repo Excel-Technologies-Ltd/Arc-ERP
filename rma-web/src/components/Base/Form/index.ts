@@ -10,6 +10,7 @@ import InputGroup from './InputGroup';
 import AntUpload from './Upload/AntUpload';
 import AntInput from './FormInput/AntInput';
 import AntSelect from './FormSelect/AntSelect';
+import FormRender from './FormRender';
 
 export {
   FormCheck,
@@ -24,4 +25,5 @@ export {
   AntUpload,
   AntInput,
   AntSelect,
+  FormRender,
 };

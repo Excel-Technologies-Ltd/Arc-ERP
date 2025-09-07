@@ -66,9 +66,14 @@ const Tippy = <C extends React.ElementType = 'span'>(props: TippyProps<C>) => {
     isDisabled();
   }, [props.content]);
 
-  const { className, ...computedProps } = props;
+  const { className, disable, ...computedProps } = props;
   return (
-    <Component ref={tippyRef} className={clsx(['cursor-pointer', className])} {...computedProps}>
+    <Component
+      ref={tippyRef}
+      disable={disable?.toString()}
+      className={clsx(['cursor-pointer', className])}
+      {...computedProps}
+    >
       {props.children}
     </Component>
   );

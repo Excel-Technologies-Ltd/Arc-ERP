@@ -1,6 +1,7 @@
 import { Supplier } from '@/types/Buying/Supplier';
 import { Customer } from '@/types/Selling/Customer';
 import { Territory } from '@/types/Setup/Territory';
+import { Item } from '@/types/Stock/Item';
 import { Warehouse } from '@/types/Stock/Warehouse';
 import { useFrappeGetDocList } from 'frappe-react-sdk';
 
@@ -32,6 +33,14 @@ export const getSupplierDropdownList = (name?: string | null) => {
 export const getCustomerDropdownList = (name?: string | null) => {
   return useFrappeGetDocList<Customer>('Customer', {
     fields: ['name', 'customer_name'],
+    filters: name ? [['name', 'like', `%${name}%`]] : undefined,
+  });
+};
+
+// Api Call to Get Item based on search
+export const getItemDropdownList = (name?: string | null) => {
+  return useFrappeGetDocList<Item>('Item', {
+    fields: ['*'],
     filters: name ? [['name', 'like', `%${name}%`]] : undefined,
   });
 };

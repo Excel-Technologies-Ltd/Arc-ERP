@@ -45,11 +45,11 @@ const AddSalesInvoice = () => {
 
   const handleAddItem = () => {
     const newItem: AddSalesItemTableDataType = {
-      item_name: `Item ${tableData.length + 1}`,
-      available_stock: 'First Select Item Name',
-      quantity: Math.ceil(Math.random() * 10),
-      rate: Math.ceil(Math.random() * 100),
-      total: Math.ceil(Math.random() * 10000),
+      item_name: '',
+      available_stock: 'Select Item Name',
+      quantity: 0,
+      rate: 0,
+      total: 0,
     };
     setTableData([...tableData, newItem]);
   };
@@ -57,6 +57,9 @@ const AddSalesInvoice = () => {
   const handleDeleteItem = (record: AddSalesItemTableDataType) => {
     setTableData(tableData.filter((item) => item !== record));
   };
+
+  // Table Columns
+  const Columns = AddSalesTableColumns({ tableData, setTableData, watch });
 
   return (
     <div>
@@ -97,7 +100,7 @@ const AddSalesInvoice = () => {
       <AntCustomTable<AddSalesItemTableDataType>
         className='mt-5 drop-shadow-md intro-y'
         columns={[
-          ...(AddSalesTableColumns || []),
+          ...(Columns || []),
           {
             title: 'Action',
             dataIndex: 'action',
@@ -123,7 +126,7 @@ const AddSalesInvoice = () => {
           <div className='flex justify-end items-center'>
             <div className='text-lg font-bold'>Total : </div>
             <div className='text-lg font-bold ml-2'>
-              {tableData.reduce((acc, curr) => acc + curr.total, 0)}
+              {tableData.reduce((acc, curr) => acc + (curr.total ?? 0), 0)}
             </div>
           </div>
         )}

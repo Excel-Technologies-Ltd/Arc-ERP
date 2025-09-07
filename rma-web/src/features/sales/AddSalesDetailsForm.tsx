@@ -12,33 +12,44 @@ import {
 import { getCustomerDocument } from '@/services/customer/customer';
 import { useEffect, useState } from 'react';
 import { Customer } from '@/types/Selling/Customer';
+import useDebouncedSearch from '@/hooks/debounce/useDebounceSearch';
 
 const AddSalesDetailsForm = ({ control }: { control: Control<AddSalesFormData> }) => {
   const [customerName] = useWatch({
     control,
     name: ['customer_name'],
   });
-  const [customerDetails, setCustomerDetails] = useState<Customer | undefined>(undefined);
-  const [customerAddress, setCustomerAddress] = useState<string[]>([]);
-  console.log(customerDetails);
+  const [, setCustomerDetails] = useState<Customer | undefined>(undefined);
+  const [customerAddress, setCustomerAddress] = useState<string | null>(null);
 
   // Api Call Start
-  const {
-    data: customerList,
-    isLoading: isLoadingCustomerList,
-    mutate: mutateCustomerList,
-  } = getCustomerDropdownList(customerName);
   const { data: warehouseList, isLoading: isLoadingWarehouseList } = getWarehouseDropdownList();
-  const { data: territoryList, isLoading: isLoadingTerritoryList } = getTerritoryDropdownList();
   const { mutate } = getCustomerDocument(customerName);
   // Api Call End
 
+  // Use debounced search for customer and territory dropdowns
+  const {
+    setSearchInput: setCustomerSearch,
+    data: { data: customerList, isLoading: isLoadingCustomerList, mutate: mutateCustomerList },
+  } = useDebouncedSearch({
+    fetchFunction: getCustomerDropdownList,
+  });
+
+  const {
+    setSearchInput: setTerritorySearch,
+    data: { data: territoryList, isLoading: isLoadingTerritoryList },
+  } = useDebouncedSearch({
+    fetchFunction: getTerritoryDropdownList,
+  });
+
+  // Revalidate Customer Details
   useEffect(() => {
     if (customerName) {
       mutate().then((data) => {
         setCustomerDetails(data);
-        setCustomerAddress((prev) => [...prev, data?.primary_address ?? '']);
+        setCustomerAddress(data?.customer_primary_address ?? null);
       });
+      // Revalidate Customer List
       mutateCustomerList();
     }
   }, [customerName, mutate, mutateCustomerList]);
@@ -51,6 +62,7 @@ const AddSalesDetailsForm = ({ control }: { control: Control<AddSalesFormData> }
         <AntDatePicker placeholder='Select Posting Date' />
       )}
 
+      {/* Customer Name */}
       {RenderController<AddSalesFormData>(
         control,
         'customer_name',
@@ -62,14 +74,19 @@ const AddSalesDetailsForm = ({ control }: { control: Control<AddSalesFormData> }
           }))}
           loading={isLoadingCustomerList}
           notFoundText='No Customer Found'
+          onSearch={(value: string) => setCustomerSearch(value)}
+          onClear={() => setCustomerSearch(null)}
         />
       )}
+
+      {/* Due Date */}
       {RenderController<AddSalesFormData>(
         control,
         'due_date',
         <AntDatePicker placeholder='Select Due Date' />
       )}
 
+      {/* Warehouse Name */}
       {RenderController<AddSalesFormData>(
         control,
         'warehouse_name',
@@ -84,6 +101,7 @@ const AddSalesDetailsForm = ({ control }: { control: Control<AddSalesFormData> }
         />
       )}
 
+      {/* Territory Name */}
       {RenderController<AddSalesFormData>(
         control,
         'territory_name',
@@ -95,21 +113,24 @@ const AddSalesDetailsForm = ({ control }: { control: Control<AddSalesFormData> }
           }))}
           loading={isLoadingTerritoryList}
           notFoundText='No Territory Found'
+          onSearch={(value: string) => setTerritorySearch(value)}
+          onClear={() => setTerritorySearch(null)}
         />
       )}
+
+      {/* Customer Address */}
       {RenderController<AddSalesFormData>(
         control,
         'customer_address',
         <AntSelect
           placeholder='Select Address'
-          options={customerAddress.map((address) => ({
-            value: address,
-            label: address,
-          }))}
+          options={customerAddress ? [{ value: customerAddress, label: customerAddress }] : []}
           notFoundText='No Address Found'
-          disabled={!customerName}
+          // disabled={!customerName ? true : false}
         />
       )}
+
+      {/* Remarks */}
       {RenderController<AddSalesFormData>(
         control,
         'remarks',
