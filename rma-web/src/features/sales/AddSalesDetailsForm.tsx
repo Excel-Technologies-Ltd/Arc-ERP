@@ -1,11 +1,48 @@
-import { Control } from 'react-hook-form';
+import { Control, useWatch } from 'react-hook-form';
 import { RenderController } from '@/lib/hook-form/RenderController';
 import AntSelect from '@/components/Base/Form/FormSelect/AntSelect';
 import AntDatePicker from '@/components/Base/DatePicker/AntDatePicker';
 import AntInput from '@/components/Base/Form/FormInput/AntInput';
 import { AddSalesFormData } from '@/types/pages/sales';
+import {
+  getCustomerDropdownList,
+  getWarehouseDropdownList,
+  getTerritoryDropdownList,
+} from '@/services/common/dropdownApi';
+import { getCustomerDocument } from '@/services/customer/customer';
+import { useEffect, useState } from 'react';
+import { Customer } from '@/types/Selling/Customer';
 
 const AddSalesDetailsForm = ({ control }: { control: Control<AddSalesFormData> }) => {
+  const [customerName] = useWatch({
+    control,
+    name: ['customer_name'],
+  });
+  const [customerDetails, setCustomerDetails] = useState<Customer | undefined>(undefined);
+  const [customerAddress, setCustomerAddress] = useState<string[]>([]);
+  console.log(customerDetails);
+
+  // Api Call Start
+  const {
+    data: customerList,
+    isLoading: isLoadingCustomerList,
+    mutate: mutateCustomerList,
+  } = getCustomerDropdownList(customerName);
+  const { data: warehouseList, isLoading: isLoadingWarehouseList } = getWarehouseDropdownList();
+  const { data: territoryList, isLoading: isLoadingTerritoryList } = getTerritoryDropdownList();
+  const { mutate } = getCustomerDocument(customerName);
+  // Api Call End
+
+  useEffect(() => {
+    if (customerName) {
+      mutate().then((data) => {
+        setCustomerDetails(data);
+        setCustomerAddress((prev) => [...prev, data?.primary_address ?? '']);
+      });
+      mutateCustomerList();
+    }
+  }, [customerName, mutate, mutateCustomerList]);
+
   return (
     <div className='mt-5 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-2 w-full bg-white dark:bg-darkmode-800 p-5 rounded-md drop-shadow-md intro-y'>
       {RenderController<AddSalesFormData>(
@@ -19,10 +56,11 @@ const AddSalesDetailsForm = ({ control }: { control: Control<AddSalesFormData> }
         'customer_name',
         <AntSelect
           placeholder='Select Customer'
-          options={Array.from({ length: 100 }, (_, i) => ({
-            value: `Customer ${i + 1}`,
-            label: `Customer ${i + 1}`,
+          options={customerList?.map((c) => ({
+            value: c.name,
+            label: c.customer_name,
           }))}
+          loading={isLoadingCustomerList}
           notFoundText='No Customer Found'
         />
       )}
@@ -37,10 +75,11 @@ const AddSalesDetailsForm = ({ control }: { control: Control<AddSalesFormData> }
         'warehouse_name',
         <AntSelect
           placeholder='Select Warehouse'
-          options={Array.from({ length: 100 }, (_, i) => ({
-            value: `Warehouse ${i + 1}`,
-            label: `Warehouse ${i + 1}`,
+          options={warehouseList?.map((w) => ({
+            value: w.name,
+            label: w.warehouse_name,
           }))}
+          loading={isLoadingWarehouseList}
           notFoundText='No Warehouse Found'
         />
       )}
@@ -50,10 +89,11 @@ const AddSalesDetailsForm = ({ control }: { control: Control<AddSalesFormData> }
         'territory_name',
         <AntSelect
           placeholder='Select Territory'
-          options={Array.from({ length: 100 }, (_, i) => ({
-            value: `Territory ${i + 1}`,
-            label: `Territory ${i + 1}`,
+          options={territoryList?.map((t) => ({
+            value: t.name,
+            label: t.territory_name,
           }))}
+          loading={isLoadingTerritoryList}
           notFoundText='No Territory Found'
         />
       )}
@@ -62,11 +102,12 @@ const AddSalesDetailsForm = ({ control }: { control: Control<AddSalesFormData> }
         'customer_address',
         <AntSelect
           placeholder='Select Address'
-          options={Array.from({ length: 100 }, (_, i) => ({
-            value: `Address ${i + 1}`,
-            label: `Address ${i + 1}`,
+          options={customerAddress.map((address) => ({
+            value: address,
+            label: address,
           }))}
-          notFoundText='No Address Found Found'
+          notFoundText='No Address Found'
+          disabled={!customerName}
         />
       )}
       {RenderController<AddSalesFormData>(

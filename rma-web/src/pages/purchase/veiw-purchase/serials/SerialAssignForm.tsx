@@ -1,15 +1,15 @@
 import AntDatePicker from '@/components/Base/DatePicker/AntDatePicker';
 import AntSelect from '@/components/Base/Form/FormSelect/AntSelect';
 import { RenderController } from '@/lib/hook-form/RenderController';
-import { getWarehouseList } from '@/services/common/commonApi';
 import { Control } from 'react-hook-form';
 import AntInput from '@/components/Base/Form/FormInput/AntInput';
 import { AssignSerialFormData } from '@/types/pages/purchase';
 import { AntUpload } from '@/components/Base/Form';
+import { getWarehouseDropdownList } from '@/services/common/dropdownApi';
 
 const SerialAssignForm = ({ control }: { control: Control<AssignSerialFormData> }) => {
   // Api Call
-  const { data: warehouseList, isLoading: isLoadingWarehouses } = getWarehouseList();
+  const { data: warehouseList, isLoading: isLoadingWarehouses } = getWarehouseDropdownList(null);
 
   return (
     <>

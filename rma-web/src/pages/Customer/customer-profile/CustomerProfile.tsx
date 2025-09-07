@@ -5,9 +5,9 @@ import { useEffect, useState } from 'react';
 import AntInput from '@/components/Base/Form/FormInput/AntInput';
 import AntSelect from '@/components/Base/Form/FormSelect/AntSelect';
 import AntButton from '@/components/Base/Button/AntButton';
-import { getTerritoryList } from '@/services/common/commonApi';
 import { ClearOutlined, SearchOutlined } from '@ant-design/icons';
 import { CustomerDetailsModal, CustomerProfileTableColumns } from '@/features/customer';
+import { getTerritoryDropdownList } from '@/services/common/dropdownApi';
 
 const CustomerProfile = () => {
   const [customerName, setCustomerName] = useState<string>('');
@@ -30,7 +30,7 @@ const CustomerProfile = () => {
     mutate,
   } = getCustomerDocument(customerName);
   const { data: territoryList, isLoading: isLoadingTerritoryList } =
-    getTerritoryList(searchBranchName);
+    getTerritoryDropdownList(searchBranchName);
 
   // Recall Customer Document when customer name changes
   useEffect(() => {

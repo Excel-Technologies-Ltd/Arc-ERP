@@ -8,9 +8,9 @@ import { PURCHASE_SELECT_STATUS } from '@/constants/app-strings';
 import CustomTable from '@/components/Table/CustomTable';
 import { PurchaseInvoice } from '@/types/Accounts/PurchaseInvoice';
 import { PurchaseTableColumn } from './TableColumn';
-import { getSupplierList } from '@/services/common/commonApi';
 import AntButton from '@/components/Base/Button/AntButton';
 import { ClearOutlined, SearchOutlined } from '@ant-design/icons';
+import { getSupplierDropdownList } from '@/services/common/dropdownApi';
 
 const Purchase = () => {
   const [supplierSearch, setSupplierSearch] = useState<string | null>(null);
@@ -22,7 +22,8 @@ const Purchase = () => {
   const [dateRange, setDateRange] = useState<[Dayjs, Dayjs] | null>(null);
 
   // API Call to get suppliers based on search
-  const { data: suppliers, isLoading: isLoadingSuppliers } = getSupplierList(supplierSearch);
+  const { data: suppliers, isLoading: isLoadingSuppliers } =
+    getSupplierDropdownList(supplierSearch);
   const {
     data: purchaseInvoices,
     isLoading: isLoadingPurchaseInvoices,
