@@ -1,4 +1,4 @@
-import { Control, useWatch } from 'react-hook-form';
+import { Control, UseFormSetValue, useWatch } from 'react-hook-form';
 import { RenderController } from '@/lib/hook-form/RenderController';
 import AntSelect from '@/components/Base/Form/FormSelect/AntSelect';
 import AntDatePicker from '@/components/Base/DatePicker/AntDatePicker';
@@ -13,18 +13,30 @@ import { getCustomerDocument } from '@/services/customer/customer';
 import { useEffect, useState } from 'react';
 import { Customer } from '@/types/Selling/Customer';
 import useDebouncedSearch from '@/hooks/debounce/useDebounceSearch';
+import dayjs from 'dayjs';
+import { getCustomerRemainingBalance } from '@/services/sales/SalesInvoice';
 
-const AddSalesDetailsForm = ({ control }: { control: Control<AddSalesFormData> }) => {
+const AddSalesDetailsForm = ({
+  control,
+  setValue,
+}: {
+  control: Control<AddSalesFormData>;
+  setValue: UseFormSetValue<AddSalesFormData>;
+}) => {
   const [customerName] = useWatch({
     control,
     name: ['customer_name'],
   });
-  const [, setCustomerDetails] = useState<Customer | undefined>(undefined);
+  const [customerDetails, setCustomerDetails] = useState<Customer | undefined>(undefined);
   const [customerAddress, setCustomerAddress] = useState<string | null>(null);
 
   // Api Call Start
   const { data: warehouseList, isLoading: isLoadingWarehouseList } = getWarehouseDropdownList();
   const { mutate } = getCustomerDocument(customerName);
+  const { mutate: mutateRemainingBalance } = getCustomerRemainingBalance({
+    party_type: 'Customer',
+    party: customerName ?? '',
+  });
   // Api Call End
 
   // Use debounced search for customer and territory dropdowns
@@ -45,21 +57,35 @@ const AddSalesDetailsForm = ({ control }: { control: Control<AddSalesFormData> }
   // Revalidate Customer Details
   useEffect(() => {
     if (customerName) {
-      mutate().then((data) => {
-        setCustomerDetails(data);
-        setCustomerAddress(data?.customer_primary_address ?? null);
-      });
+      mutate()
+        .then((data) => {
+          setCustomerDetails(data);
+          setValue('customer_details', data);
+          setCustomerAddress(data?.customer_primary_address ?? null);
+        })
+        .finally(() => {
+          mutateRemainingBalance().then((data) => {
+            const total_brandLimit =
+              customerDetails?.credit_limits?.reduce(
+                (acc, curr) => acc + (curr.credit_limit || 0),
+                0
+              ) ?? 0;
+
+            const remaining_balance = total_brandLimit - (data?.message || 0);
+            setValue('remaining_balance', remaining_balance);
+          });
+        });
       // Revalidate Customer List
       mutateCustomerList();
     }
-  }, [customerName, mutate, mutateCustomerList]);
+  }, [customerName, mutate, mutateCustomerList, setValue, customerDetails, mutateRemainingBalance]);
 
   return (
     <div className='mt-5 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-2 w-full bg-white dark:bg-darkmode-800 p-5 rounded-md drop-shadow-md intro-y'>
       {RenderController<AddSalesFormData>(
         control,
         'posting_date',
-        <AntDatePicker placeholder='Select Posting Date' />
+        <AntDatePicker placeholder='Select Posting Date' minDate={dayjs()} />
       )}
 
       {/* Customer Name */}
@@ -126,7 +152,7 @@ const AddSalesDetailsForm = ({ control }: { control: Control<AddSalesFormData> }
           placeholder='Select Address'
           options={customerAddress ? [{ value: customerAddress, label: customerAddress }] : []}
           notFoundText='No Address Found'
-          // disabled={!customerName ? true : false}
+          disabled={!customerName}
         />
       )}
 

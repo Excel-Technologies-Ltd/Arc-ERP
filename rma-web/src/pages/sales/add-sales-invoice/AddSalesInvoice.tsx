@@ -11,6 +11,12 @@ import { useAppDispatch } from '@/stores/hooks';
 import { handleDrawer } from '@/stores/drawerSlice';
 import { AddSalesFormData, AddSalesItemTableDataType } from '@/types/pages/sales';
 import { AddSalesDetailsForm, AddSalesTableColumns } from '@/features/sales';
+import { addSalesInvoice } from '@/services/sales/SalesInvoice';
+import { SALES_INVOICE } from '@/constants/doctype-strings';
+import { SalesInvoice } from '@/types/Accounts/SalesInvoice';
+import { COMPANY_NAME } from '@/constants/app-strings';
+import { BrandWiseAllocations } from '@/types/ExcelERPNext/BrandWiseAllocations';
+import { formatCurrency } from '@/utils/helper';
 
 const AddSalesInvoice = () => {
   const notify = useNotify();
@@ -21,6 +27,7 @@ const AddSalesInvoice = () => {
     reset,
     watch,
     handleSubmit: submitForm,
+    setValue,
   } = useForm<AddSalesFormData>({
     mode: 'onChange',
     resetOptions: {
@@ -28,19 +35,62 @@ const AddSalesInvoice = () => {
     },
     defaultValues: {
       posting_date: dayjs(),
+      customer_details: undefined,
+      remaining_balance: 0,
     },
   });
-  const { customer_name } = watch();
+  const { customer_name, customer_details, remaining_balance } = watch();
+
+  // Api Call Start
+  const { createDoc: CreateSalesInvoice, loading: CreateSalesLoading } = addSalesInvoice();
+  // Api Call End
 
   const handleClear = () => {
     reset();
+    setTableData([]);
   };
 
   const handleSubmit = (data: AddSalesFormData) => {
-    notify.open({
-      message: 'Sales Invoice Submitted',
-      description: `Selected Values: ${JSON.stringify(data)}`,
-    });
+    const payload = {
+      creation: dayjs().format('YYYY-MM-DD HH:mm:ss'),
+      modified: dayjs().format('YYYY-MM-DD HH:mm:ss'),
+      docstatus: 1,
+      customer: data.customer_name,
+      customer_name: data.customer_name,
+      company: COMPANY_NAME,
+      company_address: data.customer_details?.customer_primary_address,
+      posting_date: dayjs(data.posting_date).format('YYYY-MM-DD'),
+      set_posting_time: 1,
+      due_date: dayjs(data.due_date).format('YYYY-MM-DD'),
+      territory: data.territory_name,
+      total_qty: tableData.reduce((acc, curr) => acc + (curr.quantity ?? 0), 0),
+      update_stock: 0,
+      total: tableData.reduce((acc, curr) => acc + (curr.total ?? 0), 0),
+      items: tableData.map((item) => ({
+        name: item.item_name,
+        item_name: item.item_name,
+        item_code: item.item_name,
+        qty: item.quantity,
+        rate: item.rate,
+        amount: item.total,
+      })),
+      remarks: data.remarks,
+      sales_team: data.customer_details?.sales_team,
+    } as SalesInvoice;
+
+    CreateSalesInvoice(SALES_INVOICE, payload)
+      .then(() => {
+        notify.success({
+          message: 'Sales Invoice Submitted Successfully',
+        });
+        handleClear();
+      })
+      .catch((err) => {
+        notify.error({
+          message: err.message,
+          description: err.exception,
+        });
+      });
   };
 
   const handleAddItem = () => {
@@ -67,7 +117,9 @@ const AddSalesInvoice = () => {
       <div className='flex justify-between items-center mt-5'>
         <h2 className='text-2xl text-primary font-bold'>Details</h2>
         <div className='flex gap-2 items-center'>
-          <div className='text-lg text-primary font-semibold'>Remaining Balance : 0</div>
+          <div className='text-lg text-primary font-semibold'>
+            Remaining Balance : {remaining_balance}
+          </div>
           <AntButton
             label='Limit Details'
             icon={<ClearOutlined />}
@@ -90,11 +142,12 @@ const AddSalesInvoice = () => {
             icon={<SendOutlined />}
             type='primary'
             onClick={submitForm(handleSubmit)}
+            loading={CreateSalesLoading}
           />
         </div>
       </div>
       {/* Form Section */}
-      <AddSalesDetailsForm control={control} />
+      <AddSalesDetailsForm control={control} setValue={setValue} />
 
       {/* Table Section */}
       <AntCustomTable<AddSalesItemTableDataType>
@@ -136,30 +189,31 @@ const AddSalesInvoice = () => {
 
       <AntDrawer title='Brand Wise Credit Limit'>
         <div className='bg-white rounded-lg shadow-md overflow-hidden'>
-          {/* Table Header */}
-          <div className='grid grid-cols-12 bg-gray-50 px-4 py-3 border-b border-gray-200 font-semibold text-gray-700'>
-            <div className='col-span-5'>Brand</div>
-            <div className='col-span-3'>Limit</div>
-            <div className='col-span-4 text-right'>Invoice Amount</div>
-          </div>
-
-          {/* Table Body */}
-          <div className='divide-y divide-gray-100'>
-            {Array.from({ length: 50 }).map((_, index: number) => (
-              <div
-                key={index}
-                className='grid grid-cols-12 px-4 py-3 items-center hover:bg-gray-50 transition-colors duration-150'
-              >
-                <div className='col-span-5 flex items-center'>
-                  <div className='font-medium text-gray-900'>Brand Name {index + 1}</div>
-                </div>
-                <div className='col-span-3 font-medium text-gray-700'>$1,000,000</div>
-                <div className='col-span-4 text-right'>
-                  <span className='font-medium text-green-600'>$850,000</span>
-                  <div className='text-xs text-gray-500 mt-1'>Due: 05/15/2023</div>
-                </div>
-              </div>
-            ))}
+          <div className='overflow-x-auto rounded-lg border'>
+            <table className='min-w-full table-auto'>
+              <thead className='bg-primary text-white'>
+                <tr>
+                  <th className='px-6 py-3 text-left'>Brand Name</th>
+                  <th className='px-6 py-3 text-left'>Limit Amount</th>
+                </tr>
+              </thead>
+              <tbody className='bg-gray-50'>
+                {customer_details?.custom_brand_wise_allocations?.map(
+                  (item: BrandWiseAllocations) => (
+                    <tr key={item.name}>
+                      <td className='px-6 py-4 text-left'>{item.brand}</td>
+                      <td className='px-6 py-4 text-left'>{formatCurrency(item.limit)}</td>
+                    </tr>
+                  )
+                )}
+                <tr>
+                  <td className='px-6 py-4 text-left'>Others</td>
+                  <td className='px-6 py-4 text-left'>
+                    {formatCurrency(customer_details?.custom_other_brands_limit || 0)}
+                  </td>
+                </tr>
+              </tbody>
+            </table>
           </div>
         </div>
       </AntDrawer>

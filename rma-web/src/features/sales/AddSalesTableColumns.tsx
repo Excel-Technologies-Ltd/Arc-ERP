@@ -1,5 +1,3 @@
-import AntInput from '@/components/Base/Form/FormInput/AntInput';
-import AntSelect from '@/components/Base/Form/FormSelect/AntSelect';
 import { type TableProps } from 'antd/es/table';
 import { AddSalesFormData, AddSalesItemTableDataType } from '@/types/pages/sales';
 import { getItemDropdownList } from '@/services/common/dropdownApi';
@@ -8,6 +6,7 @@ import { UseFormWatch } from 'react-hook-form';
 import { getBinList } from '@/services/bin/bin';
 import { useEffect, useState } from 'react';
 import { useNotify } from '@/hooks/useNotify';
+import { AntInput, AntSelect } from '@/components/Base/Form';
 
 export const AddSalesTableColumns = ({
   tableData,
@@ -20,7 +19,9 @@ export const AddSalesTableColumns = ({
 }): TableProps<AddSalesItemTableDataType>['columns'] => {
   const notify = useNotify();
   const { warehouse_name } = watch();
-  const [itemSelect, setItemSelect] = useState<string>('');
+  const [selectedItemIndex, setSelectedItemIndex] = useState<number | null>(null);
+  const [selectedItemName, setSelectedItemName] = useState<string>('');
+
   // Api Call
   const {
     setSearchInput,
@@ -28,7 +29,7 @@ export const AddSalesTableColumns = ({
   } = useDebouncedSearch({
     fetchFunction: getItemDropdownList,
   });
-  const { mutate: mutateBinList } = getBinList(itemSelect, warehouse_name ?? '');
+  const { mutate: mutateBinList } = getBinList(selectedItemName, warehouse_name ?? '');
   // Api Call End
 
   // Update Table Data on Change
@@ -54,26 +55,29 @@ export const AddSalesTableColumns = ({
     );
   };
 
-  // Handle Item Change
+  // Handle Item Change - Update available stock for specific row
   useEffect(() => {
-    if (itemSelect) {
+    if (selectedItemName && selectedItemIndex !== null && warehouse_name) {
       mutateBinList().then((data) => {
         setTableData(
-          tableData.map((item) => ({
-            ...item,
-            available_stock: data?.message?.actual_qty || '0',
-          }))
+          tableData.map((item, i) => {
+            if (i !== selectedItemIndex) return item;
+            return {
+              ...item,
+              available_stock: data?.message?.actual_qty || '0',
+            };
+          })
         );
       });
     }
-  }, [itemSelect, warehouse_name, mutateBinList]);
+  }, [selectedItemName, warehouse_name, selectedItemIndex, mutateBinList]);
 
   return [
     {
       title: 'Item',
       dataIndex: 'item_name',
       key: 'item_name',
-      render: () => (
+      render: (_, __, index) => (
         <AntSelect
           placeholder='Select Item'
           options={itemList?.map((i) => ({
@@ -91,8 +95,15 @@ export const AddSalesTableColumns = ({
                 message: 'Error',
                 description: 'Please select warehouse first',
               });
+              return;
             }
-            setItemSelect(value);
+
+            // Update the item_name for the specific row
+            handleTableDataChange('item_name', index, value);
+
+            // Set the selected item and index to trigger the useEffect
+            setSelectedItemName(value);
+            setSelectedItemIndex(index);
           }}
         />
       ),
