@@ -15,6 +15,7 @@ import { Customer } from '@/types/Selling/Customer';
 import useDebouncedSearch from '@/hooks/debounce/useDebounceSearch';
 import dayjs from 'dayjs';
 import { getCustomerRemainingBalance } from '@/services/sales/SalesInvoice';
+import { CUSTOMER } from '@/constants/doctype-strings';
 
 const AddSalesDetailsForm = ({
   control,
@@ -34,7 +35,7 @@ const AddSalesDetailsForm = ({
   const { data: warehouseList, isLoading: isLoadingWarehouseList } = getWarehouseDropdownList();
   const { mutate } = getCustomerDocument(customerName);
   const { mutate: mutateRemainingBalance } = getCustomerRemainingBalance({
-    party_type: 'Customer',
+    party_type: CUSTOMER,
     party: customerName ?? '',
   });
   // Api Call End

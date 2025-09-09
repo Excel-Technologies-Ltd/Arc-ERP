@@ -1,4 +1,5 @@
 import { parsePaginationParams } from '@/components/Pagination/pagination.utils';
+import { CUSTOMER } from '@/constants/doctype-strings';
 import { Customer } from '@/types/Selling/Customer';
 import {
   Filter,
@@ -29,7 +30,7 @@ export const getCustomerList = ({ customer_name, territory }: CustomerFilters) =
     isLoading: isLoadingCustomerList,
     isValidating: isValidatingCustomerList,
     error: errorCustomerList,
-  } = useFrappeGetDocList<Customer>('Customer', {
+  } = useFrappeGetDocList<Customer>(CUSTOMER, {
     fields: [
       'name',
       'customer_name',
@@ -52,7 +53,7 @@ export const getCustomerList = ({ customer_name, territory }: CustomerFilters) =
     isLoading: isLoadingCustomercount,
     isValidating: isValidatingCustomercount,
     error: errorCustomercount,
-  } = useFrappeGetDocCount('Customer', conditions);
+  } = useFrappeGetDocCount(CUSTOMER, conditions);
 
   // return data
   return {
@@ -66,7 +67,7 @@ export const getCustomerList = ({ customer_name, territory }: CustomerFilters) =
 
 // Api Call to get customer document
 export const getCustomerDocument = (name: string) => {
-  return useFrappeGetDoc<Customer>('Customer', name, `name:${name}`, {
+  return useFrappeGetDoc<Customer>(CUSTOMER, name, `name:${name}`, {
     isPaused: () => !name,
   });
 };

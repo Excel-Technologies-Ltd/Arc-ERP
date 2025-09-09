@@ -7,6 +7,7 @@ import {
 import { PurchaseInvoice } from '@/types/Accounts/PurchaseInvoice';
 import { parsePaginationParams } from '@/components/Pagination/pagination.utils';
 import { useSearchParams } from 'react-router-dom';
+import { PURCHASE_INVOICE } from '@/constants/doctype-strings';
 
 export interface PurchaseInvoiceFilters {
   purchase_invoice_number?: string;
@@ -36,7 +37,7 @@ export const getPurchaseInvoiceList = ({
     isLoading: isLoadingPurchaseInvoiceList,
     isValidating: isValidatingPurchaseInvoiceList,
     error: errorPurchaseInvoiceList,
-  } = useFrappeGetDocList<PurchaseInvoice>('Purchase Invoice', {
+  } = useFrappeGetDocList<PurchaseInvoice>(PURCHASE_INVOICE, {
     fields: ['*'],
     filters: conditions,
     limit: pageSize,
@@ -48,7 +49,7 @@ export const getPurchaseInvoiceList = ({
     isLoading: isLoadingPurchaseInvoicecount,
     isValidating: isValidatingPurchaseInvoicecount,
     error: errorPurchaseInvoicecount,
-  } = useFrappeGetDocCount('Purchase Invoice', conditions);
+  } = useFrappeGetDocCount(PURCHASE_INVOICE, conditions);
 
   return {
     data: purchaseInvoiceList,
@@ -61,5 +62,5 @@ export const getPurchaseInvoiceList = ({
 
 // API Call to get purchase invoice details
 export const getPurchaseInvoiceDetails = (invoice_number: string) => {
-  return useFrappeGetDoc<PurchaseInvoice>('Purchase Invoice', invoice_number);
+  return useFrappeGetDoc<PurchaseInvoice>(PURCHASE_INVOICE, invoice_number);
 };

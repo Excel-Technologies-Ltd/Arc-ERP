@@ -1,7 +1,7 @@
+import { ColumnDateTime } from '@/components/Table/TableColumnUi';
 import { URLStockEntryDetails } from '@/router/routes.url';
 import { StockEntry } from '@/types/Stock/StockEntry';
 import { TableColumn } from '@/types/Table/table-types';
-import dayjs from 'dayjs';
 import { Link } from 'react-router-dom';
 
 export const StockEntryTableColumns = (): TableColumn<StockEntry>[] => {
@@ -63,14 +63,7 @@ export const StockEntryTableColumns = (): TableColumn<StockEntry>[] => {
     {
       key: 'posting_date',
       title: 'Posting Date',
-      render: (value) => (
-        <div className='flex flex-col text-xs'>
-          <span className='font-medium'>{dayjs(value).format('DD MMM, YYYY')}</span>
-          <span className='text-primary dark:text-darkmode-50'>
-            {dayjs(value).format('hh:mm A')}
-          </span>
-        </div>
-      ),
+      render: (value) => ColumnDateTime(value.toString()),
     },
     {
       key: 'territory',

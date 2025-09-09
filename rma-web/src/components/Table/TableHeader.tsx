@@ -11,7 +11,7 @@ const TableHeader = <T,>({ headers }: TableHeaderProps<T>) => {
       <Table.Tr>
         {headers.map((header, index) => (
           <Table.Th
-            key={header.key || index}
+            key={`${header.key}-${index}`}
             style={{ width: header.width }}
             className='border-b-0 whitespace-nowrap'
           >

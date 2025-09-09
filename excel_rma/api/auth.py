@@ -4,11 +4,12 @@ PERMISSIONS = ["read", "write", "create", "delete", "submit", "cancel", "amend",
 
 @frappe.whitelist(allow_guest=True)
 def user_details_with_permission(doctypes=None):
+    
     # Normalize doctypes
     if not doctypes:
         rma = frappe.get_cached_doc("RMA Settings")
         doctypes = [row.doctype_name for row in (rma.doctype_list or [])]
-    elif isinstance(doctypes, str):
+    elif isinstance(doctypes, str): 
         doctypes = [doctypes]
 
     # Per-doctype permissions
@@ -31,3 +32,4 @@ def user_details_with_permission(doctypes=None):
         "warehouse": warehouses,
         "permissions": user_permissions,
     }
+

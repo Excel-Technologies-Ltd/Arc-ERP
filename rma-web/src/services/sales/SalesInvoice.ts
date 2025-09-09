@@ -1,6 +1,8 @@
-import { useFrappeCreateDoc, useFrappeGetCall } from 'frappe-react-sdk';
+import { useFrappeCreateDoc, useFrappeGetCall, useFrappeGetDocList } from 'frappe-react-sdk';
 import { GET_REMAINING_BALANCE } from '@/constants/url-strings';
 import { COMPANY_NAME } from '@/constants/app-strings';
+import { SalesInvoice } from '@/types/Accounts/SalesInvoice';
+import { SALES_INVOICE } from '@/constants/doctype-strings';
 
 // Add Sales Invoice
 export const addSalesInvoice = () => {
@@ -30,4 +32,20 @@ export const getCustomerRemainingBalance = ({
       },
     }
   );
+};
+
+// get Sales Invoice List
+export const getSalesInvoiceList = () => {
+  return useFrappeGetDocList<SalesInvoice>(SALES_INVOICE, {
+    fields: [
+      'name',
+      'status',
+      'creation',
+      'customer_name',
+      'total',
+      'territory',
+      'remarks',
+      'posting_date',
+    ],
+  });
 };
