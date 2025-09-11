@@ -1,6 +1,4 @@
-import Button from '@/components/Base/Button';
 import { type TableProps } from 'antd/es/table';
-import { PlusOutlined } from '@ant-design/icons';
 import { ProductDataType } from '../Serials';
 
 export const ProductTableColumns: TableProps<ProductDataType>['columns'] = [
@@ -34,19 +32,5 @@ export const ProductTableColumns: TableProps<ProductDataType>['columns'] = [
     title: 'Warrenty Months',
     dataIndex: 'warrenty_months',
     key: 'warrenty_months',
-  },
-  {
-    title: 'Add Serial',
-    key: 'add_serial',
-    render: (_, record) => (
-      <Button
-        variant='outline-primary'
-        onClick={() => {
-          console.log(record);
-        }}
-      >
-        <PlusOutlined />
-      </Button>
-    ),
   },
 ];

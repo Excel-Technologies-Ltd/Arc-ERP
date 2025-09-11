@@ -14,3 +14,20 @@
 .single-month-picker .ant-picker-panel .ant-picker-header > * {
   visibility: visible !important; /* Ensure navigation arrows are visible */
 }
+
+.table-responsive-container {
+  width: 100%;
+  overflow-x: auto;
+}
+
+/* Optional: Add some styling for better mobile appearance */
+@media (max-width: 768px) {
+  .table-responsive-container {
+    border: 1px solid #f0f0f0;
+    border-radius: 8px;
+  }
+
+  .table-responsive-container .ant-table {
+    min-width: 600px; /* Minimum width to ensure table doesn't get too narrow */
+  }
+}

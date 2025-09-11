@@ -1,0 +1,9 @@
+export const SALES_INVOICE = 'Sales Invoice';
+export const PURCHASE_INVOICE = 'Purchase Invoice';
+export const PURCHASE = 'Purchase';
+export const CUSTOMER = 'Customer';
+export const BIN = 'Bin';
+export const WAREHOUSE = 'Warehouse';
+export const TERRITORY = 'Territory';
+export const SUPPLIER = 'Supplier';
+export const ITEM = 'Item';

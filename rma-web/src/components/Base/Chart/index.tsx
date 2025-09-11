@@ -1,20 +1,18 @@
-import { createRef, useEffect, useRef } from "react";
-import ChartJs, { ChartConfiguration } from "chart.js/auto";
+import { createRef, useEffect, useRef } from 'react';
+import ChartJs, { ChartConfiguration } from 'chart.js/auto';
 
 export interface ChartElement extends HTMLCanvasElement {
   instance: ChartJs;
 }
 
-export interface ChartProps
-  extends React.ComponentPropsWithoutRef<"canvas">,
-    ChartConfiguration {
-  width?: number | "auto";
-  height?: number | "auto";
+export interface ChartProps extends React.ComponentPropsWithoutRef<'canvas'>, ChartConfiguration {
+  width?: number | 'auto';
+  height?: number | 'auto';
   getRef?: (el: ChartElement | null) => void;
 }
 
 const init = (el: ChartElement, props: ChartProps) => {
-  const canvas = el?.getContext("2d");
+  const canvas = el?.getContext('2d');
   if (canvas) {
     const chart = new ChartJs(canvas, {
       type: props.type,
@@ -28,15 +26,15 @@ const init = (el: ChartElement, props: ChartProps) => {
 };
 
 function Chart({
-  type = "line",
+  type = 'line',
   data = {
     datasets: [],
   },
   options = {},
-  width = "auto",
-  height = "auto",
+  width = 'auto',
+  height = 'auto',
   getRef = () => {},
-  className = "",
+  className = '',
   ...computedProps
 }: ChartProps) {
   const props = {
@@ -74,11 +72,7 @@ function Chart({
         height: `${height}px`,
       }}
     >
-      <canvas
-        {...computedProps}
-        className={props.className}
-        ref={chartRef}
-      ></canvas>
+      <canvas {...computedProps} className={props.className} ref={chartRef}></canvas>
     </div>
   );
 }

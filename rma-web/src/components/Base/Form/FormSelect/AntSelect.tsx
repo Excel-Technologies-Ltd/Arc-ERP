@@ -14,7 +14,6 @@ const AntSelect: React.FC<AntSelectProps> = (props) => {
     className = 'w-full',
     loading = false,
     notFoundText = 'No options',
-    options,
     ...rest
   } = props;
   return (
@@ -28,7 +27,24 @@ const AntSelect: React.FC<AntSelectProps> = (props) => {
       filterOption={(input, option) =>
         (option?.label as string)?.toLowerCase().includes(input.toLowerCase())
       }
-      options={options}
+      // styles={{
+      //   root: {
+      //     backgroundColor: 'red',
+      //   },
+      //   popup: {},
+      // }}
+      // dropdownStyle={{ minWidth: '400px' }} // Ensure dropdown is wide enough
+      // dropdownRender={(menu) => (
+      //   <div style={{ padding: '1px' }}>
+      //     {React.cloneElement(menu as React.ReactElement, {
+      //       style: {
+      //         ...((menu as React.ReactElement).props.style || {}),
+      //         whiteSpace: 'wrap', // Allow text wrapping
+      //         wordBreak: 'break-word', // Break long words if needed
+      //       },
+      //     })}
+      // </div>
+      // )}
       {...rest}
     />
   );

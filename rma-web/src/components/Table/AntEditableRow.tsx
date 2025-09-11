@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useRef, useState } from 'react';
 import { Form } from 'antd';
 import type { FormInstance as AntFormInstance } from 'antd';
 import dayjs from 'dayjs';
-import AntDatePicker from '../DatePicker/AntDatePicker';
+import AntDatePicker from '../Base/DatePicker/AntDatePicker';
 import AntInput from '../Base/Form/FormInput/AntInput';
 
 const EditableContext = React.createContext<AntFormInstance<any> | null>(null);
@@ -80,19 +80,9 @@ export const EditableCell = <T extends Record<string, any>>({
   if (editable) {
     let inputNode;
     if (inputType === 'date') {
-      inputNode = (
-        <AntDatePicker
-          ref={inputRef}
-          onBlur={save}
-          format='YYYY-MM-DD'
-          onChange={save}
-          size='small'
-        />
-      );
+      inputNode = <AntDatePicker onBlur={save} format='YYYY-MM-DD' onChange={save} size='small' />;
     } else {
-      inputNode = (
-        <AntInput ref={inputRef} onPressEnter={save} onBlur={save} size='small' type='text' />
-      );
+      inputNode = <AntInput onPressEnter={save} onBlur={save} size='small' type='text' />;
     }
 
     childNode = editing ? (
@@ -117,38 +107,38 @@ export const EditableCell = <T extends Record<string, any>>({
   return <td {...restProps}>{childNode}</td>;
 };
 
-interface EditableTableComponents {
-  body: {
-    row: typeof EditableRow;
-    cell: typeof EditableCell;
-  };
-}
+// interface EditableTableComponents {
+//   body: {
+//     row: typeof EditableRow;
+//     cell: typeof EditableCell;
+//   };
+// }
 
-export const editableTableComponents: EditableTableComponents = {
-  body: {
-    row: EditableRow,
-    cell: EditableCell,
-  },
-};
+// export const editableTableComponents: EditableTableComponents = {
+//   body: {
+//     row: EditableRow,
+//     cell: EditableCell,
+//   },
+// };
 
-export const makeEditable = <T extends Record<string, any>>(
-  columns: any[],
-  handleSave: (record: T) => void
-) => {
-  return columns.map((col) => {
-    if (!col.editable) {
-      return col;
-    }
-    return {
-      ...col,
-      onCell: (record: T) => ({
-        record,
-        editable: col.editable,
-        dataIndex: col.dataIndex,
-        title: col.title,
-        handleSave,
-        inputType: col.inputType || 'text',
-      }),
-    };
-  });
-};
+// export const makeEditable = <T extends Record<string, any>>(
+//   columns: any[],
+//   handleSave: (record: T) => void
+// ) => {
+//   return columns.map((col) => {
+//     if (!col.editable) {
+//       return col;
+//     }
+//     return {
+//       ...col,
+//       onCell: (record: T) => ({
+//         record,
+//         editable: col.editable,
+//         dataIndex: col.dataIndex,
+//         title: col.title,
+//         handleSave,
+//         inputType: col.inputType || 'text',
+//       }),
+//     };
+//   });
+// };

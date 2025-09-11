@@ -1,5 +1,4 @@
-type PolymorphicRef<C extends React.ElementType> =
-  React.ComponentPropsWithRef<C>["ref"];
+type PolymorphicRef<C extends React.ElementType> = React.ComponentPropsWithRef<C>['ref'];
 
 type AsProp<C extends React.ElementType> = {
   as?: C;
@@ -7,7 +6,7 @@ type AsProp<C extends React.ElementType> = {
 
 type PropsToOmit<C extends React.ElementType, P> = keyof (AsProp<C> & P);
 
-type PolymorphicComponentProp<C extends React.ElementType, Props = {}> = Omit<
+type PolymorphicComponentProp<C extends React.ElementType, Props = unknown> = Omit<
   React.PropsWithChildren<AsProp<C>>,
   keyof Props
 > &
@@ -16,21 +15,19 @@ type PolymorphicComponentProp<C extends React.ElementType, Props = {}> = Omit<
 
 type PolymorphicComponentPropWithRef<
   C extends React.ElementType,
-  Props = {}
+  Props = unknown,
 > = PolymorphicComponentProp<C, Props> & { ref?: PolymorphicRef<C> };
 
 type ExtractProps<T> = T extends React.ComponentType<infer P> ? P : T;
 
-type DotPrefix<T extends string> = T extends "" ? "" : `.${T}`;
+type DotPrefix<T extends string> = T extends '' ? '' : `.${T}`;
 
 type DotNestedKeys<T> = (
   T extends object
     ? {
-        [K in Exclude<keyof T, symbol>]: `${K}${DotPrefix<
-          DotNestedKeys<T[K]>
-        >}`;
+        [K in Exclude<keyof T, symbol>]: `${K}${DotPrefix<DotNestedKeys<T[K]>>}`;
       }[Exclude<keyof T, symbol>]
-    : ""
+    : ''
 ) extends infer D
   ? Extract<D, string>
   : never;

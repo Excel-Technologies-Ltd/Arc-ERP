@@ -1,37 +1,19 @@
-import { useFrappeGetDoc, useFrappeGetDocList } from 'frappe-react-sdk';
+import {
+  type Filter,
+  useFrappeGetDoc,
+  useFrappeGetDocCount,
+  useFrappeGetDocList,
+} from 'frappe-react-sdk';
+import { PurchaseInvoice } from '@/types/Accounts/PurchaseInvoice';
+import { parsePaginationParams } from '@/components/Pagination/pagination.utils';
+import { useSearchParams } from 'react-router-dom';
+import { PURCHASE_INVOICE } from '@/constants/doctype-strings';
 
-// Purchase Invoice Single Document Interface
-export interface PurchaseInvoiceType {
-  name: string;
-  supplier: string;
-  posting_date: string;
-  set_warehouse: string;
-  status: string;
-  items: {
-    purchase_order: string;
-    name: string;
-    item_group: string;
-    item_name: string;
-    qty: number;
-    rate: number;
-    amount: number;
-  }[];
-}
-
-// Purchase Invoice List Document Interface
 export interface PurchaseInvoiceFilters {
   purchase_invoice_number?: string;
   status?: string;
   supplier?: string;
 }
-
-// API Call to get suppliers based on search
-export const getSupplierList = (supplierSearch: string | null) => {
-  return useFrappeGetDocList('Supplier', {
-    fields: ['name', 'supplier_name'],
-    filters: supplierSearch ? [['supplier_name', 'like', `%${supplierSearch}%`]] : undefined,
-  });
-};
 
 // API Call to get purchase orders
 export const getPurchaseInvoiceList = ({
@@ -39,24 +21,46 @@ export const getPurchaseInvoiceList = ({
   status,
   supplier,
 }: PurchaseInvoiceFilters) => {
-  const conditions: Array<[string, 'like', string]> = [];
+  const [searchParams] = useSearchParams();
+  const { limit_start, pageSize } = parsePaginationParams(searchParams);
 
-  if (purchase_invoice_number) {
-    conditions.push(['name', 'like', `%${purchase_invoice_number}%`]);
-  }
-  if (status) {
-    conditions.push(['status', 'like', `%${status}%`]);
-  }
-  if (supplier) {
-    conditions.push(['supplier', 'like', `%${supplier}%`]);
-  }
-  return useFrappeGetDocList('Purchase Invoice', {
+  const conditions: Filter[] = [
+    ...(purchase_invoice_number
+      ? [['name', 'like', `%${purchase_invoice_number}%`] as Filter]
+      : []),
+    ...(status ? [['status', 'like', `%${status}%`] as Filter] : []),
+    ...(supplier ? [['supplier', 'like', `%${supplier}%`] as Filter] : []),
+  ];
+
+  const {
+    data: purchaseInvoiceList,
+    isLoading: isLoadingPurchaseInvoiceList,
+    isValidating: isValidatingPurchaseInvoiceList,
+    error: errorPurchaseInvoiceList,
+  } = useFrappeGetDocList<PurchaseInvoice>(PURCHASE_INVOICE, {
     fields: ['*'],
     filters: conditions,
+    limit: pageSize,
+    limit_start: limit_start,
   });
+
+  const {
+    data: PurchaseInvoicecount,
+    isLoading: isLoadingPurchaseInvoicecount,
+    isValidating: isValidatingPurchaseInvoicecount,
+    error: errorPurchaseInvoicecount,
+  } = useFrappeGetDocCount(PURCHASE_INVOICE, conditions);
+
+  return {
+    data: purchaseInvoiceList,
+    isLoading: isLoadingPurchaseInvoiceList || isLoadingPurchaseInvoicecount,
+    isValidating: isValidatingPurchaseInvoiceList || isValidatingPurchaseInvoicecount,
+    error: errorPurchaseInvoiceList || errorPurchaseInvoicecount,
+    total: PurchaseInvoicecount,
+  };
 };
 
 // API Call to get purchase invoice details
 export const getPurchaseInvoiceDetails = (invoice_number: string) => {
-  return useFrappeGetDoc<PurchaseInvoiceType>('Purchase Invoice', invoice_number);
+  return useFrappeGetDoc<PurchaseInvoice>(PURCHASE_INVOICE, invoice_number);
 };

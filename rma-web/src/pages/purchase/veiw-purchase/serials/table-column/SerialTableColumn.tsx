@@ -1,9 +1,6 @@
 import { type TableProps } from 'antd/es/table';
 import { SerialItemType } from '../Serials';
-import { Popconfirm } from 'antd';
-import { QuestionCircleOutlined, DeleteOutlined } from '@ant-design/icons';
-import Button from '@/components/Base/Button';
-import AntDatePicker from '@/components/DatePicker/AntDatePicker';
+import AntDatePicker from '@/components/Base/DatePicker/AntDatePicker';
 import dayjs from 'dayjs';
 import AntInput from '@/components/Base/Form/FormInput/AntInput';
 
@@ -17,11 +14,6 @@ export const SerialTableColumns: TableProps<SerialItemType>['columns'] = [
     title: 'Item Name',
     dataIndex: 'item_name',
     key: 'item_name',
-  },
-  {
-    title: 'Serial No',
-    dataIndex: 'serial_no',
-    key: 'serial_no',
   },
   {
     title: 'Quantity',
@@ -46,29 +38,10 @@ export const SerialTableColumns: TableProps<SerialItemType>['columns'] = [
       return (
         <AntInput
           type='text'
-          value={record.serials}
+          value={record.serials || undefined}
           placeholder='Enter Serial Number'
           size='small'
         />
-      );
-    },
-  },
-  {
-    title: 'Actions',
-    key: 'actions',
-    render: (_, record) => {
-      return (
-        <Popconfirm
-          title='Delete'
-          description='Are you sure?'
-          onConfirm={() => console.log(record)}
-          okText='Delete'
-          icon={<QuestionCircleOutlined style={{ color: 'red' }} />}
-        >
-          <Button variant='outline-danger' size='sm'>
-            <DeleteOutlined />
-          </Button>
-        </Popconfirm>
       );
     },
   },

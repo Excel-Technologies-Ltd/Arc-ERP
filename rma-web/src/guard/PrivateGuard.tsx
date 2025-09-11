@@ -1,62 +1,22 @@
+import LottieLoader from '@/components/Loader/LottieLoder';
+import useAuthCheck from '@/hooks/auth/useAuthCheck';
 import { URLLogin } from '@/router/routes.url';
-import { getPermissionlist } from '@/services/Permissions/Permissions';
-import { useAppSelector } from '@/stores/hooks';
-import { resetPermissions, setPermissions } from '@/stores/permissionSlice';
-import { selectDarkMode } from '@/stores/darkModeSlice';
-import { ConfigProvider, theme } from 'antd';
 import { useFrappeAuth } from 'frappe-react-sdk';
-import { useDispatch } from 'react-redux';
 import { Navigate, Outlet } from 'react-router-dom';
 
 /**
  * @description PrivateGuard component
  */
 function PrivateGuard() {
-  // check if user is logged in
   const { currentUser, isLoading, isValidating } = useFrappeAuth();
-  const dispatch = useDispatch();
-  const darkMode = useAppSelector(selectDarkMode);
+  const { isChecked } = useAuthCheck();
 
-  const {
-    data: permissionList,
-    isLoading: isLoadingPermissionList,
-    error: isErrorPermissionList,
-  } = getPermissionlist();
-
-  if (isLoading || isValidating || isLoadingPermissionList) {
-    return <div>Loading...</div>;
+  if (isLoading || isValidating || isChecked) {
+    return <LottieLoader />;
   }
 
-  if (isErrorPermissionList) {
-    dispatch(resetPermissions());
-  }
-
-  if (permissionList) {
-    dispatch(setPermissions(permissionList.message));
-  }
-
-  // protected route
-  return currentUser ? (
-    <ConfigProvider
-      theme={{
-        token: {
-          colorPrimary: '#164E63',
-        },
-        algorithm: darkMode ? theme.darkAlgorithm : theme.defaultAlgorithm,
-        components: {
-          Table: {
-            headerBg: '#164E63',
-            headerColor: '#fff',
-          },
-        },
-      }}
-    >
-      <Outlet />
-    </ConfigProvider>
-  ) : (
-    <Navigate to={URLLogin()} />
-  );
+  // Protected route: render Outlet if user is logged in, otherwise redirect to login
+  return currentUser ? <Outlet /> : <Navigate to={URLLogin()} />;
 }
 
-// export private route
 export default PrivateGuard;

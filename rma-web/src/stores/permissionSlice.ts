@@ -1,6 +1,7 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { RootState } from './store';
 
-interface PermissionActions {
+export interface PermissionActions {
   read: boolean;
   write: boolean;
   create: boolean;
@@ -11,9 +12,10 @@ interface PermissionActions {
   report: boolean;
   export: boolean;
   import: boolean;
+  [key: string]: boolean; // Add this index signature
 }
 
-interface PermissionsState {
+export interface PermissionsState {
   user: string;
   roles: string[];
   territory: string[];
@@ -34,24 +36,25 @@ export const permissionSlice = createSlice({
   initialState,
   reducers: {
     setPermissions: (state, action: PayloadAction<PermissionsState>) => {
-      localStorage.setItem('permissions', JSON.stringify(action.payload.permissions));
-      localStorage.setItem('user', action.payload.user);
-      localStorage.setItem('roles', JSON.stringify(action.payload.roles));
-      localStorage.setItem('territory', JSON.stringify(action.payload.territory));
-      localStorage.setItem('warehouse', JSON.stringify(action.payload.warehouse));
-      state = action.payload;
+      state.user = action.payload.user;
+      state.roles = action.payload.roles;
+      state.territory = action.payload.territory;
+      state.warehouse = action.payload.warehouse;
+      state.permissions = action.payload.permissions;
     },
 
-    resetPermissions: () => {
-      localStorage.removeItem('permissions');
-      localStorage.removeItem('user');
-      localStorage.removeItem('roles');
-      localStorage.removeItem('territory');
-      localStorage.removeItem('warehouse');
+    resetPermissions: (state) => {
+      state.user = '';
+      state.roles = [];
+      state.territory = [];
+      state.warehouse = [];
+      state.permissions = {};
     },
   },
 });
 
 export const { setPermissions, resetPermissions } = permissionSlice.actions;
+
+export const selectPermissions = (state: RootState) => state.permission;
 
 export default permissionSlice.reducer;

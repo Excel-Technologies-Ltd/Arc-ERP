@@ -1,12 +1,12 @@
-import "@/assets/css/vendors/tippy.css";
-import { createRef, useEffect } from "react";
+import '@/assets/css/vendors/tippy.css';
+import { createRef, useEffect } from 'react';
 import tippy, {
   PopperElement,
   Props,
   roundArrow,
   animateFill as animateFillPlugin,
-} from "tippy.js";
-import clsx from "clsx";
+} from 'tippy.js';
+import clsx from 'clsx';
 
 type TippyProps<C extends React.ElementType> = PolymorphicComponentPropWithRef<
   C,
@@ -19,10 +19,7 @@ type TippyProps<C extends React.ElementType> = PolymorphicComponentPropWithRef<
   }
 >;
 
-const init = <C extends React.ElementType>(
-  el: PopperElement,
-  props: TippyProps<C>
-) => {
+const init = <C extends React.ElementType>(el: PopperElement, props: TippyProps<C>) => {
   tippy(el, {
     plugins: [animateFillPlugin],
     content: props.content,
@@ -30,28 +27,26 @@ const init = <C extends React.ElementType>(
     popperOptions: {
       modifiers: [
         {
-          name: "preventOverflow",
+          name: 'preventOverflow',
           options: {
-            rootBoundary: "viewport",
+            rootBoundary: 'viewport',
           },
         },
       ],
     },
     animateFill: false,
-    animation: "shift-away",
+    animation: 'shift-away',
     ...props.options,
   });
 };
 
-const Tippy = <C extends React.ElementType = "span">(props: TippyProps<C>) => {
+const Tippy = <C extends React.ElementType = 'span'>(props: TippyProps<C>) => {
   const tippyRef = createRef<PopperElement>();
-  const Component = props.as || "span";
+  const Component = props.as || 'span';
 
   const isDisabled = () => {
     if (tippyRef.current && tippyRef.current._tippy !== undefined) {
-      props.disable
-        ? tippyRef.current._tippy.disable()
-        : tippyRef.current._tippy.enable();
+      props.disable ? tippyRef.current._tippy.disable() : tippyRef.current._tippy.enable();
     }
   };
 
@@ -71,12 +66,12 @@ const Tippy = <C extends React.ElementType = "span">(props: TippyProps<C>) => {
     isDisabled();
   }, [props.content]);
 
-  const { content, as, options, getRef, disable, className, ...computedProps } =
-    props;
+  const { className, disable, ...computedProps } = props;
   return (
     <Component
       ref={tippyRef}
-      className={clsx(["cursor-pointer", className])}
+      disable={disable?.toString()}
+      className={clsx(['cursor-pointer', className])}
       {...computedProps}
     >
       {props.children}
