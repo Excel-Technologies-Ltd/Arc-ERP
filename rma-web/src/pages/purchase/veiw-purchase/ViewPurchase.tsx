@@ -73,7 +73,7 @@ const ViewPurchase = () => {
               <LiaFileInvoiceSolid className='w-4 h-4 mr-2 text-slate-500' />
               Order:
               <span className='ml-1 underline decoration-dotted'>
-                {purchaseInvoiceDetails?.items.map((i) => i.purchase_order).join(', ')}
+                {purchaseInvoiceDetails?.items[0]?.purchase_order}
               </span>
             </div>
 

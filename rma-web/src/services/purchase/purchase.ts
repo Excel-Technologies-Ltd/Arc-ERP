@@ -42,6 +42,10 @@ export const getPurchaseInvoiceList = ({
     filters: conditions,
     limit: pageSize,
     limit_start: limit_start,
+    orderBy: {
+      field: 'creation',
+      order: 'asc',
+    },
   });
 
   const {
