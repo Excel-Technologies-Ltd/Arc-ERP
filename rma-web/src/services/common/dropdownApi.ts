@@ -10,7 +10,7 @@ import { Filter, useFrappeGetDocList } from 'frappe-react-sdk';
 export const getWarehouseDropdownList = (name?: string | null) => {
   return useFrappeGetDocList<Warehouse>(WAREHOUSE, {
     fields: ['name', 'warehouse_name'],
-    filters: name ? ([['name', 'like', `%${name}%`]] as Filter[]) : undefined,
+    filters: name ? ([['warehouse_name', 'like', `%${name}%`]] as Filter[]) : undefined,
   });
 };
 
@@ -18,7 +18,7 @@ export const getWarehouseDropdownList = (name?: string | null) => {
 export const getTerritoryDropdownList = (name?: string | null) => {
   return useFrappeGetDocList<Territory>(TERRITORY, {
     fields: ['name', 'territory_name'],
-    filters: name ? ([['name', 'like', `%${name}%`]] as Filter[]) : undefined,
+    filters: name ? ([['territory_name', 'like', `%${name}%`]] as Filter[]) : undefined,
   });
 };
 
@@ -26,7 +26,7 @@ export const getTerritoryDropdownList = (name?: string | null) => {
 export const getSupplierDropdownList = (name?: string | null) => {
   return useFrappeGetDocList<Supplier>(SUPPLIER, {
     fields: ['name', 'supplier_name'],
-    filters: name ? ([['name', 'like', `%${name}%`]] as Filter[]) : undefined,
+    filters: name ? ([['supplier_name', 'like', `%${name}%`]] as Filter[]) : undefined,
   });
 };
 
@@ -34,14 +34,14 @@ export const getSupplierDropdownList = (name?: string | null) => {
 export const getCustomerDropdownList = (name?: string | null) => {
   return useFrappeGetDocList<Customer>(CUSTOMER, {
     fields: ['name', 'customer_name'],
-    filters: name ? ([['name', 'like', `%${name}%`]] as Filter[]) : undefined,
+    filters: name ? ([['customer_name', 'like', `%${name}%`]] as Filter[]) : undefined,
   });
 };
 
 // Api Call to Get Item based on search
 export const getItemDropdownList = (name?: string | null) => {
   return useFrappeGetDocList<Item>(ITEM, {
-    fields: ['*'],
-    filters: name ? ([['name', 'like', `%${name}%`]] as Filter[]) : undefined,
+    fields: ['name', 'item_name'],
+    filters: name ? ([['item_name', 'like', `%${name}%`]] as Filter[]) : undefined,
   });
 };

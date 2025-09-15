@@ -1,3 +1,4 @@
+import { formatCurrency } from '@/utils/helper';
 import dayjs from 'dayjs';
 import { Link } from 'react-router-dom';
 
@@ -33,4 +34,9 @@ export const ColumnProgress = (percent: number) => {
       ></div>
     </div>
   );
+};
+
+// Currency Column UI
+export const ColumnCurrency = (value: number) => {
+  return <span>{formatCurrency(value)}</span>;
 };

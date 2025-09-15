@@ -1,48 +1,42 @@
-import { useState } from 'react';
-import AntInput from '@/components/Base/Form/FormInput/AntInput';
-import AntSelect from '@/components/Base/Form/FormSelect/AntSelect';
-import AntRangePicker from '@/components/Base/DatePicker/AntRangePicker';
 import { getPurchaseInvoiceList } from '@/services/purchase/purchase';
-import type { Dayjs } from 'dayjs';
-import { PURCHASE_SELECT_STATUS } from '@/constants/app-strings';
 import CustomTable from '@/components/Table/CustomTable';
 import { PurchaseInvoice } from '@/types/Accounts/PurchaseInvoice';
-import { PurchaseTableColumn } from './TableColumn';
 import AntButton from '@/components/Base/Button/AntButton';
 import { ClearOutlined, SearchOutlined } from '@ant-design/icons';
-import { getSupplierDropdownList } from '@/services/common/dropdownApi';
+import { PurchaseListFilterForm, PurchaseListTableColumn } from '@/features/purchase';
+import { useForm } from 'react-hook-form';
+import { PurchaseListFilterFormData } from '@/types/pages/purchase';
+import { useState } from 'react';
 
 const Purchase = () => {
-  const [supplierSearch, setSupplierSearch] = useState<string | null>(null);
+  const [filterKey, setFilterKey] = useState<number>(0);
+  const { control, reset, watch } = useForm<PurchaseListFilterFormData>({
+    mode: 'onChange',
+  });
 
-  // Filter
-  const [purchaseInvoiceNumber, setPurchaseInvoiceNumber] = useState<string | null>(null);
-  const [status, setStatus] = useState<string | null>(null);
-  const [supplier, setSupplier] = useState<string | null>(null);
-  const [dateRange, setDateRange] = useState<[Dayjs, Dayjs] | null>(null);
+  const watchPurchaseInvoiceNumber = watch('invoice_number');
+  const watchStatus = watch('status');
+  const watchSupplier = watch('supplier');
 
-  // API Call to get suppliers based on search
-  const { data: suppliers, isLoading: isLoadingSuppliers } =
-    getSupplierDropdownList(supplierSearch);
+  // API Call start
   const {
     data: purchaseInvoices,
     isLoading: isLoadingPurchaseInvoices,
     total,
   } = getPurchaseInvoiceList({
-    purchase_invoice_number: purchaseInvoiceNumber ?? '',
-    status: status ?? '',
-    supplier: supplier ?? '',
+    purchase_invoice_number: watchPurchaseInvoiceNumber ?? '',
+    status: watchStatus ?? '',
+    supplier: watchSupplier ?? '',
   });
+  // Api Call end
 
   const handleClear = () => {
-    setPurchaseInvoiceNumber(null);
-    setStatus(null);
-    setSupplier(null);
-    setDateRange(null);
+    reset();
+    setFilterKey(filterKey + 1);
   };
 
   // Table Column
-  const Column = PurchaseTableColumn();
+  const Column = PurchaseListTableColumn();
 
   return (
     <>
@@ -50,50 +44,13 @@ const Purchase = () => {
         {/* Filter Options */}
         <div className='flex flex-wrap items-center col-span-12 mt-2 intro-y xl:flex-nowrap gap-3'>
           <h2 className='text-lg font-medium intro-y whitespace-nowrap'>Purchase List</h2>
-          <div className='flex w-full gap-2 flex-wrap lg:flex-nowrap'>
-            <AntInput
-              placeholder='Purchase Invoice Number'
-              type='text'
-              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                setPurchaseInvoiceNumber(e.target.value)
-              }
-              value={purchaseInvoiceNumber ?? ''}
-            />
-            <AntSelect
-              placeholder='Status'
-              value={status ?? undefined}
-              onChange={(value: string) => setStatus(value)}
-              options={PURCHASE_SELECT_STATUS}
-              showSearch={false}
-            />
-            <AntSelect
-              placeholder='Select Supplier'
-              value={supplier ?? undefined}
-              onChange={(value: string) => {
-                setSupplier(value);
-                setSupplierSearch(null);
-              }}
-              onSearch={(value: string) => setSupplierSearch(value)}
-              loading={isLoadingSuppliers}
-              options={suppliers?.map((s) => ({
-                value: s.name,
-                label: s.supplier_name,
-              }))}
-              notFoundText='No Supplier Found'
-            />
-            <AntRangePicker
-              allowClear={true}
-              value={dateRange}
-              size='large'
-              placeholder={['Start Date', 'End Date']}
-              onChange={(value) => setDateRange(value as [Dayjs, Dayjs])}
-            />
-            <div className='flex items-center gap-2'>
-              <AntButton icon={<SearchOutlined />}>Search</AntButton>
-              <AntButton icon={<ClearOutlined />} onClick={handleClear}>
-                Clear
-              </AntButton>
-            </div>
+          {/* Purchase List Filter Form */}
+          <PurchaseListFilterForm key={filterKey} control={control} />
+          <div className='flex items-center gap-2'>
+            <AntButton icon={<SearchOutlined />}>Search</AntButton>
+            <AntButton icon={<ClearOutlined />} onClick={handleClear}>
+              Clear
+            </AntButton>
           </div>
         </div>
         {/* BEGIN: Data List */}

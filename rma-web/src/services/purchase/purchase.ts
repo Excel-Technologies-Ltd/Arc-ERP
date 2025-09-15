@@ -44,7 +44,7 @@ export const getPurchaseInvoiceList = ({
     limit_start: limit_start,
     orderBy: {
       field: 'creation',
-      order: 'asc',
+      order: 'desc',
     },
   });
 

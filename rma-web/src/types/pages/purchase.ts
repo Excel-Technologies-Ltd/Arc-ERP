@@ -7,3 +7,10 @@ export type AssignSerialFormData = {
   fromRange: string;
   toRange: string;
 };
+
+export type PurchaseListFilterFormData = {
+  invoice_number: string;
+  status: string;
+  supplier: string;
+  date_range: [Dayjs, Dayjs];
+};
