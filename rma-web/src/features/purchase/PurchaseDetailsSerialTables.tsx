@@ -1,10 +1,12 @@
 import { useState } from 'react';
 import AntCustomTable from '@/components/Table/AntCustomTable';
-import { ProductTableColumns } from './table-column/ProducttableColumn';
-import { SerialTableColumns } from './table-column/SerialTableColumn';
 import Button from '@/components/Base/Button';
 import { DeleteOutlined, PlusOutlined } from '@ant-design/icons';
 import { PurchaseInvoice } from '@/types/Accounts/PurchaseInvoice';
+import {
+  PurchaseDetailsProductTableColumns,
+  PurchaseDetailsSerialTableColumns,
+} from '@/features/purchase';
 
 export interface ProductDataType {
   key: string;
@@ -23,12 +25,12 @@ export interface SerialItemType extends Pick<ProductDataType, 'key' | 'item_name
   serials: string;
 }
 
-const Serials = ({ data }: { data: PurchaseInvoice | undefined }) => {
+const PurchaseDetailsSerialTables = ({ data }: { data: PurchaseInvoice | undefined }) => {
+  console.log(data);
   // State
   const [SerialtableData, setSerialtableData] = useState<SerialItemType[]>([]);
 
   const handleAddSerial = (record: ProductDataType) => {
-    console.log(record);
     const newSerial: SerialItemType = {
       key: record.key,
       item_code: record.item_code || '',
@@ -44,6 +46,10 @@ const Serials = ({ data }: { data: PurchaseInvoice | undefined }) => {
   const handleSerialDelete = (key: string) => {
     setSerialtableData(SerialtableData.filter((i) => i.key !== key));
   };
+
+  // Table Columns
+  const ProductTableColumns = PurchaseDetailsProductTableColumns();
+  const SerialTableColumns = PurchaseDetailsSerialTableColumns();
 
   return (
     <>
@@ -67,13 +73,12 @@ const Serials = ({ data }: { data: PurchaseInvoice | undefined }) => {
               key: i.name,
               item_name: i.item_name,
               quantity: i.qty,
-              assigned: 0,
-              remaining: 0,
+              assigned: i.received_qty || 0,
+              remaining: i.qty - (i.received_qty || 0),
               has_serial: false,
               warrenty_months: 12,
             })) || []
           }
-          loading={false}
           title={() => <div className='text-lg font-bold text-center'>Product Items</div>}
           pagination={false}
         />
@@ -107,7 +112,6 @@ const Serials = ({ data }: { data: PurchaseInvoice | undefined }) => {
             warranty_date: i.warranty_date,
             serials: i.serials,
           }))}
-          loading={false}
           title={() => <div className='text-lg font-bold text-center'>Serial Items</div>}
           size='small'
         />
@@ -116,4 +120,4 @@ const Serials = ({ data }: { data: PurchaseInvoice | undefined }) => {
   );
 };
 
-export default Serials;
+export default PurchaseDetailsSerialTables;

@@ -10,13 +10,18 @@ import { useState } from 'react';
 
 const Purchase = () => {
   const [filterKey, setFilterKey] = useState<number>(0);
-  const { control, reset, watch } = useForm<PurchaseListFilterFormData>({
+  const [appliedFilterData, setAppliedFilterData] = useState<PurchaseListFilterFormData | null>(
+    null
+  );
+
+  const { control, reset, handleSubmit } = useForm<PurchaseListFilterFormData>({
     mode: 'onChange',
   });
 
-  const watchPurchaseInvoiceNumber = watch('invoice_number');
-  const watchStatus = watch('status');
-  const watchSupplier = watch('supplier');
+  // const watchPurchaseInvoiceNumber = watch('invoice_number');
+  // const watchStatus = watch('status');
+  // const watchSupplier = watch('supplier');
+  // const dateRange = watch('date_range');
 
   // API Call start
   const {
@@ -24,19 +29,25 @@ const Purchase = () => {
     isLoading: isLoadingPurchaseInvoices,
     total,
   } = getPurchaseInvoiceList({
-    purchase_invoice_number: watchPurchaseInvoiceNumber ?? '',
-    status: watchStatus ?? '',
-    supplier: watchSupplier ?? '',
+    invoice_number: appliedFilterData?.invoice_number ?? '',
+    status: appliedFilterData?.status ?? '',
+    supplier: appliedFilterData?.supplier ?? '',
+    date_range: appliedFilterData?.date_range ?? null,
   });
   // Api Call end
 
   const handleClear = () => {
     reset();
+    setAppliedFilterData(null);
     setFilterKey(filterKey + 1);
   };
 
   // Table Column
   const Column = PurchaseListTableColumn();
+
+  const onSubmit = handleSubmit((data) => {
+    setAppliedFilterData(data);
+  });
 
   return (
     <>
@@ -47,7 +58,9 @@ const Purchase = () => {
           {/* Purchase List Filter Form */}
           <PurchaseListFilterForm key={filterKey} control={control} />
           <div className='flex items-center gap-2'>
-            <AntButton icon={<SearchOutlined />}>Search</AntButton>
+            <AntButton icon={<SearchOutlined />} onClick={onSubmit}>
+              Search
+            </AntButton>
             <AntButton icon={<ClearOutlined />} onClick={handleClear}>
               Clear
             </AntButton>

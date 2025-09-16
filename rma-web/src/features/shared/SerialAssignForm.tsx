@@ -47,12 +47,12 @@ const SerialAssignForm = ({ control }: { control: Control<AssignSerialFormData> 
       {RenderController<AssignSerialFormData>(
         control,
         'fromRange',
-        <AntInput type='number' placeholder='From Range' size='middle' />
+        <AntInput type='text' placeholder='From Range' size='middle' isCapitalised />
       )}
       {RenderController<AssignSerialFormData>(
         control,
         'toRange',
-        <AntInput type='number' placeholder='To Range' size='middle' />
+        <AntInput type='text' placeholder='To Range' size='middle' isCapitalised />
       )}
     </>
   );

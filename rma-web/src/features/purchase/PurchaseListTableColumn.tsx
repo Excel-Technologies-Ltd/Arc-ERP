@@ -18,19 +18,22 @@ export const PurchaseListTableColumn = () => {
     {
       key: 'status',
       title: 'STATUS',
-      render: (status) => (
-        <span
-          className={`px-2 py-1 rounded-full text-xs ${
-            status === 'completed'
-              ? 'bg-green-100 text-green-800'
-              : status === 'pending'
-                ? 'bg-yellow-100 text-yellow-800'
-                : 'bg-red-100 text-red-800'
-          }`}
-        >
-          {status}
-        </span>
-      ),
+      render: (status, record) => {
+        console.log(record);
+        return (
+          <span
+            className={`px-2 py-1 rounded-full text-xs ${
+              status === 'completed'
+                ? 'bg-green-100 text-green-800'
+                : status === 'pending'
+                  ? 'bg-yellow-100 text-yellow-800'
+                  : 'bg-red-100 text-red-800'
+            }`}
+          >
+            {status}
+          </span>
+        );
+      },
     },
     {
       key: 'progress',

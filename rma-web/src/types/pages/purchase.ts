@@ -12,5 +12,23 @@ export type PurchaseListFilterFormData = {
   invoice_number: string;
   status: string;
   supplier: string;
-  date_range: [Dayjs, Dayjs];
+  date_range: [Dayjs, Dayjs] | null;
 };
+
+export interface DetailsItem {
+  icon?: React.ReactNode;
+  label: string;
+  value: React.ReactNode;
+  isLink?: boolean;
+}
+
+export interface DetailsCardProps {
+  title?: string;
+  items: DetailsItem[];
+  className?: string;
+  titleClassName?: string;
+  itemClassName?: string;
+  iconClassName?: string;
+  valueClassName?: string;
+  border?: boolean;
+}
