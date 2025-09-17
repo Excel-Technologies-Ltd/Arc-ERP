@@ -6,10 +6,28 @@ import AntInput from '@/components/Base/Form/FormInput/AntInput';
 import { AssignSerialFormData } from '@/types/pages/purchase';
 import { AntUpload } from '@/components/Base/Form';
 import { getWarehouseDropdownList } from '@/services/common/dropdownApi';
+import { ParseResult, useFileParser } from '@/hooks/useFileParser';
+import { useState } from 'react';
 
 const SerialAssignForm = ({ control }: { control: Control<AssignSerialFormData> }) => {
   // Api Call
   const { data: warehouseList, isLoading: isLoadingWarehouses } = getWarehouseDropdownList(null);
+  const [parsedData, setParsedData] = useState<ParseResult | null>(null);
+  console.log(parsedData, 'parsedData');
+
+  const { parseFile } = useFileParser();
+
+  const handleBeforeFileUpload = async (file: File) => {
+    if (!file) return;
+
+    const result = await parseFile(file, {
+      hasHeader: true,
+      skipEmptyLines: true,
+      dynamicTyping: true,
+    });
+
+    setParsedData(result);
+  };
 
   return (
     <>
@@ -37,12 +55,7 @@ const SerialAssignForm = ({ control }: { control: Control<AssignSerialFormData> 
       {RenderController<AssignSerialFormData>(
         control,
         'file',
-        <AntUpload
-          beforeUpload={(file) => {
-            console.log('Uploaded file:', file);
-            return false;
-          }}
-        />
+        <AntUpload accept='.xlsx,.xls,.csv' beforeUpload={(file) => handleBeforeFileUpload(file)} />
       )}
       {RenderController<AssignSerialFormData>(
         control,

@@ -32,3 +32,20 @@ export interface DetailsCardProps {
   valueClassName?: string;
   border?: boolean;
 }
+
+export interface ProductDataType {
+  key: string;
+  item_code?: string;
+  item_name: string;
+  quantity: number;
+  assigned: number;
+  remaining: number;
+  has_serial: boolean;
+  warrenty_months: number;
+}
+
+export interface SerialItemType extends Pick<ProductDataType, 'key' | 'item_name' | 'quantity'> {
+  item_code: string;
+  warranty_date: Date;
+  serials: string;
+}

@@ -4,6 +4,7 @@ import permissionReducer from './permissionSlice';
 import modalReducer from './modalSlice';
 import paginationReducer from './paginationSlice';
 import drawerReducer from './drawerSlice';
+import serialReducer from './serialSlice';
 
 export const store = configureStore({
   reducer: {
@@ -12,6 +13,7 @@ export const store = configureStore({
     modal: modalReducer,
     pagination: paginationReducer,
     drawer: drawerReducer,
+    serial: serialReducer,
   },
 });
 

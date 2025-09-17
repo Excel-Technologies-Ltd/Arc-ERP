@@ -1,45 +1,19 @@
-import { useState } from 'react';
 import AntCustomTable from '@/components/Table/AntCustomTable';
-import Button from '@/components/Base/Button';
-import { DeleteOutlined } from '@ant-design/icons';
 import { PurchaseInvoice } from '@/types/Accounts/PurchaseInvoice';
 import {
   PurchaseDetailsProductTableColumns,
   PurchaseDetailsSerialTableColumns,
 } from '@/features/purchase';
 import { PurchaseInvoiceItem } from '@/types/Accounts/PurchaseInvoiceItem';
-
-export interface ProductDataType {
-  key: string;
-  item_code?: string;
-  item_name: string;
-  quantity: number;
-  assigned: number;
-  remaining: number;
-  has_serial: boolean;
-  warrenty_months: number;
-}
-
-export interface SerialItemType extends Pick<ProductDataType, 'key' | 'item_name' | 'quantity'> {
-  item_code: string;
-  warranty_date: Date;
-  serials: string;
-}
+import { SerialItemType } from '@/types/pages/purchase';
+import { selectSerialTableData } from '@/stores/serialSlice';
+import { useAppSelector } from '@/stores/hooks';
 
 const PurchaseDetailsSerialTables = ({ data }: { data: PurchaseInvoice | undefined }) => {
-  // State
-  const [SerialtableData, setSerialtableData] = useState<SerialItemType[]>([]);
+  const serialTableData = useAppSelector(selectSerialTableData);
 
-  // Serial Delete
-  const handleSerialDelete = (key: string) => {
-    setSerialtableData(SerialtableData.filter((i) => i.key !== key));
-  };
-
-  // Table Columns
-  const ProductTableColumns = PurchaseDetailsProductTableColumns({
-    setSerialtableData,
-    SerialtableData,
-  });
+  // Table Columns - No props needed!
+  const ProductTableColumns = PurchaseDetailsProductTableColumns();
   const SerialTableColumns = PurchaseDetailsSerialTableColumns();
 
   return (
@@ -47,40 +21,21 @@ const PurchaseDetailsSerialTables = ({ data }: { data: PurchaseInvoice | undefin
       <div className='w-full'>
         <AntCustomTable<PurchaseInvoiceItem>
           columns={ProductTableColumns}
-          data={data?.items || []}
+          data={data?.items.map((item, index) => ({ ...item, key: `${index}` })) || []}
           title={() => <div className='text-lg font-bold text-center'>Product Items</div>}
         />
       </div>
 
       <div className='mt-5 w-full'>
         <AntCustomTable<SerialItemType>
-          columns={[
-            ...(SerialTableColumns || []),
-            {
-              title: 'Actions',
-              key: 'actions',
-              render: (_, record) => {
-                return (
-                  <Button
-                    onClick={() => handleSerialDelete(record.key)}
-                    variant='outline-danger'
-                    size='sm'
-                  >
-                    <DeleteOutlined />
-                  </Button>
-                );
-              },
-            },
-          ]}
-          data={SerialtableData?.map((i) => ({
-            key: i.key,
-            item_code: i.item_code,
-            item_name: i.item_name,
-            quantity: i.quantity,
-            warranty_date: i.warranty_date,
-            serials: i.serials,
-          }))}
-          title={() => <div className='text-lg font-bold text-center'>Serial Items</div>}
+          columns={SerialTableColumns}
+          data={serialTableData}
+          title={() => (
+            <div className='flex justify-between items-center'>
+              <div className='text-lg font-bold text-center flex-1'>Serial Items</div>
+              <div className='text-sm text-gray-500'>Total Items: {serialTableData.length}</div>
+            </div>
+          )}
           size='small'
         />
       </div>

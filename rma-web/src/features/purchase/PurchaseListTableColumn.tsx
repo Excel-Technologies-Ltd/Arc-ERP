@@ -18,8 +18,7 @@ export const PurchaseListTableColumn = () => {
     {
       key: 'status',
       title: 'STATUS',
-      render: (status, record) => {
-        console.log(record);
+      render: (status) => {
         return (
           <span
             className={`px-2 py-1 rounded-full text-xs ${

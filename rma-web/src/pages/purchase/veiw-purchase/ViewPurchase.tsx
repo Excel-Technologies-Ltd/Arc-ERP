@@ -11,6 +11,8 @@ import { calculateRangeTotal } from '@/utils/helper';
 import LottieLoader from '@/components/Loader/LottieLoder';
 import { PurchaseInvoice } from '@/types/Accounts/PurchaseInvoice';
 import SerialAssignForm from '@/features/shared/SerialAssignForm';
+import { selectSerialTableData } from '@/stores/serialSlice';
+import { useAppSelector } from '@/stores/hooks';
 
 const mapApiToForm = (pi?: PurchaseInvoice): AssignSerialFormData => ({
   warehouse: pi?.set_warehouse ?? undefined,
@@ -35,7 +37,7 @@ const ViewPurchase = () => {
   const formValues = useMemo(() => mapApiToForm(purchaseInvoiceDetails), [purchaseInvoiceDetails]);
 
   // From Handel
-  const { control, watch } = useForm<AssignSerialFormData>({
+  const { control, watch, handleSubmit } = useForm<AssignSerialFormData>({
     values: formValues,
     mode: 'onChange',
     resetOptions: {
@@ -46,6 +48,11 @@ const ViewPurchase = () => {
   // Calculate Total Range
   const [from, to] = watch(['fromRange', 'toRange']);
   const total = useMemo(() => calculateRangeTotal(from, to, notify), [from, to]);
+  const serialTableData = useAppSelector(selectSerialTableData);
+
+  const onSubmit = (data: AssignSerialFormData) => {
+    console.log(data, serialTableData);
+  };
 
   if (isLoading || isValidating) return <LottieLoader pageLoader />;
 
@@ -54,7 +61,7 @@ const ViewPurchase = () => {
       <div className='flex flex-col items-center mt-8 intro-y sm:flex-row'>
         <h2 className='mr-auto text-lg font-medium'>Transaction Details</h2>
         <div className='flex w-full mt-4 sm:w-auto sm:mt-0'>
-          <Button variant='primary' className='mr-2 shadow-md'>
+          <Button variant='primary' className='mr-2 shadow-md' onClick={handleSubmit(onSubmit)}>
             Submit
           </Button>
         </div>
