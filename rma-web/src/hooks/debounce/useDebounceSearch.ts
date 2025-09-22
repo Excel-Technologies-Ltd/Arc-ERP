@@ -15,7 +15,7 @@ interface UseDebouncedSearchResult<T> {
 
 const useDebouncedSearch = <T>({
   fetchFunction,
-  debounceDelay = 0,
+  debounceDelay = 500,
 }: UseDebouncedSearchProps<T>): UseDebouncedSearchResult<T> => {
   const [searchInput, setSearchInput] = useState<string | null>(null);
   const debouncedSearch = useDebounce(searchInput, debounceDelay);

@@ -1,3 +1,4 @@
+import { NotifyType } from '@/components/Notification/NotificationProvider';
 import dayjs from 'dayjs';
 import duration from 'dayjs/plugin/duration';
 import { parseColor } from 'tailwindcss/lib/util/color';
@@ -127,6 +128,40 @@ const toTitle = (s: string) =>
     .replace(/[-_]+/g, ' ')
     .replace(/\b\w/g, (c) => c.toUpperCase());
 
+const calculateRangeTotal = (from: string, to: string, notify: NotifyType): number => {
+  if (!from || !to) return 0;
+
+  if (from.length !== to.length) {
+    notify.error({ message: "Lengths don't match" });
+    return 0;
+  }
+
+  const prefixFrom = from.replace(/\d+$/, '');
+  const numFromStr = from.match(/\d+$/);
+  const prefixTo = to.replace(/\d+$/, '');
+  const numToStr = to.match(/\d+$/);
+
+  if (!numFromStr || !numToStr) {
+    notify.error({ message: 'No numbers found' });
+    return 0;
+  }
+
+  if (prefixFrom !== prefixTo) {
+    notify.error({ message: "Prefixes don't match" });
+    return 0;
+  }
+
+  const numFrom = parseInt(numFromStr[0], 10);
+  const numTo = parseInt(numToStr[0], 10);
+
+  if (isNaN(numFrom) || isNaN(numTo) || numFrom > numTo) {
+    notify.error({ message: 'Invalid numbers' });
+    return 0;
+  }
+
+  return numTo - numFrom + 1;
+};
+
 export {
   cutText,
   formatDate,
@@ -141,4 +176,5 @@ export {
   toRGB,
   stringToHTML,
   toTitle,
+  calculateRangeTotal,
 };

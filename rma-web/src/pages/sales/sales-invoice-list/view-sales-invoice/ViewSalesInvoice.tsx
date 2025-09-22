@@ -1,10 +1,10 @@
 import AntButton from '@/components/Base/Button/AntButton';
 import AntDrawer from '@/components/Drawer/AntDrawer';
 import AntModal from '@/components/Modal/AntModal';
+import { PurchaseDetailsSerialTables } from '@/features/purchase';
 import { SalesDetailsCard, SalesDetailsConnectionsView } from '@/features/sales';
 import ResetSerialUi from '@/features/shared/ResetSerialUi';
-import SerialAssignForm from '@/pages/purchase/veiw-purchase/serials/SerialAssignForm';
-import Serials from '@/pages/purchase/veiw-purchase/serials/Serials';
+import SerialAssignForm from '@/features/shared/SerialAssignForm';
 import { handleDrawer } from '@/stores/drawerSlice';
 import { useAppDispatch } from '@/stores/hooks';
 import { handleModal } from '@/stores/modalSlice';
@@ -81,7 +81,7 @@ const ViewSalesInvoice = () => {
         </div>
         {/* Serial Details Table */}
         <div className='col-span-12 lg:col-span-7 2xl:col-span-8 intro-x'>
-          <Serials
+          <PurchaseDetailsSerialTables
             data={
               {
                 items: [

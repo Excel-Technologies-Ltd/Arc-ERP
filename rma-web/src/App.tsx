@@ -27,6 +27,11 @@ const App = () => {
               headerBg: '#164E63',
               headerColor: '#fff',
             },
+            // Notification: {
+            //   colorBgElevated: '#164E63',
+            //   colorText: '#fff',
+            //   colorTextHeading: '#fff',
+            // },
           },
         }}
       >
