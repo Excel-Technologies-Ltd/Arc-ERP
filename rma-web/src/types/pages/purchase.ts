@@ -7,3 +7,45 @@ export type AssignSerialFormData = {
   fromRange: string;
   toRange: string;
 };
+
+export type PurchaseListFilterFormData = {
+  invoice_number: string;
+  status: string;
+  supplier: string;
+  date_range: [Dayjs, Dayjs] | null;
+};
+
+export interface DetailsItem {
+  icon?: React.ReactNode;
+  label: string;
+  value: React.ReactNode;
+  isLink?: boolean;
+}
+
+export interface DetailsCardProps {
+  title?: string;
+  items: DetailsItem[];
+  className?: string;
+  titleClassName?: string;
+  itemClassName?: string;
+  iconClassName?: string;
+  valueClassName?: string;
+  border?: boolean;
+}
+
+export interface ProductDataType {
+  key: string;
+  item_code?: string;
+  item_name: string;
+  quantity: number;
+  assigned: number;
+  remaining: number;
+  has_serial: boolean;
+  warrenty_months: number;
+}
+
+export interface SerialItemType extends Pick<ProductDataType, 'key' | 'item_name' | 'quantity'> {
+  item_code: string;
+  warranty_date: Date;
+  serials: string;
+}

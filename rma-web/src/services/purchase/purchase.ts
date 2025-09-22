@@ -8,28 +8,26 @@ import { PurchaseInvoice } from '@/types/Accounts/PurchaseInvoice';
 import { parsePaginationParams } from '@/components/Pagination/pagination.utils';
 import { useSearchParams } from 'react-router-dom';
 import { PURCHASE_INVOICE } from '@/constants/doctype-strings';
-
-export interface PurchaseInvoiceFilters {
-  purchase_invoice_number?: string;
-  status?: string;
-  supplier?: string;
-}
+import { PurchaseListFilterFormData } from '@/types/pages/purchase';
+import dayjs from 'dayjs';
 
 // API Call to get purchase orders
 export const getPurchaseInvoiceList = ({
-  purchase_invoice_number,
+  invoice_number,
   status,
   supplier,
-}: PurchaseInvoiceFilters) => {
+  date_range,
+}: Pick<PurchaseListFilterFormData, 'invoice_number' | 'status' | 'supplier' | 'date_range'>) => {
   const [searchParams] = useSearchParams();
   const { limit_start, pageSize } = parsePaginationParams(searchParams);
+  const formDate = date_range ? dayjs(date_range[0]).format('YYYY-MM-DD') : null;
+  const toDate = date_range ? dayjs(date_range[1]).format('YYYY-MM-DD') : null;
 
-  const conditions: Filter[] = [
-    ...(purchase_invoice_number
-      ? [['name', 'like', `%${purchase_invoice_number}%`] as Filter]
-      : []),
+  const conditions = [
+    ...(invoice_number ? [['name', 'like', `%${invoice_number}%`] as Filter] : []),
     ...(status ? [['status', 'like', `%${status}%`] as Filter] : []),
     ...(supplier ? [['supplier', 'like', `%${supplier}%`] as Filter] : []),
+    ...(formDate && toDate ? [['posting_date', 'between', [formDate, toDate]] as Filter] : []),
   ];
 
   const {
@@ -42,6 +40,10 @@ export const getPurchaseInvoiceList = ({
     filters: conditions,
     limit: pageSize,
     limit_start: limit_start,
+    orderBy: {
+      field: 'creation',
+      order: 'desc',
+    },
   });
 
   const {

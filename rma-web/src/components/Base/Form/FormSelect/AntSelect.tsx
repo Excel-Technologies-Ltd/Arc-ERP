@@ -24,9 +24,10 @@ const AntSelect: React.FC<AntSelectProps> = (props) => {
       className={className}
       loading={loading}
       notFoundContent={loading ? <Spin size='small' /> : notFoundText}
-      filterOption={(input, option) =>
-        (option?.label as string)?.toLowerCase().includes(input.toLowerCase())
-      }
+      filterOption={(input, option) => {
+        if (loading) return true;
+        return (option?.label as string)?.toLowerCase().includes(input.toLowerCase());
+      }}
       // styles={{
       //   root: {
       //     backgroundColor: 'red',
