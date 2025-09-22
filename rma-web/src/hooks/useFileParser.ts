@@ -1,29 +1,7 @@
-export interface ParseResult<T = any> {
-  data: T[];
-  errors: string[];
-  meta?: {
-    fields?: string[];
-    delimiter?: string;
-    linebreak?: string;
-    aborted?: boolean;
-    truncated?: boolean;
-    cursor?: number;
-  };
-}
-
-export interface FileParserOptions {
-  hasHeader?: boolean;
-  delimiter?: string;
-  skipEmptyLines?: boolean;
-  dynamicTyping?: boolean;
-  encoding?: string;
-}
-
-export type SupportedFileType = 'csv' | 'xlsx' | 'xls';
-
 import { useState, useCallback } from 'react';
 import Papa from 'papaparse';
 import * as XLSX from 'xlsx';
+import { FileParserOptions, ParseResult, SupportedFileType } from '@/types/common.types';
 
 export const useFileParser = () => {
   const [isLoading, setIsLoading] = useState(false);

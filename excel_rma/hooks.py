@@ -108,9 +108,9 @@ app_license = "MIT"
 # ---------------
 # Override standard doctype classes
 
-override_doctype_class = {
-	"Customer": "excel_rma.api.override_doctype.customer.CustomCustomer"
-}
+# override_doctype_class = {
+# 	"Customer": "excel_rma.api.override_doctype.customer.CustomCustomer"
+# }
 
 # Document Events
 # ---------------

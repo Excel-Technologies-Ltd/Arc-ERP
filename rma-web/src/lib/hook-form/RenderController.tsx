@@ -16,10 +16,21 @@ export const RenderController = <T extends FieldValues>(
       render={({ field }) => {
         // Check if Component is a JSX element
         if (React.isValidElement(Component)) {
-          return React.cloneElement(Component, {
+          const originalOnChange = Component.props.onChange;
+          return React.cloneElement(Component as React.ReactElement<any>, {
             ...field,
+            // Merge onChange handlers
+            onChange: (value: any) => {
+              // Call the component's original onChange if it exists
+              if (originalOnChange) {
+                originalOnChange(value);
+              }
+              // Always call the field's onChange to update react-hook-form
+              field.onChange(value);
+            },
           });
         }
+
         // Otherwise, treat it as a component type
         const ComponentAsType = Component as React.ComponentType<any>;
         return (

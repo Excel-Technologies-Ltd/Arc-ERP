@@ -6,8 +6,9 @@ import AntInput from '@/components/Base/Form/FormInput/AntInput';
 import { AssignSerialFormData } from '@/types/pages/purchase';
 import { AntUpload } from '@/components/Base/Form';
 import { getWarehouseDropdownList } from '@/services/common/dropdownApi';
-import { ParseResult, useFileParser } from '@/hooks/useFileParser';
+import { useFileParser } from '@/hooks/useFileParser';
 import { useState } from 'react';
+import { ParseResult } from '@/types/common.types';
 
 const SerialAssignForm = ({ control }: { control: Control<AssignSerialFormData> }) => {
   // Api Call
@@ -60,7 +61,13 @@ const SerialAssignForm = ({ control }: { control: Control<AssignSerialFormData> 
       {RenderController<AssignSerialFormData>(
         control,
         'fromRange',
-        <AntInput type='text' placeholder='From Range' size='middle' isCapitalised />
+        <AntInput
+          onChange={() => console.log('1')}
+          type='text'
+          placeholder='From Range'
+          size='middle'
+          isCapitalised
+        />
       )}
       {RenderController<AssignSerialFormData>(
         control,
