@@ -74,7 +74,7 @@ const ViewSalesInvoice = () => {
             </div>
             {/* Serial Assign Form */}
             <div className='space-y-4 w-full'>
-              <SerialAssignForm control={control} />
+              <SerialAssignForm control={control} items={[]} />
               <p className='text-lg text-primary'>Total : {total}</p>
             </div>
           </div>

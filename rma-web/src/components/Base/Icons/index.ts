@@ -5,6 +5,7 @@ import { FaHome, FaShoppingBag } from 'react-icons/fa';
 import { CiSettings } from 'react-icons/ci';
 import { IoIosNotificationsOutline } from 'react-icons/io';
 import { CiLight, CiDark } from 'react-icons/ci';
+import { GoDotFill } from 'react-icons/go';
 
 export {
   LiaFileInvoiceSolid,
@@ -17,4 +18,5 @@ export {
   IoIosNotificationsOutline,
   CiLight,
   CiDark,
+  GoDotFill,
 };

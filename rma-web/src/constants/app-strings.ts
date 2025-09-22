@@ -6,3 +6,4 @@ export const PURCHASE_SELECT_STATUS = [
 ];
 
 export const COMPANY_NAME = 'Excel technologies Limited';
+export const UPLOAD_FILE_HEADER = ['item_name', 'serial_no'];

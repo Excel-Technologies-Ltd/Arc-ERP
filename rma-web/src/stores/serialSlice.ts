@@ -19,7 +19,10 @@ const SerialSlice = createSlice({
   reducers: {
     addSerials: (
       state,
-      action: PayloadAction<{ record: PurchaseInvoiceItem; quantity: number }>
+      action: PayloadAction<{
+        record: Pick<PurchaseInvoiceItem, 'item_name' | 'item_code' | 'name' | 'qty'>;
+        quantity: number;
+      }>
     ) => {
       const { record, quantity } = action.payload;
       const currentCount = state.serialTableData.filter(

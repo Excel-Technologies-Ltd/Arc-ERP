@@ -50,10 +50,12 @@ const ViewPurchase = () => {
   const total = useMemo(() => calculateRangeTotal(from, to, notify), [from, to]);
   const serialTableData = useAppSelector(selectSerialTableData);
 
+  // Handle Submit
   const onSubmit = (data: AssignSerialFormData) => {
-    console.log(data, serialTableData);
+    console.log({ data, serialTableData });
   };
 
+  // Render Loader
   if (isLoading || isValidating) return <LottieLoader pageLoader />;
 
   return (
@@ -77,7 +79,7 @@ const ViewPurchase = () => {
               <div className='text-base font-medium truncate'>Serial Assign</div>
             </div>
             <div className='space-y-4 w-full'>
-              <SerialAssignForm control={control} />
+              <SerialAssignForm control={control} items={purchaseInvoiceDetails?.items || []} />
               <p className='text-lg text-primary'>Total : {total}</p>
             </div>
           </div>

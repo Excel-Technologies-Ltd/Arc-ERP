@@ -1,3 +1,4 @@
+import AntTags from '@/components/Base/Tag/AntTag';
 import { ColumnCurrency, ColumnLink, ColumnProgress } from '@/components/Table/TableColumnUi';
 import { URLPurchaseDetails } from '@/router/routes.url';
 import { PurchaseInvoice } from '@/types/Accounts/PurchaseInvoice';
@@ -19,19 +20,27 @@ export const PurchaseListTableColumn = () => {
       key: 'status',
       title: 'STATUS',
       render: (status) => {
-        return (
-          <span
-            className={`px-2 py-1 rounded-full text-xs ${
-              status === 'completed'
-                ? 'bg-green-100 text-green-800'
-                : status === 'pending'
-                  ? 'bg-yellow-100 text-yellow-800'
-                  : 'bg-red-100 text-red-800'
-            }`}
-          >
-            {status}
-          </span>
-        );
+        const getColor = (status: string) => {
+          switch (status) {
+            case 'Cancelled':
+              return 'red';
+            case 'Submitted':
+              return 'green';
+            default:
+              return 'blue';
+          }
+        };
+        const getText = (status: string) => {
+          switch (status) {
+            case 'Cancelled':
+              return 'Cancelled';
+            case 'Submitted':
+              return 'Submitted';
+            default:
+              return status;
+          }
+        };
+        return <AntTags color={getColor(status.toString())}>{getText(status.toString())}</AntTags>;
       },
     },
     {

@@ -158,6 +158,7 @@ export const useFileParser = () => {
     parseFile,
     isLoading,
     error,
+    getFileType,
     clearError: () => setError(null),
   };
 };

@@ -9,6 +9,7 @@ import {
   updateInputValue,
   selectSerialTableData,
   selectInputValues,
+  resetInputValues,
 } from '@/stores/serialSlice';
 import { useAppDispatch, useAppSelector } from '@/stores/hooks';
 
@@ -113,6 +114,7 @@ export const PurchaseDetailsProductTableColumns =
                 />
               }
               onConfirm={() => handleAddSerial(record)}
+              onOpenChange={(open) => open && dispatch(resetInputValues())}
               okText='Submit'
               showCancel={false}
               placement='left'
