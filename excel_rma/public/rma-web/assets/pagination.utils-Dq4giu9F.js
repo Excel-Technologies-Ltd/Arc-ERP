@@ -1,1 +1,0 @@
-const p=[10,20,50,100,500],g=t=>{const a=Math.max(1,parseInt(t.get("page")||"1")||1),e=Math.max(1,parseInt(t.get("pageSize")||"10")||10),n=t.get("search")||"",s=Math.max(0,parseInt(t.get("limit_start")||"0")||0);return{page:a,pageSize:e,search:n,limit_start:s}};export{p as P,g as p};
