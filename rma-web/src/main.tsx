@@ -13,7 +13,9 @@ ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
     swrConfig={{
       revalidateOnFocus: false,
       shouldRetryOnError: false,
+
     }}
+    url='http://development.localhost:8000/'
   >
     <Provider store={store}>
       <App />

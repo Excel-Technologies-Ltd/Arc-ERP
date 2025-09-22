@@ -109,20 +109,19 @@ app_license = "MIT"
 # Override standard doctype classes
 
 override_doctype_class = {
-	"Customer": "excel_rma.api.override_doctype.customer.CustomCustomer"
+	"Customer": "excel_rma.api.override_doctype.customer.CustomCustomer",
+	"Purchase Invoice": "excel_rma.overrides.purchase_invoice.CustomPurchaseInvoice"
 }
 
 # Document Events
 # ---------------
 # Hook on document methods and events
 
-# doc_events = {
-# 	"*": {
-# 		"on_update": "method",
-# 		"on_cancel": "method",
-# 		"on_trash": "method"
-# 	}
-# }
+doc_events = {
+	"Purchase Invoice": {
+        "get_hello_msg": "excel_rma.overrides.purchase_invoice.CustomPurchaseInvoice.get_hello_msg"
+    }
+}
 
 # Scheduled Tasks
 # ---------------
