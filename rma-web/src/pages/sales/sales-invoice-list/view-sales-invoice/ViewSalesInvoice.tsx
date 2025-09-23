@@ -82,6 +82,7 @@ const ViewSalesInvoice = () => {
         {/* Serial Details Table */}
         <div className='col-span-12 lg:col-span-7 2xl:col-span-8 intro-x'>
           <PurchaseDetailsSerialTables
+            control={control}
             data={
               {
                 items: [

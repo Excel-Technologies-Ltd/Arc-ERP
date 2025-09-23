@@ -1,7 +1,12 @@
 import { useState, useCallback } from 'react';
 import Papa from 'papaparse';
 import * as XLSX from 'xlsx';
-import { FileParserOptions, ParseResult, SupportedFileType } from '@/types/common.types';
+import {
+  FileParserOptions,
+  ParseResult,
+  SerialFileDataType,
+  SupportedFileType,
+} from '@/types/common.types';
 
 export const useFileParser = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -41,7 +46,9 @@ export const useFileParser = () => {
           delimitersToGuess: [',', '\t', '|', ';'],
           complete: (results) => {
             resolve({
-              data: results.data as any[],
+              data: (results.data as SerialFileDataType[]).filter(
+                (i) => i.item_name && i.serial_no
+              ),
               errors: results.errors.map((err) => err.message),
               meta: results.meta,
             });
@@ -87,7 +94,7 @@ export const useFileParser = () => {
             });
 
             resolve({
-              data: jsonData,
+              data: jsonData as SerialFileDataType[],
               errors: [],
               meta: {
                 fields: Object.keys(jsonData[0] || {}),

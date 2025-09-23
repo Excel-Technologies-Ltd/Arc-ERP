@@ -3,7 +3,7 @@ import { getPurchaseInvoiceDetails } from '@/services/purchase/purchase';
 import Button from '@/components/Base/Button';
 import { useForm } from 'react-hook-form';
 import dayjs from 'dayjs';
-import { useMemo } from 'react';
+import { useMemo, useEffect } from 'react';
 import { AssignSerialFormData } from '@/types/pages/purchase';
 import { PurchaseDetailsCard, PurchaseDetailsSerialTables } from '@/features/purchase';
 import { useNotify } from '@/hooks/useNotify';
@@ -45,10 +45,17 @@ const ViewPurchase = () => {
     },
   });
 
-  // Calculate Total Range
+  // Calculate Total Range safely without notifications during render
   const [from, to] = watch(['fromRange', 'toRange']);
-  const total = useMemo(() => calculateRangeTotal(from, to, notify), [from, to]);
+  const { total, error } = useMemo(() => calculateRangeTotal(from, to), [from, to]);
   const serialTableData = useAppSelector(selectSerialTableData);
+
+  // Handle notifications in useEffect to avoid setState during render
+  useEffect(() => {
+    if (error && from && to) {
+      notify.error({ message: error });
+    }
+  }, [error, from, to, notify]);
 
   // Handle Submit
   const onSubmit = (data: AssignSerialFormData) => {
@@ -85,7 +92,7 @@ const ViewPurchase = () => {
           </div>
         </div>
         <div className='col-span-12 lg:col-span-7 2xl:col-span-8 intro-x'>
-          <PurchaseDetailsSerialTables data={purchaseInvoiceDetails} />
+          <PurchaseDetailsSerialTables data={purchaseInvoiceDetails} control={control} />
         </div>
       </div>
       {/* END: Transaction Details */}

@@ -50,6 +50,10 @@ function Tab({
               ? children({
                   selected: selected,
                   disabled: disabled,
+                  hover: false,
+                  focus: false,
+                  active: false,
+                  autofocus: false,
                 })
               : children}
           </tabContext.Provider>
@@ -176,6 +180,7 @@ Tab.Panel = ({ children, className, ...props }: ExtractProps<typeof HeadlessTab.
             {typeof children === 'function'
               ? children({
                   selected: selected,
+                  focus: false,
                 })
               : children}
           </>

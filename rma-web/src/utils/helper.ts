@@ -1,4 +1,3 @@
-import { NotifyType } from '@/components/Notification/NotificationProvider';
 import dayjs from 'dayjs';
 import duration from 'dayjs/plugin/duration';
 import { parseColor } from 'tailwindcss/lib/util/color';
@@ -128,12 +127,12 @@ const toTitle = (s: string) =>
     .replace(/[-_]+/g, ' ')
     .replace(/\b\w/g, (c) => c.toUpperCase());
 
-const calculateRangeTotal = (from: string, to: string, notify: NotifyType): number => {
-  if (!from || !to) return 0;
+// Helper function to calculate range
+const calculateRangeTotal = (from: string, to: string): { total: number; error: string | null } => {
+  if (!from || !to) return { total: 0, error: null };
 
   if (from.length !== to.length) {
-    notify.error({ message: "Lengths don't match" });
-    return 0;
+    return { total: 0, error: "Lengths don't match" };
   }
 
   const prefixFrom = from.replace(/\d+$/, '');
@@ -142,24 +141,21 @@ const calculateRangeTotal = (from: string, to: string, notify: NotifyType): numb
   const numToStr = to.match(/\d+$/);
 
   if (!numFromStr || !numToStr) {
-    notify.error({ message: 'No numbers found' });
-    return 0;
+    return { total: 0, error: 'No numbers found' };
   }
 
   if (prefixFrom !== prefixTo) {
-    notify.error({ message: "Prefixes don't match" });
-    return 0;
+    return { total: 0, error: "Prefixes don't match" };
   }
 
   const numFrom = parseInt(numFromStr[0], 10);
   const numTo = parseInt(numToStr[0], 10);
 
   if (isNaN(numFrom) || isNaN(numTo) || numFrom > numTo) {
-    notify.error({ message: 'Invalid numbers' });
-    return 0;
+    return { total: 0, error: 'Invalid numbers' };
   }
 
-  return numTo - numFrom + 1;
+  return { total: numTo - numFrom + 1, error: null };
 };
 
 export {

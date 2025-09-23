@@ -8,8 +8,13 @@ export type FormField = {
   options?: { value: string; label: string }[];
 };
 
-export interface ParseResult<T = any> {
-  data: T[];
+export type SerialFileDataType = {
+  item_name: string;
+  serial_no: string;
+};
+
+export interface ParseResult {
+  data: SerialFileDataType[];
   errors: string[];
   meta?: {
     fields?: string[];

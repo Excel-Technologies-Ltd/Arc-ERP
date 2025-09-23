@@ -5,15 +5,22 @@ import {
   PurchaseDetailsSerialTableColumns,
 } from '@/features/purchase';
 import { PurchaseInvoiceItem } from '@/types/Accounts/PurchaseInvoiceItem';
-import { SerialItemType } from '@/types/pages/purchase';
+import { AssignSerialFormData, SerialItemType } from '@/types/pages/purchase';
 import { selectSerialTableData } from '@/stores/serialSlice';
 import { useAppSelector } from '@/stores/hooks';
+import { Control } from 'react-hook-form';
 
-const PurchaseDetailsSerialTables = ({ data }: { data: PurchaseInvoice | undefined }) => {
+const PurchaseDetailsSerialTables = ({
+  data,
+  control,
+}: {
+  data: PurchaseInvoice | undefined;
+  control: Control<AssignSerialFormData>;
+}) => {
   const serialTableData = useAppSelector(selectSerialTableData);
 
   // Table Columns - No props needed!
-  const ProductTableColumns = PurchaseDetailsProductTableColumns();
+  const ProductTableColumns = PurchaseDetailsProductTableColumns(control);
   const SerialTableColumns = PurchaseDetailsSerialTableColumns();
 
   return (

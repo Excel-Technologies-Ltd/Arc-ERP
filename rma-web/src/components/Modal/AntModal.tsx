@@ -5,6 +5,7 @@ import { Modal, type ModalProps } from 'antd';
 const AntModal = (props: ModalProps) => {
   const dispatch = useAppDispatch();
   const { isOpen } = useAppSelector(selectModal);
+
   const handleClose = () => {
     dispatch(handleModal({ type: '', isOpen: false }));
   };

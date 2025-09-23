@@ -1,4 +1,3 @@
-import { PurchaseInvoiceItem } from '@/types/Accounts/PurchaseInvoiceItem';
 import { SerialItemType } from '@/types/pages/purchase';
 import { createSelector, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { RootState } from './store';
@@ -20,26 +19,18 @@ const SerialSlice = createSlice({
     addSerials: (
       state,
       action: PayloadAction<{
-        record: Pick<PurchaseInvoiceItem, 'item_name' | 'item_code' | 'name' | 'qty'>;
-        quantity: number;
+        serials: SerialItemType[];
+        recordName?: string;
       }>
     ) => {
-      const { record, quantity } = action.payload;
-      const currentCount = state.serialTableData.filter(
-        (serial) => serial.item_name === record.item_name
-      ).length;
+      const { serials, recordName } = action.payload;
 
-      const newSerials = Array.from({ length: quantity }, (_, i) => ({
-        key: `${record.item_name}_${currentCount + i + 1}`,
-        item_code: record.item_code || '',
-        item_name: record.item_name,
-        quantity: 1,
-        warranty_date: new Date(),
-        serials: '',
-      }));
+      state.serialTableData.push(...serials);
 
-      state.serialTableData.push(...newSerials);
-      state.inputValues[record.name] = '';
+      // Clear input value if recordName is provided
+      if (recordName) {
+        state.inputValues[recordName] = '';
+      }
     },
 
     deleteSerialTableItem: (state, action: PayloadAction<string>) => {

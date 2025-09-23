@@ -92,7 +92,17 @@ export const PurchaseDetailsSerialTableColumns = (): TableProps<SerialItemType>[
       title: 'Serials',
       key: 'serials',
       dataIndex: 'serials',
-      render: (_, record) => {
+      render: (value, record) => {
+        const splitValue = value?.split(' - ');
+
+        if (splitValue.length > 1) {
+          return (
+            <>
+              {splitValue[0]?.toUpperCase()} - {splitValue[splitValue.length - 1]?.toUpperCase()}
+            </>
+          );
+        }
+
         return (
           <AntInput
             type='text'
