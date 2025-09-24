@@ -6,6 +6,7 @@ export type AssignSerialFormData = {
   file: FileList | undefined;
   fromRange: string;
   toRange: string;
+  totalRangeValue: string;
 };
 
 export type PurchaseListFilterFormData = {
@@ -44,7 +45,8 @@ export interface ProductDataType {
   warrenty_months: number;
 }
 
-export interface SerialItemType extends Pick<ProductDataType, 'key' | 'item_name' | 'quantity'> {
+export interface SerialItemType
+  extends Pick<ProductDataType, 'key' | 'item_name' | 'quantity' | 'has_serial'> {
   item_code: string;
   warranty_date: Date;
   serials: string;

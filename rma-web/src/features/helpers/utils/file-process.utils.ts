@@ -58,6 +58,7 @@ export const processAndGroupFileData = (
           item_code: matchingItem?.item_code || '',
           qty: 0,
           serials: [],
+          has_serial: matchingItem?.custom_has_excel_serial === 'Yes' ? true : false,
           matchingItem,
         };
       }
@@ -78,6 +79,7 @@ export const processAndGroupFileData = (
         item_name: string;
         item_code: string;
         qty: number;
+        has_serial: boolean;
         serials: string[];
         matchingItem?: PurchaseInvoiceItem;
       }
@@ -98,6 +100,7 @@ export const convertGroupedDataToSerials = (
       item_code: string;
       qty: number;
       serials: string[];
+      has_serial: boolean;
     }
   >
 ): SerialItemType[] => {
@@ -108,6 +111,7 @@ export const convertGroupedDataToSerials = (
     quantity: group.qty,
     serials: group.serials.join(' - '), // Join all serials with separator
     warranty_date: new Date(),
+    has_serial: group.has_serial,
   }));
 };
 
@@ -130,6 +134,7 @@ export const generateSerialItems = (
     item_code: item.item_code || '',
     item_name: item.item_name,
     quantity: 1,
+    has_serial: item.custom_has_excel_serial === 'Yes' ? true : false,
     warranty_date: new Date(),
     serials: '',
   }));

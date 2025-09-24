@@ -8,19 +8,21 @@ import { PurchaseInvoiceItem } from '@/types/Accounts/PurchaseInvoiceItem';
 import { AssignSerialFormData, SerialItemType } from '@/types/pages/purchase';
 import { selectSerialTableData } from '@/stores/serialSlice';
 import { useAppSelector } from '@/stores/hooks';
-import { Control } from 'react-hook-form';
+import { Control, UseFormSetValue } from 'react-hook-form';
 
 const PurchaseDetailsSerialTables = ({
   data,
   control,
+  setValue,
 }: {
   data: PurchaseInvoice | undefined;
   control: Control<AssignSerialFormData>;
+  setValue: UseFormSetValue<AssignSerialFormData>;
 }) => {
   const serialTableData = useAppSelector(selectSerialTableData);
 
   // Table Columns - No props needed!
-  const ProductTableColumns = PurchaseDetailsProductTableColumns(control);
+  const ProductTableColumns = PurchaseDetailsProductTableColumns(control, setValue);
   const SerialTableColumns = PurchaseDetailsSerialTableColumns();
 
   return (

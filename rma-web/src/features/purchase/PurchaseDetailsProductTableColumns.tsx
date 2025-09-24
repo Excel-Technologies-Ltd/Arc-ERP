@@ -12,22 +12,22 @@ import {
 import { useAppDispatch, useAppSelector } from '@/stores/hooks';
 import { getAddedSerialsCount, getRemainingQty } from '@/features/helpers/utils';
 import { useAddSerialHandler } from '../helpers/handlers/useAddSerial.handler';
-import { Control, useWatch } from 'react-hook-form';
+import { Control, UseFormSetValue, useWatch } from 'react-hook-form';
 import { AssignSerialFormData } from '@/types/pages/purchase';
 
 export const PurchaseDetailsProductTableColumns = (
-  control: Control<AssignSerialFormData>
+  control: Control<AssignSerialFormData>,
+  setValue: UseFormSetValue<AssignSerialFormData>
 ): TableProps<PurchaseInvoiceItem>['columns'] => {
   const dispatch = useAppDispatch();
   const { fromRange, toRange } = useWatch({ control });
-  console.log(fromRange, toRange);
 
   // Call Selectors
   const serialTableData = useAppSelector(selectSerialTableData);
   const inputValues = useAppSelector(selectInputValues);
 
   // Add Serial Handler
-  const { handleAddSerial } = useAddSerialHandler({ inputValues, serialTableData });
+  const { handleAddSerial } = useAddSerialHandler({ inputValues, serialTableData, control });
 
   return [
     { title: 'Item Name', dataIndex: 'item_name', key: 'item_name' },
@@ -62,7 +62,26 @@ export const PurchaseDetailsProductTableColumns = (
       title: 'Add Serial',
       key: 'add_serial',
       render: (_, record) => {
-        const inputValue = inputValues[record.name] || '';
+        const inputValue = inputValues?.[record?.name] || '';
+        const isDisabled = getRemainingQty(record, serialTableData) <= 0;
+        const onlyButtonClick = fromRange && toRange;
+
+        if (onlyButtonClick) {
+          return (
+            <Button
+              disabled={isDisabled}
+              variant='outline-primary'
+              onClick={() => {
+                setValue('fromRange', '');
+                setValue('toRange', '');
+                setValue('totalRangeValue', '');
+                handleAddSerial(record);
+              }}
+            >
+              <PlusOutlined />
+            </Button>
+          );
+        }
 
         return (
           <Popconfirm
@@ -89,10 +108,7 @@ export const PurchaseDetailsProductTableColumns = (
             showCancel={false}
             placement='left'
           >
-            <Button
-              disabled={getRemainingQty(record, serialTableData) <= 0}
-              variant='outline-primary'
-            >
+            <Button disabled={isDisabled} variant='outline-primary'>
               <PlusOutlined />
             </Button>
           </Popconfirm>

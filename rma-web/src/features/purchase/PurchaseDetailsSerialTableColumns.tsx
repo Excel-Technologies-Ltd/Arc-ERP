@@ -93,13 +93,14 @@ export const PurchaseDetailsSerialTableColumns = (): TableProps<SerialItemType>[
       key: 'serials',
       dataIndex: 'serials',
       render: (value, record) => {
-        const splitValue = value?.split(' - ');
+        if (!record.has_serial) return <span>Non Serialized Item</span>;
 
+        const splitValue = value?.split(' - ');
         if (splitValue.length > 1) {
           return (
-            <>
+            <span>
               {splitValue[0]?.toUpperCase()} - {splitValue[splitValue.length - 1]?.toUpperCase()}
-            </>
+            </span>
           );
         }
 

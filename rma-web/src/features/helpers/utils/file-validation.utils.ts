@@ -16,12 +16,12 @@ export const validateQuantityAssignment = (
   assignedQuantity: number,
   serialTableData: SerialItemType[]
 ): { isValid: boolean; error?: string } => {
-  if (assignedQuantity <= 0) {
-    return {
-      isValid: false,
-      error: 'Please enter a valid number greater than 0',
-    };
-  }
+  // if (assignedQuantity <= 0) {
+  //   return {
+  //     isValid: false,
+  //     error: 'Please enter a valid number greater than 0',
+  //   };
+  // }
 
   const remaining = getRemainingQty(item, serialTableData);
   if (assignedQuantity > remaining) {

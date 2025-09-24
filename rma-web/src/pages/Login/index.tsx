@@ -65,7 +65,7 @@ function Main() {
             <div className='flex-col hidden min-h-screen xl:flex'>
               <a href='' className='flex items-center pt-5 -intro-x'>
                 <img alt='Midone Tailwind HTML Admin Template' className='w-6' src={logoUrl} />
-                <span className='ml-3 text-lg text-white'> Excel Rma </span>
+                <span className='ml-3 text-lg text-white'> Arc ERP </span>
               </a>
               <div className='my-auto'>
                 <img

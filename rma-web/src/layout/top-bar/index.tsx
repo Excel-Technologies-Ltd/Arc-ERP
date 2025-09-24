@@ -50,7 +50,7 @@ function Main() {
           {/* BEGIN: Logo */}
           <Link to='/' className={clsx(['-intro-x hidden md:flex xl:w-[180px]'])}>
             <img alt='Enigma Tailwind HTML Admin Template' className='w-6' src={logoUrl} />
-            <span className={clsx(['ml-3 text-lg text-white hidden xl:block'])}>Rma Web</span>
+            <span className={clsx(['ml-3 text-lg text-white hidden xl:block'])}>Arc ERP</span>
           </Link>
           {/* END: Logo */}
           {/* BEGIN: Breadcrumb */}

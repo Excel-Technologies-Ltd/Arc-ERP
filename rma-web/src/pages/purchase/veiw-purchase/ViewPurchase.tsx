@@ -20,6 +20,7 @@ const mapApiToForm = (pi?: PurchaseInvoice): AssignSerialFormData => ({
   file: undefined,
   fromRange: '',
   toRange: '',
+  totalRangeValue: '',
 });
 
 const ViewPurchase = () => {
@@ -37,7 +38,7 @@ const ViewPurchase = () => {
   const formValues = useMemo(() => mapApiToForm(purchaseInvoiceDetails), [purchaseInvoiceDetails]);
 
   // From Handel
-  const { control, watch, handleSubmit } = useForm<AssignSerialFormData>({
+  const { control, watch, handleSubmit, setValue } = useForm<AssignSerialFormData>({
     values: formValues,
     mode: 'onChange',
     resetOptions: {
@@ -56,6 +57,16 @@ const ViewPurchase = () => {
       notify.error({ message: error });
     }
   }, [error, from, to, notify]);
+
+  // Update totalRange field whenever fromRange or toRange changes
+  useEffect(() => {
+    if (from && to) {
+      setValue('totalRangeValue', total.toString(), {
+        shouldValidate: true,
+        shouldDirty: true,
+      });
+    }
+  }, [from, to, setValue, total]);
 
   // Handle Submit
   const onSubmit = (data: AssignSerialFormData) => {
@@ -92,7 +103,11 @@ const ViewPurchase = () => {
           </div>
         </div>
         <div className='col-span-12 lg:col-span-7 2xl:col-span-8 intro-x'>
-          <PurchaseDetailsSerialTables data={purchaseInvoiceDetails} control={control} />
+          <PurchaseDetailsSerialTables
+            data={purchaseInvoiceDetails}
+            control={control}
+            setValue={setValue}
+          />
         </div>
       </div>
       {/* END: Transaction Details */}
