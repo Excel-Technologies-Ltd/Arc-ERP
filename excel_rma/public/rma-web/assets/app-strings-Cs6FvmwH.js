@@ -1,1 +1,0 @@
-const l=[{value:"completed",label:"Completed"},{value:"cancelled",label:"Cancelled"},{value:"submitted",label:"Submitted"},{value:"all",label:"All"}],e="Excel technologies Limited";export{e as C,l as P};
