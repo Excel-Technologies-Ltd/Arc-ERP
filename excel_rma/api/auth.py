@@ -2,7 +2,7 @@ import frappe
 
 PERMISSIONS = ["read", "write", "create", "delete", "submit", "cancel", "amend", "report", "export", "import"]
 
-@frappe.whitelist(allow_guest=True)
+@frappe.whitelist()
 def user_details_with_permission(doctypes=None):
     
     # Normalize doctypes

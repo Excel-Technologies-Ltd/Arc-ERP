@@ -31,3 +31,60 @@
     min-width: 600px; /* Minimum width to ensure table doesn't get too narrow */
   }
 }
+
+.floating-select-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+.floating-label {
+  position: absolute;
+  left: 11px;
+  top: 50%;
+  transform: translateY(-50%);
+  background-color: white;
+  color: rgba(0, 0, 0, 0.45);
+  padding: 0 5px;
+  pointer-events: none;
+  transition: all 0.2s ease;
+  z-index: 1;
+  font-size: 14px;
+}
+
+.floating-select-wrapper.floating .floating-label {
+  top: -8px;
+  transform: translateY(0);
+  font-size: 12px;
+  color: #164e63;
+}
+
+/* Adjust for different select sizes */
+.floating-select-wrapper .ant-select-lg ~ .floating-label {
+  font-size: 16px;
+}
+
+.floating-select-wrapper.floating .ant-select-lg ~ .floating-label {
+  font-size: 12px;
+}
+
+.floating-select-wrapper .ant-select-sm ~ .floating-label {
+  font-size: 12px;
+  top: 45%;
+}
+
+.floating-select-wrapper.floating .ant-select-sm ~ .floating-label {
+  top: -8px;
+  font-size: 11px;
+}
+
+/* Dark theme support */
+.ant-dark .floating-label,
+.dark .floating-label {
+  background-color: #141414;
+  color: rgba(255, 255, 255, 0.45);
+}
+
+.ant-dark .floating-select-wrapper.floating .floating-label,
+.dark .floating-select-wrapper.floating .floating-label {
+  color: #164e63;
+}

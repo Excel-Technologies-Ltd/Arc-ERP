@@ -33,9 +33,9 @@ const AntInput: React.FC<AntInputProps> = (props) => {
 
           const handleUppercaseChange = (e: React.ChangeEvent<HTMLInputElement>) => {
             // Skip transformation for number type
-            if (type === 'number') return onChange?.(e as any);
+            if (type === 'number') return onChange?.(e);
             const value = e.target.value?.toUpperCase();
-            onChange?.({ ...e, target: { ...e.target, value } } as any);
+            onChange?.({ ...e, target: { ...e.target, value } });
           };
 
           return (
