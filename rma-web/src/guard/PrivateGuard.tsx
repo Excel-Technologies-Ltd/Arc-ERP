@@ -11,6 +11,7 @@ function PrivateGuard() {
   const { currentUser, isLoading, isValidating } = useFrappeAuth();
   const { isChecked } = useAuthCheck();
 
+  // Show loader if loading or validating
   if (isLoading || isValidating || isChecked) {
     return <LottieLoader />;
   }

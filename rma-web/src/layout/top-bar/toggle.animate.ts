@@ -50,10 +50,10 @@ export const switchDarkMode = (
     dispatch(setDarkMode(darkMode));
     setDarkModeClass();
 
-    // // Clean up animation class after transition
-    // setTimeout(() => {
-    //   document.body.classList.remove(`theme-transition-${animation.name}`);
-    // }, 700); // Match this with your animation duration
+    // Clean up animation class after transition
+    setTimeout(() => {
+      document.body.classList.remove(`theme-transition-${animation.name}`);
+    }, 1000); // Match this with your animation duration
   };
 
   // Use View Transition API if available, otherwise fallback

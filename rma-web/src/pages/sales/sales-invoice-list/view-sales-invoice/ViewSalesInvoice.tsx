@@ -13,7 +13,7 @@ import { useForm } from 'react-hook-form';
 
 const ViewSalesInvoice = () => {
   const dispatch = useAppDispatch();
-  const { control, watch } = useForm<AssignSerialFormData>({
+  const { control, watch, setValue } = useForm<AssignSerialFormData>({
     mode: 'onChange',
     resetOptions: {
       keepDirtyValues: true,
@@ -82,6 +82,7 @@ const ViewSalesInvoice = () => {
         {/* Serial Details Table */}
         <div className='col-span-12 lg:col-span-7 2xl:col-span-8 intro-x'>
           <PurchaseDetailsSerialTables
+            setValue={setValue}
             control={control}
             data={
               {

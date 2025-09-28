@@ -14,6 +14,7 @@ function useAuthCheck() {
     isLoading: permissionLoading,
     isValidating: permissionValidating,
     mutate: refetchPermission,
+    error: permissionError,
   } = getPermissionlist();
 
   useEffect(() => {
@@ -34,7 +35,7 @@ function useAuthCheck() {
     }
   }, [permissionLoading, permissionValidating, permissionData, dispatch]);
 
-  return { isChecked };
+  return { isChecked, permissionError };
 }
 
 export default useAuthCheck;

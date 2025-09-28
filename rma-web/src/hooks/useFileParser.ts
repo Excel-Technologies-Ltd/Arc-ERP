@@ -1,6 +1,6 @@
 import { useState, useCallback } from 'react';
 import Papa from 'papaparse';
-import * as XLSX from 'xlsx';
+import { read, utils } from 'xlsx';
 import {
   FileParserOptions,
   ParseResult,
@@ -73,7 +73,7 @@ export const useFileParser = () => {
         reader.onload = (e) => {
           try {
             const data = new Uint8Array(e.target?.result as ArrayBuffer);
-            const workbook = XLSX.read(data, {
+            const workbook = read(data, {
               type: 'array',
               cellStyles: true,
               cellDates: true,
@@ -87,7 +87,7 @@ export const useFileParser = () => {
             const worksheet = workbook.Sheets[sheetName];
 
             // Convert to JSON
-            const jsonData = XLSX.utils.sheet_to_json(worksheet, {
+            const jsonData = utils.sheet_to_json(worksheet, {
               header: options.hasHeader !== false ? 1 : undefined,
               defval: '',
               blankrows: !options.skipEmptyLines,

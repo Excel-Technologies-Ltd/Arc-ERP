@@ -61,7 +61,7 @@ export const createAnimation = (variant: AnimationVariant, start: AnimationStart
       name: `${variant}-${start}`,
       css: `
        ::view-transition-group(root) {
-        animation-duration: 0.7s;
+        animation-duration: 1s;
         animation-timing-function: var(--expo-out);
       }
             
@@ -108,12 +108,12 @@ export const createAnimation = (variant: AnimationVariant, start: AnimationStart
       ::view-transition-new(root) {
         mask: url('${svg}') ${start.replace('-', ' ')} / 0 no-repeat;
         mask-origin: content-box;
-        animation: scale-${start} 3s;
+        animation: scale-${start} 1s;
         transform-origin: ${transformOrigin};
       }
       ::view-transition-old(root),
       .dark::view-transition-old(root) {
-        animation: scale-${start} 3s;
+        animation: scale-${start} 1s;
         transform-origin: ${transformOrigin};
         z-index: -1;
       }

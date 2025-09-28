@@ -5,6 +5,7 @@ import { NotificationProvider } from './components/Notification/NotificationProv
 import { useAppSelector } from './stores/hooks';
 import { selectDarkMode } from './stores/darkModeSlice';
 import useAuthCheck from './hooks/auth/useAuthCheck';
+import LottieLoader from './components/Loader/LottieLoder';
 
 const App = () => {
   const darkMode = useAppSelector(selectDarkMode);
@@ -38,7 +39,7 @@ const App = () => {
         <AntApp>
           <NotificationProvider>
             {isChecked ? (
-              <div>Loading....</div>
+              <LottieLoader />
             ) : (
               <>
                 <RouterProvider router={router} />
