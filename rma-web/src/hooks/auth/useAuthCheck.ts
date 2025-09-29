@@ -30,7 +30,7 @@ function useAuthCheck() {
       setIsChecked(false);
 
       if (permissionData) {
-        dispatch(setPermissions(permissionData.message));
+        dispatch(setPermissions(permissionData?.message));
       }
     }
   }, [permissionLoading, permissionValidating, permissionData, dispatch]);

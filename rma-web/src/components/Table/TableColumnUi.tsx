@@ -25,11 +25,13 @@ export const ColumnLink = (url: string, value: string) => {
 };
 
 // Progress Column UI
-export const ColumnProgress = (percent: number) => {
+export const ColumnProgress = (percent: number, status?: string) => {
   return (
-    <div className='w-full bg-gray-200 rounded-full h-1.5'>
+    <div
+      className={`w-full rounded-full h-1.5 ${status === 'Cancelled' ? 'bg-red-200' : 'bg-gray-200'}`}
+    >
       <div
-        className={`h-1.5 rounded-full ${percent > 0.5 ? 'bg-green-500' : 'bg-orange-500'}`}
+        className={`h-1.5 rounded-full ${percent === 1 ? 'bg-green-500' : 'bg-orange-500'}`}
         style={{ width: `${percent * 99}%` }}
       ></div>
     </div>

@@ -1,4 +1,4 @@
-import { GET_PERMISSION_LIST } from '@/constants/url-strings';
+import { GET_PERMISSION_LIST } from '@/constants/api-strings';
 import { useFrappeGetCall } from 'frappe-react-sdk';
 
 // API Call to get permission list

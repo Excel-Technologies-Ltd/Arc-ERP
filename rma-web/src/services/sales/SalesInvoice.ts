@@ -1,5 +1,5 @@
 import { useFrappeCreateDoc, useFrappeGetCall, useFrappeGetDocList } from 'frappe-react-sdk';
-import { GET_REMAINING_BALANCE } from '@/constants/url-strings';
+import { GET_REMAINING_BALANCE } from '@/constants/api-strings';
 import { COMPANY_NAME } from '@/constants/app-strings';
 import { SalesInvoice } from '@/types/Accounts/SalesInvoice';
 import { SALES_INVOICE } from '@/constants/doctype-strings';

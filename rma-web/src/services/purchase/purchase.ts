@@ -1,15 +1,13 @@
-import {
-  type Filter,
-  useFrappeGetDoc,
-  useFrappeGetDocCount,
-  useFrappeGetDocList,
-} from 'frappe-react-sdk';
+import { type Filter, useFrappeGetCall, useFrappeGetDoc } from 'frappe-react-sdk';
 import { PurchaseInvoice } from '@/types/Accounts/PurchaseInvoice';
 import { parsePaginationParams } from '@/components/Pagination/pagination.utils';
 import { useSearchParams } from 'react-router-dom';
 import { PURCHASE_INVOICE } from '@/constants/doctype-strings';
 import { PurchaseListFilterFormData } from '@/types/pages/purchase';
 import dayjs from 'dayjs';
+import { GET_PURCHASE_INVOICE_LIST } from '@/constants/api-strings';
+import { FrappeGetCallResponse } from '@/types/common.types';
+import { PURCHASE_INVOICE_LIST_FIELDS } from '@/constants/api-fields';
 
 // API Call to get purchase orders
 export const getPurchaseInvoiceList = ({
@@ -35,8 +33,8 @@ export const getPurchaseInvoiceList = ({
     isLoading: isLoadingPurchaseInvoiceList,
     isValidating: isValidatingPurchaseInvoiceList,
     error: errorPurchaseInvoiceList,
-  } = useFrappeGetDocList<PurchaseInvoice>(PURCHASE_INVOICE, {
-    fields: ['*'],
+  } = useFrappeGetCall<FrappeGetCallResponse<PurchaseInvoice>>(GET_PURCHASE_INVOICE_LIST, {
+    fields: PURCHASE_INVOICE_LIST_FIELDS,
     filters: conditions,
     limit: pageSize,
     limit_start: limit_start,
@@ -46,19 +44,12 @@ export const getPurchaseInvoiceList = ({
     },
   });
 
-  const {
-    data: PurchaseInvoicecount,
-    isLoading: isLoadingPurchaseInvoicecount,
-    isValidating: isValidatingPurchaseInvoicecount,
-    error: errorPurchaseInvoicecount,
-  } = useFrappeGetDocCount(PURCHASE_INVOICE, conditions);
-
   return {
-    data: purchaseInvoiceList,
-    isLoading: isLoadingPurchaseInvoiceList || isLoadingPurchaseInvoicecount,
-    isValidating: isValidatingPurchaseInvoiceList || isValidatingPurchaseInvoicecount,
-    error: errorPurchaseInvoiceList || errorPurchaseInvoicecount,
-    total: PurchaseInvoicecount,
+    data: purchaseInvoiceList?.message.data,
+    isLoading: isLoadingPurchaseInvoiceList,
+    isValidating: isValidatingPurchaseInvoiceList,
+    error: errorPurchaseInvoiceList,
+    total: purchaseInvoiceList?.message.count,
   };
 };
 

@@ -317,4 +317,12 @@ export interface PurchaseInvoice {
   is_old_subcontracting_flow?: 0 | 1;
   /**	Remarks : Small Text	*/
   remarks?: string;
+  /**	Receipt Data : Table - Purchase Receipt Item	*/
+  receipt_data?: PurchaseReceiptItem[];
 }
+
+export type PurchaseReceiptItem = {
+  purchase_invoice?: string;
+  qty: number;
+  modified_by: string;
+};

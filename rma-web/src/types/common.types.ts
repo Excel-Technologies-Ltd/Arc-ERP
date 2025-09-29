@@ -35,3 +35,10 @@ export interface FileParserOptions {
 }
 
 export type SupportedFileType = 'csv' | 'xlsx' | 'xls';
+
+export interface FrappeGetCallResponse<T> {
+  message: {
+    data: T[];
+    count: number;
+  };
+}

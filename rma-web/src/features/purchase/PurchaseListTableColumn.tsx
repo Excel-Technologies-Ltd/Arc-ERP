@@ -3,6 +3,7 @@ import { ColumnCurrency, ColumnLink, ColumnProgress } from '@/components/Table/T
 import { URLPurchaseDetails } from '@/router/routes.url';
 import { PurchaseInvoice } from '@/types/Accounts/PurchaseInvoice';
 import { TableColumn } from '@/types/Table/table-types';
+import { getProgress, getStatusColor, getStatusText } from '@/utils/tableUtils';
 
 export const PurchaseListTableColumn = () => {
   const TableHeader: TableColumn<PurchaseInvoice>[] = [
@@ -19,34 +20,20 @@ export const PurchaseListTableColumn = () => {
     {
       key: 'status',
       title: 'STATUS',
-      render: (status) => {
-        const getColor = (status: string) => {
-          switch (status) {
-            case 'Cancelled':
-              return 'red';
-            case 'Submitted':
-              return 'green';
-            default:
-              return 'blue';
-          }
-        };
-        const getText = (status: string) => {
-          switch (status) {
-            case 'Cancelled':
-              return 'Cancelled';
-            case 'Submitted':
-              return 'Submitted';
-            default:
-              return status;
-          }
-        };
-        return <AntTags color={getColor(status.toString())}>{getText(status.toString())}</AntTags>;
+      render: (status, record) => {
+        const progress = getProgress(record.total_qty ?? 0, record.receipt_data);
+        const color = getStatusColor(progress === 1 ? 'Completed' : status.toString());
+        const text = getStatusText(progress === 1 ? 'Completed' : status.toString());
+        return <AntTags color={color}>{text}</AntTags>;
       },
     },
     {
       key: 'progress',
       title: 'PROGRESS',
-      render: () => ColumnProgress(0.5),
+      render: (_, record) => {
+        const progress = getProgress(record.total_qty ?? 0, record.receipt_data);
+        return ColumnProgress(progress, record.status);
+      },
     },
     { key: 'posting_date', title: 'POSTING DATE' },
     { key: 'supplier_name', title: 'SUPPLIER' },
@@ -56,7 +43,13 @@ export const PurchaseListTableColumn = () => {
       render: (value) => ColumnCurrency(Number(value)),
     },
     { key: 'owner', title: 'CREATED BY' },
-    { key: 'delivered_by', title: 'DELIVERED BY' },
+    {
+      key: 'delivered_by',
+      title: 'DELIVERED BY',
+      render: (_, record) => {
+        return record.receipt_data?.[0]?.modified_by ?? <div className='text-center'>-</div>;
+      },
+    },
   ];
 
   return TableHeader;

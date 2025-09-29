@@ -36,6 +36,7 @@ const Purchase = () => {
   });
   // Api Call end
 
+  // handle Clear
   const handleClear = () => {
     reset();
     setAppliedFilterData(null);
@@ -45,6 +46,7 @@ const Purchase = () => {
   // Table Column
   const Column = PurchaseListTableColumn();
 
+  // handle Submit
   const onSubmit = handleSubmit((data) => {
     setAppliedFilterData(data);
   });
