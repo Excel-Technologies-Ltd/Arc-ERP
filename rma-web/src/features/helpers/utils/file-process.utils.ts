@@ -101,6 +101,7 @@ export const convertGroupedDataToSerials = (
       qty: number;
       serials: string[];
       has_serial: boolean;
+      matchingItem?: PurchaseInvoiceItem;
     }
   >
 ): SerialItemType[] => {
@@ -109,9 +110,11 @@ export const convertGroupedDataToSerials = (
     item_name: group.item_name,
     item_code: group.item_code,
     quantity: group.qty,
-    serials: group.serials.join(' - '), // Join all serials with separator
+    serials: group.serials, // Join all serials with separator
     warranty_date: new Date(),
     has_serial: group.has_serial,
+    amount: group.matchingItem?.amount || 0,
+    rate: group.matchingItem?.rate || 0,
   }));
 };
 
@@ -136,7 +139,9 @@ export const generateSerialItems = (
     quantity: 1,
     has_serial: item.custom_has_excel_serial === 'Yes' ? true : false,
     warranty_date: new Date(),
-    serials: '',
+    serials: [],
+    rate: item.rate,
+    amount: Number(item.rate) * 1 || 0,
   }));
 };
 
@@ -175,4 +180,41 @@ export const processFile = (
     message: 'File processed successfully',
     description: `Added ${makeSerialData.reduce((acc, item) => acc + item.quantity, 0)} serial items`,
   });
+};
+
+/**
+ * Generate serial numbers from a range
+ * @param fromRange - Starting serial number (e.g., "ACT001")
+ * @param toRange - Ending serial number (e.g., "ACT010")
+ * @returns Array of serial numbers between the range
+ */
+export const generateSerialNumbersFromRange = (fromRange: string, toRange: string): string[] => {
+  if (!fromRange || !toRange) return [];
+
+  // Extract prefix and numeric parts
+  const prefixFrom = fromRange.replace(/\d+$/, '');
+  const numFromStr = fromRange.match(/\d+$/);
+  const prefixTo = toRange.replace(/\d+$/, '');
+  const numToStr = toRange.match(/\d+$/);
+
+  // Validation checks
+  if (!numFromStr || !numToStr) return [];
+  if (prefixFrom !== prefixTo) return [];
+  if (fromRange.length !== toRange.length) return [];
+
+  const numFrom = parseInt(numFromStr[0], 10);
+  const numTo = parseInt(numToStr[0], 10);
+
+  if (isNaN(numFrom) || isNaN(numTo) || numFrom > numTo) return [];
+
+  // Generate serial numbers
+  const serials: string[] = [];
+  const numLength = numFromStr[0].length; // Preserve leading zeros
+
+  for (let i = numFrom; i <= numTo; i++) {
+    const paddedNum = i.toString().padStart(numLength, '0');
+    serials.push(`${prefixFrom}${paddedNum}`);
+  }
+
+  return serials;
 };

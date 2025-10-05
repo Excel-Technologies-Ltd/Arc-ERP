@@ -1,5 +1,9 @@
 import { PurchaseInvoiceItem } from '@/types/Accounts/PurchaseInvoiceItem';
-import { generateSerialItems, validateQuantityAssignment } from '../utils';
+import {
+  generateSerialItems,
+  generateSerialNumbersFromRange,
+  validateQuantityAssignment,
+} from '../utils';
 import { AssignSerialFormData, SerialItemType } from '@/types/pages/purchase';
 import { addSerials } from '@/stores/serialSlice';
 import { useAppDispatch } from '@/stores/hooks';
@@ -24,8 +28,6 @@ export const useAddSerialHandler = ({
     const assignedQuantity =
       Number(totalRangeValue) > 0 ? Number(totalRangeValue) : parseInt(inputValue || '0');
 
-    console.log(assignedQuantity);
-
     // Use centralized validation
     const validation = validateQuantityAssignment(record, assignedQuantity, serialTableData);
 
@@ -40,7 +42,16 @@ export const useAddSerialHandler = ({
 
     // if fromRange and toRange are provided, generate serials using utility function
     if (fromRange && toRange) {
-      const serials = `${fromRange} - ${toRange}`;
+      const serials = generateSerialNumbersFromRange(fromRange, toRange);
+
+      // check if serials length is 0
+      if (serials.length === 0) {
+        notify.error({
+          message: 'Invalid range',
+        });
+        return;
+      }
+
       // dispatch the prepared serials
       dispatch(
         addSerials({
@@ -53,6 +64,8 @@ export const useAddSerialHandler = ({
               has_serial: record.custom_has_excel_serial === 'Yes' ? true : false,
               warranty_date: new Date(),
               serials: serials,
+              rate: record.rate,
+              amount: Number(record.rate) * Number(totalRangeValue) || 0,
             },
           ],
           recordName: record.name,

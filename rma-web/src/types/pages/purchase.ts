@@ -49,5 +49,7 @@ export interface SerialItemType
   extends Pick<ProductDataType, 'key' | 'item_name' | 'quantity' | 'has_serial'> {
   item_code: string;
   warranty_date: Date;
-  serials: string;
+  serials: string[];
+  amount: number;
+  rate: number;
 }

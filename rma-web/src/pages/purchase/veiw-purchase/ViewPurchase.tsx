@@ -4,7 +4,7 @@ import Button from '@/components/Base/Button';
 import { useForm } from 'react-hook-form';
 import dayjs from 'dayjs';
 import { useMemo, useEffect } from 'react';
-import { AssignSerialFormData } from '@/types/pages/purchase';
+import { AssignSerialFormData, SerialItemType } from '@/types/pages/purchase';
 import { PurchaseDetailsCard, PurchaseDetailsSerialTables } from '@/features/purchase';
 import { useNotify } from '@/hooks/useNotify';
 import { calculateRangeTotal } from '@/utils/helper';
@@ -70,7 +70,35 @@ const ViewPurchase = () => {
 
   // Handle Submit
   const onSubmit = (data: AssignSerialFormData) => {
-    console.log({ data, serialTableData });
+    // merge duplicate items by name and amount, sum quantities
+    const mergedItems = serialTableData.reduce(
+      (acc, curr) => {
+        const key = curr.item_name;
+        if (!acc[key]) {
+          acc[key] = { ...curr };
+        } else {
+          // Sum the quantities for items with same name and amount
+          acc[key].quantity += curr.quantity;
+          // Sum the amounts for merged items
+          acc[key].amount += curr.amount;
+          // Merge serials arrays
+          acc[key].serials = [...acc[key].serials, ...curr.serials];
+        }
+        return acc;
+      },
+      {} as Record<string, SerialItemType>
+    );
+
+    const payload = {
+      posting_date: dayjs(data.date).format('YYYY-MM-DD'),
+      posting_time: dayjs(data.date).format('HH:mm:ss'),
+      purchase_invoice_name: purchaseInvoiceDetails?.name,
+      supplier: purchaseInvoiceDetails?.supplier,
+      total: serialTableData.reduce((acc, curr) => acc + (curr.amount ?? 0), 0),
+      total_qty: serialTableData.reduce((acc, curr) => acc + (curr.quantity ?? 0), 0),
+      items: Object.values(mergedItems),
+    };
+    console.log(payload);
   };
 
   // Render Loader

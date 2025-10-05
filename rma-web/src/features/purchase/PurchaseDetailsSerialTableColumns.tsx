@@ -79,7 +79,7 @@ export const PurchaseDetailsSerialTableColumns = (): TableProps<SerialItemType>[
                   updateSerialTableItem({
                     key: record.key,
                     field: 'warranty_date',
-                    value: date.toDate(),
+                    value: [date.toISOString()],
                   })
                 );
               }
@@ -95,11 +95,10 @@ export const PurchaseDetailsSerialTableColumns = (): TableProps<SerialItemType>[
       render: (value, record) => {
         if (!record.has_serial) return <span>Non Serialized Item</span>;
 
-        const splitValue = value?.split(' - ');
-        if (splitValue.length > 1) {
+        if (value.length > 1) {
           return (
             <span>
-              {splitValue[0]?.toUpperCase()} - {splitValue[splitValue.length - 1]?.toUpperCase()}
+              {value[0]?.toUpperCase()} - {value[value.length - 1]?.toUpperCase()}
             </span>
           );
         }
@@ -117,7 +116,7 @@ export const PurchaseDetailsSerialTableColumns = (): TableProps<SerialItemType>[
                 updateSerialTableItem({
                   key: record.key,
                   field: 'serials',
-                  value: e.target.value,
+                  value: [e.target.value],
                 })
               );
             }}

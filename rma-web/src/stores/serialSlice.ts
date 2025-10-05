@@ -4,7 +4,7 @@ import { RootState } from './store';
 
 interface SerialState {
   serialTableData: SerialItemType[];
-  inputValues: { [key: string]: string };
+  inputValues: { [key: string]: string[] };
 }
 
 const initialState: SerialState = {
@@ -29,7 +29,7 @@ const SerialSlice = createSlice({
 
       // Clear input value if recordName is provided
       if (recordName) {
-        state.inputValues[recordName] = '';
+        state.inputValues[recordName] = [];
       }
     },
 
@@ -42,7 +42,7 @@ const SerialSlice = createSlice({
       action: PayloadAction<{
         key: string;
         field: keyof SerialItemType;
-        value: any;
+        value: string[];
       }>
     ) => {
       const { key, field, value } = action.payload;
@@ -55,7 +55,7 @@ const SerialSlice = createSlice({
       }
     },
 
-    updateInputValue: (state, action: PayloadAction<{ name: string; value: string }>) => {
+    updateInputValue: (state, action: PayloadAction<{ name: string; value: string[] }>) => {
       const { name, value } = action.payload;
       state.inputValues[name] = value;
     },
