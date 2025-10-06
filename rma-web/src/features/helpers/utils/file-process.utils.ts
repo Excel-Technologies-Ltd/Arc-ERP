@@ -1,6 +1,6 @@
 import { PurchaseInvoiceItem } from '@/types/Accounts/PurchaseInvoiceItem';
 import { ParseResult } from '@/types/common.types';
-import { SerialItemType } from '@/types/pages/purchase';
+import { type SerialItemType } from '@/types/pages/purchase';
 import { validateFileUploadQuantities } from './file-validation.utils';
 import { addSerials } from '@/stores/serialSlice';
 import { NotifyType } from '@/components/Notification/NotificationProvider';
@@ -18,7 +18,7 @@ export const getAddedSerialsCount = (
 ): number => {
   return serialTableData
     .filter((serial) => serial.item_name === itemName)
-    .reduce((acc, serial) => acc + serial.quantity, 0);
+    .reduce((acc, serial) => acc + serial.qty, 0);
 };
 
 /**
@@ -57,8 +57,8 @@ export const processAndGroupFileData = (
           item_name: item.item_name,
           item_code: matchingItem?.item_code || '',
           qty: 0,
-          serials: [],
-          has_serial: matchingItem?.custom_has_excel_serial === 'Yes' ? true : false,
+          serial_no: [],
+          has_serial_no: matchingItem?.custom_has_excel_serial === 'Yes' ? true : false,
           matchingItem,
         };
       }
@@ -68,7 +68,7 @@ export const processAndGroupFileData = (
 
       // Collect all serial numbers
       if (item.serial_no && item.serial_no.trim()) {
-        acc[key].serials.push(item.serial_no.trim());
+        acc[key].serial_no.push(item.serial_no.trim());
       }
 
       return acc;
@@ -79,8 +79,8 @@ export const processAndGroupFileData = (
         item_name: string;
         item_code: string;
         qty: number;
-        has_serial: boolean;
-        serials: string[];
+        has_serial_no: boolean;
+        serial_no: string[];
         matchingItem?: PurchaseInvoiceItem;
       }
     >
@@ -99,8 +99,8 @@ export const convertGroupedDataToSerials = (
       item_name: string;
       item_code: string;
       qty: number;
-      serials: string[];
-      has_serial: boolean;
+      serial_no: string[];
+      has_serial_no: boolean;
       matchingItem?: PurchaseInvoiceItem;
     }
   >
@@ -109,10 +109,10 @@ export const convertGroupedDataToSerials = (
     key: `${group.item_name}_${group.item_code}`,
     item_name: group.item_name,
     item_code: group.item_code,
-    quantity: group.qty,
-    serials: group.serials, // Join all serials with separator
+    qty: group.qty,
+    serial_no: group.serial_no, // Join all serials with separator
     warranty_date: new Date(),
-    has_serial: group.has_serial,
+    has_serial_no: group.has_serial_no,
     amount: group.matchingItem?.amount || 0,
     rate: group.matchingItem?.rate || 0,
   }));
@@ -136,10 +136,10 @@ export const generateSerialItems = (
     key: `${item.item_name}_${currentCount + i + 1}`,
     item_code: item.item_code || '',
     item_name: item.item_name,
-    quantity: 1,
-    has_serial: item.custom_has_excel_serial === 'Yes' ? true : false,
+    qty: 1,
+    has_serial_no: item.custom_has_excel_serial === 'Yes' ? true : false,
     warranty_date: new Date(),
-    serials: [],
+    serial_no: [],
     rate: item.rate,
     amount: Number(item.rate) * 1 || 0,
   }));
@@ -178,7 +178,7 @@ export const processFile = (
   // Show success message
   notify.success({
     message: 'File processed successfully',
-    description: `Added ${makeSerialData.reduce((acc, item) => acc + item.quantity, 0)} serial items`,
+    description: `Added ${makeSerialData.reduce((acc, item) => acc + item.qty, 0)} serial items`,
   });
 };
 

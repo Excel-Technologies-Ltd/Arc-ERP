@@ -2,7 +2,7 @@ import AntDatePicker from '@/components/Base/DatePicker/AntDatePicker';
 import { AntInput } from '@/components/Base/Form';
 import { type TableProps } from 'antd';
 import dayjs from 'dayjs';
-import { SerialItemType } from '@/types/pages/purchase';
+import { type SerialItemType } from '@/types/pages/purchase';
 import {
   deleteSerialTableItem,
   selectSerialTableData,
@@ -60,8 +60,8 @@ export const PurchaseDetailsSerialTableColumns = (): TableProps<SerialItemType>[
     },
     {
       title: 'Quantity',
-      dataIndex: 'quantity',
-      key: 'quantity',
+      dataIndex: 'qty',
+      key: 'qty',
     },
     {
       title: 'Warranty Date',
@@ -91,9 +91,9 @@ export const PurchaseDetailsSerialTableColumns = (): TableProps<SerialItemType>[
     {
       title: 'Serials',
       key: 'serials',
-      dataIndex: 'serials',
+      dataIndex: 'serial_no',
       render: (value, record) => {
-        if (!record.has_serial) return <span>Non Serialized Item</span>;
+        if (!record.has_serial_no) return <span>Non Serialized Item</span>;
 
         if (value.length > 1) {
           return (
@@ -106,7 +106,7 @@ export const PurchaseDetailsSerialTableColumns = (): TableProps<SerialItemType>[
         return (
           <AntInput
             type='text'
-            value={record.serials || ''}
+            value={record.serial_no || ''}
             placeholder='Enter Serial Number'
             size='small'
             onKeyUp={(e) => handleKeyUp(e, record.key)}
@@ -115,7 +115,7 @@ export const PurchaseDetailsSerialTableColumns = (): TableProps<SerialItemType>[
               dispatch(
                 updateSerialTableItem({
                   key: record.key,
-                  field: 'serials',
+                  field: 'serial_no',
                   value: [e.target.value],
                 })
               );

@@ -52,6 +52,13 @@ const SerialAssignForm = ({
         <AntUpload
           accept='.xlsx,.xls,.csv'
           beforeUpload={handleBeforeFileUpload}
+          customRequest={({ onSuccess }) => {
+            // Custom request that immediately calls success
+            // This prevents actual HTTP upload and just marks as successful
+            setTimeout(() => {
+              onSuccess?.('ok');
+            }, 100);
+          }}
           loading={isFileLoading}
           disabled={isFileLoading}
         />

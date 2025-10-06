@@ -62,7 +62,7 @@ export const PurchaseDetailsProductTableColumns = (
       title: 'Add Serial',
       key: 'add_serial',
       render: (_, record) => {
-        const inputValue = inputValues?.[record?.name] || '';
+        const inputValue = inputValues?.[record?.name]?.[0] || ''; // Access first element
         const isDisabled = getRemainingQty(record, serialTableData) <= 0;
         const onlyButtonClick = fromRange && toRange;
 
@@ -96,7 +96,7 @@ export const PurchaseDetailsProductTableColumns = (
                   dispatch(
                     updateInputValue({
                       name: record.name,
-                      value: e.target.value,
+                      value: [e.target.value],
                     })
                   )
                 }

@@ -1,11 +1,16 @@
-import { type Filter, useFrappeGetCall, useFrappeGetDoc } from 'frappe-react-sdk';
+import {
+  type Filter,
+  useFrappeGetCall,
+  useFrappeGetDoc,
+  useFrappePostCall,
+} from 'frappe-react-sdk';
 import { PurchaseInvoice } from '@/types/Accounts/PurchaseInvoice';
 import { parsePaginationParams } from '@/components/Pagination/pagination.utils';
 import { useSearchParams } from 'react-router-dom';
 import { PURCHASE_INVOICE } from '@/constants/doctype-strings';
 import { PurchaseListFilterFormData } from '@/types/pages/purchase';
 import dayjs from 'dayjs';
-import { GET_PURCHASE_INVOICE_LIST } from '@/constants/api-strings';
+import { GET_PURCHASE_INVOICE_LIST, POST_SERIAL_ASSIGN } from '@/constants/api-strings';
 import { FrappeGetCallResponse } from '@/types/common.types';
 import { PURCHASE_INVOICE_LIST_FIELDS } from '@/constants/api-fields';
 
@@ -56,4 +61,9 @@ export const getPurchaseInvoiceList = ({
 // API Call to get purchase invoice details
 export const getPurchaseInvoiceDetails = (invoice_number: string) => {
   return useFrappeGetDoc<PurchaseInvoice>(PURCHASE_INVOICE, invoice_number);
+};
+
+// Api Call to post serial assign
+export const postSerialAssign = () => {
+  return useFrappePostCall(POST_SERIAL_ASSIGN);
 };

@@ -1,6 +1,5 @@
 import { useParams } from 'react-router-dom';
-import { getPurchaseInvoiceDetails } from '@/services/purchase/purchase';
-import Button from '@/components/Base/Button';
+import { getPurchaseInvoiceDetails, postSerialAssign } from '@/services/purchase/purchase';
 import { useForm } from 'react-hook-form';
 import dayjs from 'dayjs';
 import { useMemo, useEffect } from 'react';
@@ -11,8 +10,9 @@ import { calculateRangeTotal } from '@/utils/helper';
 import LottieLoader from '@/components/Loader/LottieLoder';
 import { PurchaseInvoice } from '@/types/Accounts/PurchaseInvoice';
 import SerialAssignForm from '@/features/shared/SerialAssignForm';
-import { selectSerialTableData } from '@/stores/serialSlice';
-import { useAppSelector } from '@/stores/hooks';
+import { clearAllSerialTableData, selectSerialTableData } from '@/stores/serialSlice';
+import { useAppDispatch, useAppSelector } from '@/stores/hooks';
+import AntButton from '@/components/Base/Button/AntButton';
 
 const mapApiToForm = (pi?: PurchaseInvoice): AssignSerialFormData => ({
   warehouse: pi?.set_warehouse ?? undefined,
@@ -26,19 +26,23 @@ const mapApiToForm = (pi?: PurchaseInvoice): AssignSerialFormData => ({
 const ViewPurchase = () => {
   const { invoice_number } = useParams();
   const notify = useNotify();
+  const dispatch = useAppDispatch();
 
-  // Api Call
+  // Api Call start
   const {
     data: purchaseInvoiceDetails,
     isLoading,
     isValidating,
   } = getPurchaseInvoiceDetails(invoice_number ?? '');
+  const { call: SerialAssignCall, loading: isLoadingSerialAssign } = postSerialAssign();
+
+  // Api Call end
 
   // Build reactive "values" from API data
   const formValues = useMemo(() => mapApiToForm(purchaseInvoiceDetails), [purchaseInvoiceDetails]);
 
   // From Handel
-  const { control, watch, handleSubmit, setValue } = useForm<AssignSerialFormData>({
+  const { control, watch, handleSubmit, setValue, reset } = useForm<AssignSerialFormData>({
     values: formValues,
     mode: 'onChange',
     resetOptions: {
@@ -68,8 +72,14 @@ const ViewPurchase = () => {
     }
   }, [from, to, setValue, total]);
 
+  // handle clear
+  const handleClear = () => {
+    reset();
+    dispatch(clearAllSerialTableData());
+  };
+
   // Handle Submit
-  const onSubmit = (data: AssignSerialFormData) => {
+  const onSubmit = async (data: AssignSerialFormData) => {
     // merge duplicate items by name and amount, sum quantities
     const mergedItems = serialTableData.reduce(
       (acc, curr) => {
@@ -78,27 +88,35 @@ const ViewPurchase = () => {
           acc[key] = { ...curr };
         } else {
           // Sum the quantities for items with same name and amount
-          acc[key].quantity += curr.quantity;
+          acc[key].qty += curr.qty;
           // Sum the amounts for merged items
           acc[key].amount += curr.amount;
           // Merge serials arrays
-          acc[key].serials = [...acc[key].serials, ...curr.serials];
+          acc[key].serial_no = [...acc[key].serial_no, ...curr.serial_no];
         }
         return acc;
       },
       {} as Record<string, SerialItemType>
     );
 
-    const payload = {
+    const payload: Record<string, any> = {
       posting_date: dayjs(data.date).format('YYYY-MM-DD'),
       posting_time: dayjs(data.date).format('HH:mm:ss'),
       purchase_invoice_name: purchaseInvoiceDetails?.name,
       supplier: purchaseInvoiceDetails?.supplier,
       total: serialTableData.reduce((acc, curr) => acc + (curr.amount ?? 0), 0),
-      total_qty: serialTableData.reduce((acc, curr) => acc + (curr.quantity ?? 0), 0),
+      total_qty: serialTableData.reduce((acc, curr) => acc + (curr.qty ?? 0), 0),
+      warehouse: data.warehouse,
       items: Object.values(mergedItems),
     };
-    console.log(payload);
+    await SerialAssignCall(payload)
+      .then((res) => {
+        notify.success({ message: JSON.parse(res.message)?.message });
+        handleClear();
+      })
+      .catch((err) => {
+        notify.error({ message: 'ERROR', description: err.exception });
+      });
   };
 
   // Render Loader
@@ -109,9 +127,14 @@ const ViewPurchase = () => {
       <div className='flex flex-col items-center mt-8 intro-y sm:flex-row'>
         <h2 className='mr-auto text-lg font-medium'>Transaction Details</h2>
         <div className='flex w-full mt-4 sm:w-auto sm:mt-0'>
-          <Button variant='primary' className='mr-2 shadow-md' onClick={handleSubmit(onSubmit)}>
+          <AntButton
+            color='primary'
+            variant='solid'
+            onClick={handleSubmit(onSubmit)}
+            loading={isLoadingSerialAssign}
+          >
             Submit
-          </Button>
+          </AntButton>
         </div>
       </div>
       {/* BEGIN: Transaction Details */}

@@ -45,11 +45,12 @@ export interface ProductDataType {
   warrenty_months: number;
 }
 
-export interface SerialItemType
-  extends Pick<ProductDataType, 'key' | 'item_name' | 'quantity' | 'has_serial'> {
+export interface SerialItemType extends Pick<ProductDataType, 'key' | 'item_name'> {
   item_code: string;
   warranty_date: Date;
-  serials: string[];
+  serial_no: string[];
   amount: number;
   rate: number;
+  has_serial_no: boolean;
+  qty: number;
 }

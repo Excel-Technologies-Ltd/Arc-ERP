@@ -15,7 +15,7 @@ export const useAddSerialHandler = ({
   serialTableData,
   control,
 }: {
-  inputValues: Record<string, string>;
+  inputValues: Record<string, string[]>; // Change from string to string[]
   serialTableData: SerialItemType[];
   control: Control<AssignSerialFormData>;
 }) => {
@@ -24,7 +24,7 @@ export const useAddSerialHandler = ({
   const { fromRange, toRange, totalRangeValue } = useWatch({ control });
 
   const handleAddSerial = (record: PurchaseInvoiceItem) => {
-    const inputValue = inputValues?.[record.name] || '';
+    const inputValue = inputValues?.[record.name]?.[0] || ''; // Access first element of array
     const assignedQuantity =
       Number(totalRangeValue) > 0 ? Number(totalRangeValue) : parseInt(inputValue || '0');
 
@@ -60,10 +60,10 @@ export const useAddSerialHandler = ({
               key: `${record.item_name}_${record.item_code}`,
               item_code: record.item_code || '',
               item_name: record.item_name,
-              quantity: Number(totalRangeValue),
-              has_serial: record.custom_has_excel_serial === 'Yes' ? true : false,
+              qty: Number(totalRangeValue),
+              has_serial_no: record.custom_has_excel_serial === 'Yes' ? true : false,
               warranty_date: new Date(),
-              serials: serials,
+              serial_no: serials,
               rate: record.rate,
               amount: Number(record.rate) * Number(totalRangeValue) || 0,
             },

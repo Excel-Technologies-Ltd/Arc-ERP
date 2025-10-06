@@ -17,7 +17,7 @@ export const useSerialFileUploadHandler = (items: PurchaseInvoiceItem[]) => {
 
   // handle before file upload
   const handleBeforeFileUpload = async (file: File) => {
-    if (!file) return;
+    if (!file) return ANT_UPLOAD_FILE_LIST_IGNORE;
 
     try {
       const fileType = getFileType(file);
