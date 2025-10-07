@@ -1,1 +1,0 @@
-import{r as u}from"./index-BdS-ME_6.js";const r=(e,t=500)=>{const[c,n]=u.useState(e);return u.useEffect(()=>{const s=setTimeout(()=>{n(e)},t);return()=>{clearTimeout(s)}},[e,t]),c},d=({fetchFunction:e,debounceDelay:t=500})=>{const[c,n]=u.useState(null),s=r(c,t),o=e(s);return{searchInput:c,setSearchInput:n,data:o}};export{d as u};

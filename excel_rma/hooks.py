@@ -116,13 +116,11 @@ app_license = "MIT"
 # ---------------
 # Hook on document methods and events
 
-# doc_events = {
-# 	"*": {
-# 		"on_update": "method",
-# 		"on_cancel": "method",
-# 		"on_trash": "method"
-# 	}
-# }
+doc_events = {
+    "Purchase Order": {
+        "on_submit": "excel_rma.doc_events.purchase_order.create_purchase_invoice",
+    },
+}
 
 # Scheduled Tasks
 # ---------------
@@ -214,4 +212,7 @@ app_license = "MIT"
 # 	"excel_rma.auth.validate"
 # ]
 
-website_route_rules = [{'from_route': '/rma-web/<path:app_path>', 'to_route': 'rma-web'}, {'from_route': '/rma-web/<path:app_path>', 'to_route': 'rma-web'},]
+website_route_rules = [
+    {"from_route": "/rma-web/<path:app_path>", "to_route": "rma-web"},
+    {"from_route": "/rma-web/<path:app_path>", "to_route": "rma-web"},
+]
