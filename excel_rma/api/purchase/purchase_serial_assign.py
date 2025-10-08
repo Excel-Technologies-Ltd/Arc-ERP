@@ -1,8 +1,9 @@
+from excel_rma.utils.constants import EVENT_TYPE
 from excel_rma.utils.mongo import get_db
 import frappe
 
 
-@frappe.whitelist(allow_guest=True)
+@frappe.whitelist()
 def assign_serial(**payload):
     frappe.publish_realtime(
         "serial_assign_process", {"message": "Starting Process", "progress": 0}
@@ -157,7 +158,7 @@ def _execute_transaction(serial_coll, pr_payload, mongo_docs, pi_name, batch_siz
 
         # Create Purchase Receipt
         pr_doc = frappe.get_doc(pr_payload)
-        pr_doc.insert(ignore_permissions=True)
+        pr_doc.insert()
 
         frappe.publish_realtime(
             "serial_assign_process", {"message": "Inserting Serials", "progress": 80}
@@ -174,6 +175,17 @@ def _execute_transaction(serial_coll, pr_payload, mongo_docs, pi_name, batch_siz
 
         frappe.publish_realtime(
             "serial_assign_process", {"message": "Process Completed", "progress": 100}
+        )
+
+        # Make Purchase Invoice completed if all items are fully assigned
+        __Make_Purchase_Invoice_Completed(pi_name)
+
+        # Create Serial History into MongoDB using frappe queue
+        frappe.enqueue(
+            __create_serial_history,
+            queue="long",
+            mongo_docs=mongo_docs,
+            pi_name=pi_name,
         )
 
         return frappe.as_json(
@@ -196,7 +208,9 @@ def _execute_transaction(serial_coll, pr_payload, mongo_docs, pi_name, batch_siz
         if pr_doc and pr_doc.name:
             try:
                 frappe.delete_doc(
-                    "Purchase Receipt", pr_doc.name, force=True, ignore_permissions=True
+                    "Purchase Receipt",
+                    pr_doc.name,
+                    force=True,
                 )
                 frappe.db.commit()
             except:
@@ -206,3 +220,91 @@ def _execute_transaction(serial_coll, pr_payload, mongo_docs, pi_name, batch_siz
 
     finally:
         session.end_session()
+
+
+def __Make_Purchase_Invoice_Completed(pi_name):
+    """Make Purchase Invoice completed if all items are fully assigned."""
+    from excel_rma.api.purchase.purchase_invoice import get_purchase_invoice_details
+
+    # Get full invoice details with receipt data
+    invoice_data = get_purchase_invoice_details(pi_name)
+
+    if not invoice_data or not invoice_data.get("items"):
+        frappe.throw("Purchase Invoice does not have any items")
+
+    # Check if ALL items are fully assigned (remaining_qty == 0)
+    all_items_complete = all(
+        item.get("remaining_qty", item.get("qty")) == 0
+        for item in invoice_data["items"]
+    )
+
+    if not all_items_complete:
+        return
+
+    # All items are complete, update status
+    frappe.db.set_value("Purchase Invoice", pi_name, "custom_excel_status", "Completed")
+
+    frappe.msgprint(f"Purchase Invoice {pi_name} marked as Completed")
+
+
+def __create_serial_history(mongo_docs, pi_name):
+    """
+    Create serial history records in MongoDB for each serial number.
+    Uses batch processing for efficient insertion.
+    """
+    if not mongo_docs:
+        return
+
+    # Get MongoDB connection
+    mongo_db = get_db()
+    serial_history_coll = mongo_db["serial_no_history"]
+
+    # Constants
+    BATCH_SIZE = 30000
+
+    # Get Purchase Invoice document for reference
+    pi_doc = frappe.get_doc("Purchase Invoice", pi_name)
+
+    # Get current user and timestamp
+    current_user = frappe.session.user
+    current_datetime = frappe.utils.now()
+
+    # Build serial history documents
+    history_docs = []
+    for doc in mongo_docs:
+        history_doc = {
+            "eventDate": current_datetime,
+            "eventType": EVENT_TYPE[
+                "SerialPurchased"
+            ],  # Event type for purchase receipt creation
+            "serial_no": doc.get("serial_no"),
+            "document_no": pi_doc.name,  # Purchase Invoice name
+            "transaction_from": pi_doc.supplier,  # From supplier
+            "transaction_to": doc.get("warehouse"),  # To warehouse
+            "document_type": "Purchase Receipt",
+            "parent_document": pi_name,
+            "created_on": current_datetime,
+            "created_by": current_user,
+            "item_code": doc.get("item_code"),
+            "item_name": doc.get("item_name"),
+        }
+        history_docs.append(history_doc)
+
+    # Insert history records in batches
+    try:
+        total_inserted = 0
+        for i in range(0, len(history_docs), BATCH_SIZE):
+            batch = history_docs[i : i + BATCH_SIZE]
+            result = serial_history_coll.insert_many(batch, ordered=False)
+            total_inserted += len(result.inserted_ids)
+
+        frappe.logger().info(
+            f"Created {total_inserted} serial history records for Purchase Invoice {pi_name}"
+        )
+
+    except Exception as e:
+        # Log error but don't fail the main transaction
+        frappe.log_error(
+            f"Failed to create serial history for {pi_name}: {str(e)}",
+            "Serial History Creation Error",
+        )

@@ -48,3 +48,93 @@ def get_purchase_invoice_list(
         "data": invoices["data"],
         "count": invoices["total"],
     }
+
+
+@frappe.whitelist()
+def get_purchase_invoice_details(purchase_invoice: str) -> Dict[str, Union[Dict, List]]:
+    """
+    Get detailed information about a specific purchase invoice including related receipt data for each item.
+
+    Args:
+        purchase_invoice: Name/ID of the Purchase Invoice document
+
+    Returns:
+        Dictionary containing invoice data with receipt_data attached to each item
+
+    Raises:
+        frappe.DoesNotExistError: If purchase invoice doesn't exist
+        frappe.PermissionError: If user doesn't have permission to view the invoice
+    """
+    try:
+        # Fetch the Purchase Invoice document
+        invoice_doc = frappe.get_doc("Purchase Invoice", purchase_invoice)
+
+        # Check if user has permission to view this document
+        invoice_doc.check_permission("read")
+
+        # Convert document to dictionary for JSON serialization
+        invoice_data = invoice_doc.as_dict()
+
+        # Get all item codes from the invoice in one go
+        item_codes = [item.get("item_code") for item in invoice_data["items"]]
+
+        # Fetch all receipt data in a single query
+        if item_codes:
+            receipt_data = frappe.db.get_all(
+                "Purchase Receipt Item",
+                filters={
+                    "item_code": ["in", item_codes],
+                    "purchase_invoice": purchase_invoice,
+                    "docstatus": 1,
+                },
+                fields=[
+                    "item_code",
+                    "qty",
+                    "modified_by",
+                    "name",
+                    "parent",
+                    "creation",
+                    "modified",
+                ],
+            )
+
+            # Group receipt data by item_code for O(1) lookup
+            receipt_map = {}
+            for receipt in receipt_data:
+                item_code = receipt.pop("item_code")
+                if item_code not in receipt_map:
+                    receipt_map[item_code] = []
+                receipt_map[item_code].append(receipt)
+
+            # Attach receipt_data to each invoice item
+            for item in invoice_data["items"]:
+                item["receipt_data"] = receipt_map.get(item.get("item_code"), [])
+                item["assign_qty"] = sum(
+                    receipt.get("qty") for receipt in item["receipt_data"]
+                )
+                item["remaining_qty"] = item.get("qty") - sum(
+                    receipt.get("qty") for receipt in item["receipt_data"]
+                )
+        else:
+            # No items in invoice
+            for item in invoice_data["items"]:
+                item["receipt_data"] = []
+
+        return invoice_data
+
+    except frappe.DoesNotExistError:
+        frappe.throw(
+            f"Purchase Invoice {purchase_invoice} does not exist",
+            frappe.DoesNotExistError,
+        )
+    except frappe.PermissionError:
+        frappe.throw(
+            f"You do not have permission to view Purchase Invoice {purchase_invoice}",
+            frappe.PermissionError,
+        )
+    except Exception as e:
+        frappe.log_error(
+            message=frappe.get_traceback(),
+            title=f"Error fetching Purchase Invoice details: {purchase_invoice}",
+        )
+        frappe.throw(f"An error occurred while fetching invoice details: {str(e)}")

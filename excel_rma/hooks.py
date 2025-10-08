@@ -120,6 +120,9 @@ doc_events = {
     "Purchase Order": {
         "on_submit": "excel_rma.doc_events.purchase_order.create_purchase_invoice",
     },
+    "Purchase Invoice": {
+        "on_cancel": "excel_rma.doc_events.purchase_invoice.update_custom_status_on_cancel",
+    },
 }
 
 # Scheduled Tasks
