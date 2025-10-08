@@ -215,6 +215,13 @@ doc_events = {
 # 	"excel_rma.auth.validate"
 # ]
 
+fixtures = [
+    {
+        "doctype": "Custom Field",
+        "filters": {"name": ["in", ["Purchase Invoice-custom_excel_status"]]},
+    }
+]
+
 website_route_rules = [
     {"from_route": "/rma-web/<path:app_path>", "to_route": "rma-web"},
     {"from_route": "/rma-web/<path:app_path>", "to_route": "rma-web"},
