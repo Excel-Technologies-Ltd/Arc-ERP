@@ -18,12 +18,12 @@ export const PurchaseListTableColumn = () => {
       render: (value) => ColumnLink(URLPurchaseDetails(value.toString()), value.toString()),
     },
     {
-      key: 'status',
+      key: 'custom_excel_status',
       title: 'STATUS',
-      render: (status, record) => {
-        const progress = getProgress(record.total_qty ?? 0, record.receipt_data);
-        const color = getStatusColor(progress === 1 ? 'Completed' : status.toString());
-        const text = getStatusText(progress === 1 ? 'Completed' : status.toString());
+      render: (value) => {
+        // const progress = getProgress(record.total_qty ?? 0, record.receipt_data);
+        const color = getStatusColor(value.toString());
+        const text = getStatusText(value.toString());
         return <AntTags color={color}>{text}</AntTags>;
       },
     },

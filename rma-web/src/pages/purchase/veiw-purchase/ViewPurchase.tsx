@@ -39,7 +39,10 @@ const ViewPurchase = () => {
   // Api Call end
 
   // Build reactive "values" from API data
-  const formValues = useMemo(() => mapApiToForm(purchaseInvoiceDetails), [purchaseInvoiceDetails]);
+  const formValues = useMemo(
+    () => mapApiToForm(purchaseInvoiceDetails?.message),
+    [purchaseInvoiceDetails]
+  );
 
   // From Handel
   const { control, watch, handleSubmit, setValue, reset } = useForm<AssignSerialFormData>({
@@ -87,10 +90,9 @@ const ViewPurchase = () => {
     dispatch(clearAllSerialTableData());
   };
 
-  // Handle Submit
-  const onSubmit = async (data: AssignSerialFormData) => {
-    // merge duplicate items by name and amount, sum quantities
-    const mergedItems = serialTableData.reduce(
+  // Item Merge
+  const MakeMergeItems = useMemo(() => {
+    return serialTableData.reduce(
       (acc, curr) => {
         const key = curr.item_name;
         if (!acc[key]) {
@@ -107,16 +109,24 @@ const ViewPurchase = () => {
       },
       {} as Record<string, SerialItemType>
     );
+  }, [serialTableData]);
+
+  // Handle Submit
+  const onSubmit = async (data: AssignSerialFormData) => {
+    if (Object.values(MakeMergeItems).length === 0) {
+      notify.error({ message: 'No items to assign' });
+      return;
+    }
 
     const payload: Record<string, any> = {
       posting_date: dayjs(data.date).format('YYYY-MM-DD'),
       posting_time: dayjs(data.date).format('HH:mm:ss'),
-      purchase_invoice_name: purchaseInvoiceDetails?.name,
-      supplier: purchaseInvoiceDetails?.supplier,
+      purchase_invoice_name: purchaseInvoiceDetails?.message.name,
+      supplier: purchaseInvoiceDetails?.message.supplier,
       total: serialTableData.reduce((acc, curr) => acc + (curr.amount ?? 0), 0),
       total_qty: serialTableData.reduce((acc, curr) => acc + (curr.qty ?? 0), 0),
       warehouse: data.warehouse,
-      items: Object.values(mergedItems),
+      items: Object.values(MakeMergeItems),
     };
     await SerialAssignCall(payload)
       .then((res) => {
@@ -153,21 +163,24 @@ const ViewPurchase = () => {
       <div className='grid grid-cols-11 gap-5 mt-5'>
         <div className='col-span-12 lg:col-span-4 2xl:col-span-3 intro-y'>
           {/* Purchase Details Box */}
-          {purchaseInvoiceDetails && <PurchaseDetailsCard data={purchaseInvoiceDetails} />}
+          {purchaseInvoiceDetails && <PurchaseDetailsCard data={purchaseInvoiceDetails?.message} />}
           {/* Serial Details Box */}
           <div className='p-5 rounded-md box mt-5'>
             <div className='flex items-center pb-5 mb-5 border-b border-slate-200/60 dark:border-darkmode-400'>
               <div className='text-base font-medium truncate'>Serial Assign</div>
             </div>
             <div className='space-y-4 w-full'>
-              <SerialAssignForm control={control} items={purchaseInvoiceDetails?.items || []} />
+              <SerialAssignForm
+                control={control}
+                items={purchaseInvoiceDetails?.message.items || []}
+              />
               <p className='text-lg text-primary'>Total : {total}</p>
             </div>
           </div>
         </div>
         <div className='col-span-12 lg:col-span-7 2xl:col-span-8 intro-x'>
           <PurchaseDetailsSerialTables
-            data={purchaseInvoiceDetails}
+            data={purchaseInvoiceDetails?.message}
             control={control}
             setValue={setValue}
           />

@@ -32,7 +32,7 @@ export const getRemainingQty = (
   serialTableData: SerialItemType[]
 ): number => {
   const addedSerials = getAddedSerialsCount(item.item_name, serialTableData);
-  return item.qty - (item.received_qty || 0) - addedSerials;
+  return (item.remaining_qty ?? 0) - addedSerials;
 };
 
 /**
@@ -217,4 +217,13 @@ export const generateSerialNumbersFromRange = (fromRange: string, toRange: strin
   }
 
   return serials;
+};
+
+/**
+ * Get receipt quantity for an item
+ * @param record - The purchase invoice item
+ * @returns The receipt quantity
+ */
+export const CalculateRecieptQty = (record: PurchaseInvoiceItem): number => {
+  return record.receipt_data?.reduce((acc, curr) => acc + (curr.qty || 0), 0) || 0;
 };

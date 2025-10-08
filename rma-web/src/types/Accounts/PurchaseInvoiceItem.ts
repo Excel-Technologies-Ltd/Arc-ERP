@@ -1,3 +1,5 @@
+import { PurchaseReceiptItem } from './PurchaseInvoice';
+
 export interface PurchaseInvoiceItem {
   name: string;
   creation: string;
@@ -180,4 +182,10 @@ Used for Taxes and Charges	*/
   cost_center?: string;
   /**	Page Break : Check	*/
   page_break?: 0 | 1;
+  /**	Receipt Data : Table - Purchase Receipt Item	*/
+  receipt_data?: PurchaseReceiptItem[];
+  /**	Assign Qty : Float	*/
+  assign_qty?: number;
+  /**	Remaining Qty : Float	*/
+  remaining_qty?: number;
 }

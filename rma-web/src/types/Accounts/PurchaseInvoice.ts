@@ -319,10 +319,16 @@ export interface PurchaseInvoice {
   remarks?: string;
   /**	Receipt Data : Table - Purchase Receipt Item	*/
   receipt_data?: PurchaseReceiptItem[];
+  custom_excel_status: string;
 }
 
 export type PurchaseReceiptItem = {
   purchase_invoice?: string;
   qty: number;
   modified_by: string;
+  receipt?: string;
+  name?: string;
+  creation?: string;
+  modified?: string;
+  parent?: string;
 };

@@ -1,17 +1,15 @@
-import {
-  type Filter,
-  useFrappeGetCall,
-  useFrappeGetDoc,
-  useFrappePostCall,
-} from 'frappe-react-sdk';
-import { PurchaseInvoice } from '@/types/Accounts/PurchaseInvoice';
+import { type Filter, useFrappeGetCall, useFrappePostCall } from 'frappe-react-sdk';
+import { type PurchaseInvoice, type PurchaseReceiptItem } from '@/types/Accounts/PurchaseInvoice';
 import { parsePaginationParams } from '@/components/Pagination/pagination.utils';
 import { useSearchParams } from 'react-router-dom';
-import { PURCHASE_INVOICE } from '@/constants/doctype-strings';
 import { PurchaseListFilterFormData } from '@/types/pages/purchase';
 import dayjs from 'dayjs';
-import { GET_PURCHASE_INVOICE_LIST, POST_SERIAL_ASSIGN } from '@/constants/api-strings';
-import { FrappeGetCallResponse } from '@/types/common.types';
+import {
+  GET_PURCHASE_INVOICE_DETAILS,
+  GET_PURCHASE_INVOICE_LIST,
+  POST_SERIAL_ASSIGN,
+} from '@/constants/api-strings';
+import { FrappeGetCallDocResponse, FrappeGetCallListResponseWithCount } from '@/types/common.types';
 import { PURCHASE_INVOICE_LIST_FIELDS } from '@/constants/api-fields';
 
 // API Call to get purchase orders
@@ -28,7 +26,7 @@ export const getPurchaseInvoiceList = ({
 
   const conditions = [
     ...(invoice_number ? [['name', 'like', `%${invoice_number}%`] as Filter] : []),
-    ...(status ? [['status', 'like', `%${status}%`] as Filter] : []),
+    ...(status ? [['custom_excel_status', 'like', `%${status}%`] as Filter] : []),
     ...(supplier ? [['supplier', 'like', `%${supplier}%`] as Filter] : []),
     ...(formDate && toDate ? [['posting_date', 'between', [formDate, toDate]] as Filter] : []),
   ];
@@ -38,16 +36,19 @@ export const getPurchaseInvoiceList = ({
     isLoading: isLoadingPurchaseInvoiceList,
     isValidating: isValidatingPurchaseInvoiceList,
     error: errorPurchaseInvoiceList,
-  } = useFrappeGetCall<FrappeGetCallResponse<PurchaseInvoice>>(GET_PURCHASE_INVOICE_LIST, {
-    fields: PURCHASE_INVOICE_LIST_FIELDS,
-    filters: conditions,
-    limit: pageSize,
-    limit_start: limit_start,
-    orderBy: {
-      field: 'creation',
-      order: 'desc',
-    },
-  });
+  } = useFrappeGetCall<FrappeGetCallListResponseWithCount<PurchaseInvoice>>(
+    GET_PURCHASE_INVOICE_LIST,
+    {
+      fields: PURCHASE_INVOICE_LIST_FIELDS,
+      filters: conditions,
+      limit: pageSize,
+      limit_start: limit_start,
+      orderBy: {
+        field: 'creation',
+        order: 'desc',
+      },
+    }
+  );
 
   return {
     data: purchaseInvoiceList?.message.data,
@@ -60,7 +61,13 @@ export const getPurchaseInvoiceList = ({
 
 // API Call to get purchase invoice details
 export const getPurchaseInvoiceDetails = (invoice_number: string) => {
-  return useFrappeGetDoc<PurchaseInvoice>(PURCHASE_INVOICE, invoice_number);
+  const callData = useFrappeGetCall<FrappeGetCallDocResponse<PurchaseInvoice>>(
+    GET_PURCHASE_INVOICE_DETAILS,
+    {
+      purchase_invoice: invoice_number,
+    }
+  );
+  return callData;
 };
 
 // Api Call to post serial assign

@@ -18,11 +18,6 @@ const Purchase = () => {
     mode: 'onChange',
   });
 
-  // const watchPurchaseInvoiceNumber = watch('invoice_number');
-  // const watchStatus = watch('status');
-  // const watchSupplier = watch('supplier');
-  // const dateRange = watch('date_range');
-
   // API Call start
   const {
     data: purchaseInvoices,

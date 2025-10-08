@@ -36,9 +36,13 @@ export interface FileParserOptions {
 
 export type SupportedFileType = 'csv' | 'xlsx' | 'xls';
 
-export interface FrappeGetCallResponse<T> {
+export interface FrappeGetCallListResponseWithCount<T> {
   message: {
     data: T[];
-    count: number;
+    count?: number;
   };
+}
+
+export interface FrappeGetCallDocResponse<T> {
+  message: T;
 }

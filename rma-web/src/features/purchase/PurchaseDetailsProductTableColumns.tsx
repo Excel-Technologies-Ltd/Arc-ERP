@@ -10,7 +10,11 @@ import {
   resetInputValues,
 } from '@/stores/serialSlice';
 import { useAppDispatch, useAppSelector } from '@/stores/hooks';
-import { getAddedSerialsCount, getRemainingQty } from '@/features/helpers/utils';
+import {
+  CalculateRecieptQty,
+  getAddedSerialsCount,
+  getRemainingQty,
+} from '@/features/helpers/utils';
 import { useAddSerialHandler } from '../helpers/handlers/useAddSerial.handler';
 import { Control, UseFormSetValue, useWatch } from 'react-hook-form';
 import { AssignSerialFormData } from '@/types/pages/purchase';
@@ -34,9 +38,11 @@ export const PurchaseDetailsProductTableColumns = (
     { title: 'Quantity', dataIndex: 'qty', key: 'qty' },
     {
       title: 'Assigned',
-      key: 'assigned',
-      render: (_, record) =>
-        (record.received_qty || 0) + getAddedSerialsCount(record.item_name, serialTableData),
+      key: 'assigned_qty',
+      dataIndex: 'assign_qty',
+      render: (value, record) => {
+        return (value || 0) + getAddedSerialsCount(record.item_name, serialTableData);
+      },
     },
     {
       title: 'Remaining',

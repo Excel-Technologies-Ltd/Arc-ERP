@@ -10,4 +10,5 @@ export const PURCHASE_INVOICE_LIST_FIELDS: (keyof PurchaseInvoice)[] = [
   'creation',
   'owner',
   'total_qty',
+  'custom_excel_status',
 ];
