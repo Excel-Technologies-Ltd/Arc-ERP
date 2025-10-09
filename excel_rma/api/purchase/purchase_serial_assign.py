@@ -5,9 +5,6 @@ import frappe
 
 @frappe.whitelist()
 def assign_serial(**payload):
-    frappe.publish_realtime(
-        "serial_assign_process", {"message": "Starting Process", "progress": 0}
-    )
     """
     Assigns serial numbers to purchase invoice items and creates purchase receipt.
     Uses batch processing for validation and insertion.
@@ -39,10 +36,6 @@ def assign_serial(**payload):
     if serials:
         _validate_serials_batched(serials, serial_coll, BATCH_SIZE)
 
-    frappe.publish_realtime(
-        "serial_assign_process", {"message": "Validation Complete", "progress": 40}
-    )
-
     # Prepare payloads
     pr_payload = _build_pr_payload(items, pi_name, po_ref, data)
     mongo_docs = _build_mongo_docs(items, data)
@@ -66,9 +59,7 @@ def _extract_serials(items):
 
 def _validate_serials_batched(serials, collection, batch_size):
     """Validate serials in batches for duplicates and existence."""
-    frappe.publish_realtime(
-        "serial_assign_process", {"message": "Validating Serials", "progress": 20}
-    )
+
     # Check input duplicates
     seen = set()
     duplicates = {s for s in serials if s in seen or seen.add(s)}
@@ -146,10 +137,7 @@ def _insert_batched(collection, docs, batch_size, session):
 
 def _execute_transaction(serial_coll, pr_payload, mongo_docs, pi_name, batch_size):
     """Execute transaction with proper rollback handling."""
-    frappe.publish_realtime(
-        "serial_assign_process",
-        {"message": "Creating Purchase Receipt", "progress": 60},
-    )
+
     session = serial_coll.database.client.start_session()
     pr_doc = None
 
@@ -160,10 +148,6 @@ def _execute_transaction(serial_coll, pr_payload, mongo_docs, pi_name, batch_siz
         pr_doc = frappe.get_doc(pr_payload)
         pr_doc.insert()
 
-        frappe.publish_realtime(
-            "serial_assign_process", {"message": "Inserting Serials", "progress": 80}
-        )
-
         # Insert serials in batches
         inserted = 0
         if mongo_docs:
@@ -172,10 +156,6 @@ def _execute_transaction(serial_coll, pr_payload, mongo_docs, pi_name, batch_siz
         # Commit both transactions
         session.commit_transaction()
         frappe.db.commit()
-
-        frappe.publish_realtime(
-            "serial_assign_process", {"message": "Process Completed", "progress": 100}
-        )
 
         # Make Purchase Invoice completed if all items are fully assigned
         __Make_Purchase_Invoice_Completed(pi_name)

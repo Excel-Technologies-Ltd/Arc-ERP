@@ -1,1 +1,0 @@
-import{U as e}from"./index-BRQSaQKC.js";const a=[{value:"completed",label:"Completed"},{value:"cancelled",label:"Cancelled"},{value:"submitted",label:"Submitted"},{value:"all",label:"All"}],t="Excel technologies Limited",o=["item_name","serial_no"],s=e.LIST_IGNORE;export{s as A,t as C,a as P,o as U};

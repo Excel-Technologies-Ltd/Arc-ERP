@@ -13,7 +13,6 @@ import SerialAssignForm from '@/features/shared/SerialAssignForm';
 import { clearAllSerialTableData, selectSerialTableData } from '@/stores/serialSlice';
 import { useAppDispatch, useAppSelector } from '@/stores/hooks';
 import AntButton from '@/components/Base/Button/AntButton';
-import { useFrappeEventListener } from 'frappe-react-sdk';
 
 const mapApiToForm = (pi?: PurchaseInvoice): AssignSerialFormData => ({
   warehouse: pi?.set_warehouse ?? undefined,
@@ -74,15 +73,6 @@ const ViewPurchase = () => {
       });
     }
   }, [from, to, setValue, total]);
-
-  useFrappeEventListener('serial_assign_process', (event) => {
-    notify.info({
-      message: 'Processing...',
-      key: 'processing',
-      description: <li>{event.message}</li>,
-      duration: 0,
-    });
-  });
 
   // handle clear
   const handleClear = () => {
