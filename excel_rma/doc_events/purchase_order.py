@@ -16,7 +16,12 @@ def create_purchase_invoice(doc, method):
     try:
         # Use ERPNext's built-in function
         pi = make_purchase_invoice(doc.name)
-        pi.insert(ignore_permissions=True)
+
+        # Set posting date to match Purchase Order transaction date
+        pi.posting_date = doc.transaction_date
+        pi.set_posting_time = 1  # Enable manual posting time
+
+        pi.insert()
         pi.submit()  # Remove this line if you want draft
 
         frappe.msgprint(f"Purchase Invoice {pi.name} created", alert=True)
