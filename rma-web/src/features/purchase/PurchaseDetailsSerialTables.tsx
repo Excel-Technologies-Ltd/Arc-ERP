@@ -6,9 +6,11 @@ import {
 } from '@/features/purchase';
 import { PurchaseInvoiceItem } from '@/types/Accounts/PurchaseInvoiceItem';
 import { AssignSerialFormData, SerialItemType } from '@/types/pages/purchase';
-import { selectSerialTableData } from '@/stores/serialSlice';
-import { useAppSelector } from '@/stores/hooks';
+import { clearAllSerialTableData, selectSerialTableData } from '@/stores/serialSlice';
+import { useAppDispatch, useAppSelector } from '@/stores/hooks';
 import { Control, UseFormSetValue } from 'react-hook-form';
+import { useLocation } from 'react-router-dom';
+import { useEffect } from 'react';
 
 const PurchaseDetailsSerialTables = ({
   data,
@@ -19,7 +21,16 @@ const PurchaseDetailsSerialTables = ({
   control: Control<AssignSerialFormData>;
   setValue: UseFormSetValue<AssignSerialFormData>;
 }) => {
+  const location = useLocation();
+  const dispatch = useAppDispatch();
+
+  // Selectors
   const serialTableData = useAppSelector(selectSerialTableData);
+
+  // Clear all serial table data when location changes
+  useEffect(() => {
+    dispatch(clearAllSerialTableData());
+  }, [location.pathname, dispatch]);
 
   // Table Columns - No props needed!
   const ProductTableColumns = PurchaseDetailsProductTableColumns(control, setValue);

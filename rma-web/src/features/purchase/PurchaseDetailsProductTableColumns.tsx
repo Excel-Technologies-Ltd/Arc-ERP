@@ -10,11 +10,7 @@ import {
   resetInputValues,
 } from '@/stores/serialSlice';
 import { useAppDispatch, useAppSelector } from '@/stores/hooks';
-import {
-  CalculateRecieptQty,
-  getAddedSerialsCount,
-  getRemainingQty,
-} from '@/features/helpers/utils';
+import { getAddedSerialsCount, getRemainingQty } from '@/features/helpers/utils';
 import { useAddSerialHandler } from '../helpers/handlers/useAddSerial.handler';
 import { Control, UseFormSetValue, useWatch } from 'react-hook-form';
 import { AssignSerialFormData } from '@/types/pages/purchase';
@@ -98,6 +94,7 @@ export const PurchaseDetailsProductTableColumns = (
                 placeholder='Enter Assigned Number'
                 size='middle'
                 value={inputValue}
+                onPressEnter={() => handleAddSerial(record)}
                 onChange={(e) =>
                   dispatch(
                     updateInputValue({

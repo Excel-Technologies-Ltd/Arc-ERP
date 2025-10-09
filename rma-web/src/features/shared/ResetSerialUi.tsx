@@ -1,6 +1,6 @@
 import { AiOutlineClose, AiOutlineWarning } from '@/components/Base/Icons';
 
-const ResetSerialUi = () => {
+const ResetSerialUi = ({ bulletPoints }: { bulletPoints: string[] }) => {
   return (
     <>
       <div>
@@ -32,14 +32,7 @@ const ResetSerialUi = () => {
               Resetting will cancel linked:
             </p>
             <ul className='grid grid-cols-1 gap-2 sm:grid-cols-2'>
-              {[
-                'Sales Invoice',
-                'Delivery Notes',
-                'Sales Returns',
-                'Credit Notes',
-                'Linked/Assigned Serials',
-                'Serial History',
-              ].map((label) => (
+              {bulletPoints.map((label) => (
                 <li key={label} className='flex items-start gap-2 '>
                   <span className='mt-0.5 inline-flex h-5 w-5 flex-none items-center justify-center rounded-md bg-red-100'>
                     {/* small x icon */}

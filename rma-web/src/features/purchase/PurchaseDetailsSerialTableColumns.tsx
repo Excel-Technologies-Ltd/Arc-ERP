@@ -17,7 +17,7 @@ export const PurchaseDetailsSerialTableColumns = (): TableProps<SerialItemType>[
   const serialTableData = useAppSelector(selectSerialTableData);
 
   // Serial Delete
-  const handleSerialDelete = (key: string) => {
+  const handleSerialDelete = (key: number) => {
     dispatch(deleteSerialTableItem(key));
   };
 
@@ -129,9 +129,9 @@ export const PurchaseDetailsSerialTableColumns = (): TableProps<SerialItemType>[
       title: 'Actions',
       key: 'actions',
       width: 80,
-      render: (_, record) => {
+      render: (_, __, index) => {
         return (
-          <Button onClick={() => handleSerialDelete(record.key)} variant='outline-danger' size='sm'>
+          <Button onClick={() => handleSerialDelete(index)} variant='outline-danger' size='sm'>
             <DeleteOutlined />
           </Button>
         );

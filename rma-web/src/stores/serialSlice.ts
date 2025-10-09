@@ -33,8 +33,8 @@ const SerialSlice = createSlice({
       }
     },
 
-    deleteSerialTableItem: (state, action: PayloadAction<string>) => {
-      state.serialTableData = state.serialTableData.filter((item) => item.key !== action.payload);
+    deleteSerialTableItem: (state, action: PayloadAction<number>) => {
+      state.serialTableData = state.serialTableData.filter((_, idx) => idx !== action.payload);
     },
 
     updateSerialTableItem: (

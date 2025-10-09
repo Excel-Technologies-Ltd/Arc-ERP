@@ -13,6 +13,9 @@ import SerialAssignForm from '@/features/shared/SerialAssignForm';
 import { clearAllSerialTableData, selectSerialTableData } from '@/stores/serialSlice';
 import { useAppDispatch, useAppSelector } from '@/stores/hooks';
 import AntButton from '@/components/Base/Button/AntButton';
+import { handleModal } from '@/stores/modalSlice';
+import AntModal from '@/components/Modal/AntModal';
+import ResetSerialUi from '@/features/shared/ResetSerialUi';
 
 const mapApiToForm = (pi?: PurchaseInvoice): AssignSerialFormData => ({
   warehouse: pi?.set_warehouse ?? undefined,
@@ -32,7 +35,7 @@ const ViewPurchase = () => {
   const {
     data: purchaseInvoiceDetails,
     isLoading,
-    isValidating,
+    mutate,
   } = getPurchaseInvoiceDetails(invoice_number ?? '');
   const { call: SerialAssignCall, loading: isLoadingSerialAssign } = postSerialAssign();
   // Api Call end
@@ -121,6 +124,7 @@ const ViewPurchase = () => {
     await SerialAssignCall(payload)
       .then((res) => {
         notify.success({ message: JSON.parse(res.message)?.message });
+        mutate();
         handleClear();
       })
       .catch((err) => {
@@ -132,13 +136,28 @@ const ViewPurchase = () => {
   };
 
   // Render Loader
-  if (isLoading || isValidating) return <LottieLoader pageLoader />;
+  if (isLoading) return <LottieLoader pageLoader />;
 
   return (
     <>
       <div className='flex flex-col items-center mt-8 intro-y sm:flex-row'>
         <h2 className='mr-auto text-lg font-medium'>Transaction Details</h2>
         <div className='flex w-full mt-4 sm:w-auto sm:mt-0'>
+          <AntButton
+            color='red'
+            variant='solid'
+            className='mr-2'
+            onClick={() =>
+              dispatch(
+                handleModal({
+                  isOpen: true,
+                  type: 'purchase_serial_reset',
+                })
+              )
+            }
+          >
+            Reset
+          </AntButton>
           <AntButton
             color='primary'
             variant='solid'
@@ -177,6 +196,18 @@ const ViewPurchase = () => {
         </div>
       </div>
       {/* END: Transaction Details */}
+      {/* Modal */}
+      <AntModal okText='Reset'>
+        <ResetSerialUi
+          bulletPoints={[
+            'Purchase Order',
+            'Purchase Invoice',
+            'Purchase Receipts',
+            'Linked/Assigned Serials',
+            'Serial History',
+          ]}
+        />
+      </AntModal>
     </>
   );
 };

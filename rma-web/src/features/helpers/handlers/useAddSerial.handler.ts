@@ -37,9 +37,6 @@ export const useAddSerialHandler = ({
       });
     }
 
-    // Generate serials using utility function
-    const newSerials = generateSerialItems(record, assignedQuantity, serialTableData);
-
     // if fromRange and toRange are provided, generate serials using utility function
     if (fromRange && toRange) {
       const serials = generateSerialNumbersFromRange(fromRange, toRange);
@@ -71,16 +68,42 @@ export const useAddSerialHandler = ({
           recordName: record.name,
         })
       );
-    } else {
-      // if fromRange and toRange are not provided, generate serials using utility function
-      // Dispatch the prepared serials
+      return;
+    }
+
+    if (record.custom_has_excel_serial === 'No') {
+      // dispatch the prepared serials
       dispatch(
         addSerials({
-          serials: newSerials,
+          serials: [
+            {
+              key: `${record.item_name}_${record.item_code}`,
+              item_code: record.item_code || '',
+              item_name: record.item_name,
+              qty: Number(inputValue),
+              has_serial_no: false,
+              warranty_date: new Date(),
+              serial_no: [],
+              rate: record.rate,
+              amount: Number(record.rate) * Number(inputValue) || 0,
+            },
+          ],
           recordName: record.name,
         })
       );
+      return;
     }
+
+    // Generate serials using utility function
+    const newSerials = generateSerialItems(record, assignedQuantity, serialTableData);
+    // if fromRange and toRange are not provided, generate serials using utility function
+    // Dispatch the prepared serials
+    dispatch(
+      addSerials({
+        serials: newSerials,
+        recordName: record.name,
+      })
+    );
 
     notify.success({
       message: `Successfully added ${assignedQuantity} serial items for ${record.item_name}`,

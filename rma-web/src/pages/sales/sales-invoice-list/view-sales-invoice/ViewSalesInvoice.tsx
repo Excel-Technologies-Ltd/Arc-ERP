@@ -121,7 +121,16 @@ const ViewSalesInvoice = () => {
 
       {/* Modal */}
       <AntModal title='Reset Serial' okText='Reset'>
-        <ResetSerialUi />
+        <ResetSerialUi
+          bulletPoints={[
+            'Sales Invoice',
+            'Delivery Notes',
+            'Sales Returns',
+            'Credit Notes',
+            'Linked/Assigned Serials',
+            'Serial History',
+          ]}
+        />
       </AntModal>
     </>
   );
