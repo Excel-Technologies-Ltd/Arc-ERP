@@ -70,7 +70,7 @@ export const PurchaseDetailsSerialTableColumns = (): TableProps<SerialItemType>[
       render: (_, record) => {
         return (
           <AntDatePicker
-            value={dayjs(record.warranty_date)}
+            value={dayjs(record.warranty_date || new Date())}
             placeholder='Select Date'
             size='small'
             onChange={(date) => {

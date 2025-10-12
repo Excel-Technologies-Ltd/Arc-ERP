@@ -21,7 +21,7 @@ const SerialAssignForm = ({
   // Api Call end
 
   // Handle File Upload
-  const { handleBeforeFileUpload, isFileLoading } = useSerialFileUploadHandler(items);
+  const { handleBeforeFileUpload, isFileLoading } = useSerialFileUploadHandler(items, control);
 
   return (
     <>
@@ -44,7 +44,7 @@ const SerialAssignForm = ({
       {RenderController<AssignSerialFormData>(
         control,
         'date',
-        <AntDatePicker placeholder='Select Date' size='middle' />
+        <AntDatePicker placeholder='Select Date' size='middle' allowClear={false} />
       )}
       {RenderController<AssignSerialFormData>(
         control,

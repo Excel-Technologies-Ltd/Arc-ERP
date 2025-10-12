@@ -59,7 +59,11 @@ export const PurchaseDetailsProductTableColumns = (
         return <Tag color={hasSerial ? 'green' : 'red'}>{hasSerial ? 'Yes' : 'No'}</Tag>;
       },
     },
-    { title: 'Warranty Months', dataIndex: 'warrenty_months', key: 'warrenty_months' },
+    {
+      title: 'Warranty Months',
+      dataIndex: 'custom_purchase_warranty_period_in_months',
+      key: 'warrenty_months',
+    },
     {
       title: 'Add Serial',
       key: 'add_serial',

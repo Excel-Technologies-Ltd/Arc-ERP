@@ -9,6 +9,7 @@ import { addSerials } from '@/stores/serialSlice';
 import { useAppDispatch } from '@/stores/hooks';
 import { useNotify } from '@/hooks/useNotify';
 import { Control, useWatch } from 'react-hook-form';
+import dayjs, { Dayjs } from 'dayjs';
 
 export const useAddSerialHandler = ({
   inputValues,
@@ -21,9 +22,10 @@ export const useAddSerialHandler = ({
 }) => {
   const dispatch = useAppDispatch();
   const notify = useNotify();
-  const { fromRange, toRange, totalRangeValue } = useWatch({ control });
+  const { fromRange, toRange, totalRangeValue, date } = useWatch({ control });
 
   const handleAddSerial = (record: PurchaseInvoiceItem) => {
+    console.log(record.custom_purchase_warranty_period_in_months);
     const inputValue = inputValues?.[record.name]?.[0] || ''; // Access first element of array
     const assignedQuantity =
       Number(totalRangeValue) > 0 ? Number(totalRangeValue) : parseInt(inputValue || '0');
@@ -36,6 +38,12 @@ export const useAddSerialHandler = ({
         message: validation.error,
       });
     }
+
+    // Make Warrenty Date using warranty months
+    const warrantyDate = (date as Dayjs).add(
+      Number(record.custom_purchase_warranty_period_in_months),
+      'month'
+    );
 
     // if fromRange and toRange are provided, generate serials using utility function
     if (fromRange && toRange) {
@@ -59,7 +67,7 @@ export const useAddSerialHandler = ({
               item_name: record.item_name,
               qty: Number(totalRangeValue),
               has_serial_no: record.custom_has_excel_serial === 'Yes' ? true : false,
-              warranty_date: new Date(),
+              warranty_date: warrantyDate,
               serial_no: serials,
               rate: record.rate,
               amount: Number(record.rate) * Number(totalRangeValue) || 0,
@@ -82,7 +90,7 @@ export const useAddSerialHandler = ({
               item_name: record.item_name,
               qty: Number(inputValue),
               has_serial_no: false,
-              warranty_date: new Date(),
+              warranty_date: warrantyDate,
               serial_no: [],
               rate: record.rate,
               amount: Number(record.rate) * Number(inputValue) || 0,
@@ -95,7 +103,7 @@ export const useAddSerialHandler = ({
     }
 
     // Generate serials using utility function
-    const newSerials = generateSerialItems(record, assignedQuantity, serialTableData);
+    const newSerials = generateSerialItems(record, assignedQuantity, serialTableData, warrantyDate);
     // if fromRange and toRange are not provided, generate serials using utility function
     // Dispatch the prepared serials
     dispatch(

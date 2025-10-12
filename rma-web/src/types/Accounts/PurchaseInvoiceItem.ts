@@ -17,12 +17,16 @@ export interface PurchaseInvoiceItem {
   product_bundle?: string;
   /**	Item Name : Data	*/
   item_name: string;
+  /**	Has Excel Serial : Select	*/
+  custom_has_excel_serial?: '' | 'Yes' | 'No';
+  /**	Sales Warranty Period (in months) : Data	*/
+  custom_sales_warranty_period_in_months?: string;
+  /**	Purchase Warranty Period (in months) : Data	*/
+  custom_purchase_warranty_period_in_months?: string;
   /**	Description : Text Editor	*/
   description?: string;
   /**	Brand : Link - Brand	*/
   brand?: string;
-  /**	Has Excel Serial : Select	*/
-  custom_has_excel_serial?: '' | 'Yes' | 'No';
   /**	Item Group : Link - Item Group	*/
   item_group?: string;
   /**	Image : Attach	*/

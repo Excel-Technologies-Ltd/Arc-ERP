@@ -6,11 +6,18 @@ import { PurchaseInvoiceItem } from '@/types/Accounts/PurchaseInvoiceItem';
 import { selectSerialTableData } from '@/stores/serialSlice';
 import { processFile } from '../utils';
 import { handleCSVValidation, handleExcelFile } from '../validations/file.validation';
+import { Control, useWatch } from 'react-hook-form';
+import { AssignSerialFormData } from '@/types/pages/purchase';
+import { Dayjs } from 'dayjs';
 
-export const useSerialFileUploadHandler = (items: PurchaseInvoiceItem[]) => {
+export const useSerialFileUploadHandler = (
+  items: PurchaseInvoiceItem[],
+  control: Control<AssignSerialFormData>
+) => {
   const dispatch = useAppDispatch();
   const notify = useNotify();
   const { parseFile, getFileType, isLoading: isFileLoading } = useFileParser();
+  const { date } = useWatch({ control });
 
   // Add selector to get current serial data
   const serialTableData = useAppSelector(selectSerialTableData);
@@ -43,7 +50,7 @@ export const useSerialFileUploadHandler = (items: PurchaseInvoiceItem[]) => {
           if (!handleCSVValidation(parsedData, fileMeta, items, notify)) {
             return ANT_UPLOAD_FILE_LIST_IGNORE;
           }
-          processFile(parsedData, items, serialTableData, notify, dispatch);
+          processFile(parsedData, items, serialTableData, notify, dispatch, date as Dayjs);
           break;
 
         case 'xls':

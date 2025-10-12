@@ -36,7 +36,7 @@ export const PurchaseDetailsCard = ({ data }: { data: PurchaseInvoice }) => {
     {
       icon: <LiaFileInvoiceSolid className='text-slate-500' />,
       label: 'Status',
-      value: <Tag color='blue'>{data.status || 'Unknown'}</Tag>,
+      value: <Tag color='blue'>{data.custom_excel_status || 'Unknown'}</Tag>,
     },
   ];
   return (

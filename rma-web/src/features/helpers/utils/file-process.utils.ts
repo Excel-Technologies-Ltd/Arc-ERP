@@ -5,6 +5,7 @@ import { validateFileUploadQuantities } from './file-validation.utils';
 import { addSerials } from '@/stores/serialSlice';
 import { NotifyType } from '@/components/Notification/NotificationProvider';
 import { AppDispatch } from '@/stores/store';
+import { Dayjs } from 'dayjs';
 
 /**
  * Helper function to get added serials count for a specific item
@@ -103,7 +104,8 @@ export const convertGroupedDataToSerials = (
       has_serial_no: boolean;
       matchingItem?: PurchaseInvoiceItem;
     }
-  >
+  >,
+  warrantyDate: Dayjs
 ): SerialItemType[] => {
   return Object.values(groupedData).map((group) => ({
     key: `${group.item_name}_${group.item_code}`,
@@ -111,7 +113,7 @@ export const convertGroupedDataToSerials = (
     item_code: group.item_code,
     qty: group.qty,
     serial_no: group.serial_no, // Join all serials with separator
-    warranty_date: new Date(),
+    warranty_date: warrantyDate,
     has_serial_no: group.has_serial_no,
     amount: group.matchingItem?.amount || 0,
     rate: group.matchingItem?.rate || 0,
@@ -128,7 +130,8 @@ export const convertGroupedDataToSerials = (
 export const generateSerialItems = (
   item: PurchaseInvoiceItem,
   quantity: number,
-  serialTableData: SerialItemType[]
+  serialTableData: SerialItemType[],
+  warrantyDate: Dayjs
 ): SerialItemType[] => {
   const currentCount = getAddedSerialsCount(item.item_name, serialTableData);
 
@@ -138,7 +141,7 @@ export const generateSerialItems = (
     item_name: item.item_name,
     qty: 1,
     has_serial_no: item.custom_has_excel_serial === 'Yes' ? true : false,
-    warranty_date: new Date(),
+    warranty_date: warrantyDate,
     serial_no: [],
     rate: item.rate,
     amount: Number(item.rate) * 1 || 0,
@@ -150,7 +153,8 @@ export const processFile = (
   items: PurchaseInvoiceItem[],
   serialTableData: SerialItemType[],
   notify: NotifyType,
-  dispatch: AppDispatch
+  dispatch: AppDispatch,
+  warrantyDate: Dayjs
 ): void => {
   // Group serials by item_name using utility function
   const groupedData = processAndGroupFileData(parsedData, items);
@@ -168,7 +172,7 @@ export const processFile = (
   }
 
   // Convert grouped data to serial items using utility function
-  const makeSerialData = convertGroupedDataToSerials(groupedData);
+  const makeSerialData = convertGroupedDataToSerials(groupedData, warrantyDate);
 
   // Dispatch each grouped item
   makeSerialData.forEach((item) => {

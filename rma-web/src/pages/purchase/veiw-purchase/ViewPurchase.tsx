@@ -173,6 +173,7 @@ const ViewPurchase = () => {
         <div className='col-span-12 lg:col-span-4 2xl:col-span-3 intro-y'>
           {/* Purchase Details Box */}
           {purchaseInvoiceDetails && <PurchaseDetailsCard data={purchaseInvoiceDetails?.message} />}
+
           {/* Serial Details Box */}
           <div className='p-5 rounded-md box mt-5'>
             <div className='flex items-center pb-5 mb-5 border-b border-slate-200/60 dark:border-darkmode-400'>
@@ -196,6 +197,7 @@ const ViewPurchase = () => {
         </div>
       </div>
       {/* END: Transaction Details */}
+
       {/* Modal */}
       <AntModal okText='Reset'>
         <ResetSerialUi

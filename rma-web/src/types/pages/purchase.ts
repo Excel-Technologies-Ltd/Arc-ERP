@@ -47,7 +47,7 @@ export interface ProductDataType {
 
 export interface SerialItemType extends Pick<ProductDataType, 'key' | 'item_name'> {
   item_code: string;
-  warranty_date: Date;
+  warranty_date: Dayjs;
   serial_no: string[];
   amount: number;
   rate: number;
