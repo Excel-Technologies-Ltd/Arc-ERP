@@ -19,7 +19,7 @@ import ResetSerialUi from '@/features/shared/ResetSerialUi';
 
 const mapApiToForm = (pi?: PurchaseInvoice): AssignSerialFormData => ({
   warehouse: pi?.set_warehouse ?? undefined,
-  date: pi?.posting_date ? dayjs(pi.posting_date) : dayjs(),
+  date: pi?.posting_date ? dayjs(`${pi.posting_date} ${pi.posting_time || '00:00:00'}`) : dayjs(),
   file: undefined,
   fromRange: '',
   toRange: '',
@@ -111,16 +111,23 @@ const ViewPurchase = () => {
       return;
     }
 
+    // Make Payload
     const payload: Record<string, any> = {
-      posting_date: dayjs(data.date).format('YYYY-MM-DD'),
-      posting_time: dayjs(data.date).format('HH:mm:ss'),
+      posting_date: dayjs(data.date || new Date()).format('YYYY-MM-DD'),
+      posting_time: dayjs(data.date || new Date()).format('HH:mm:ss'),
       purchase_invoice_name: purchaseInvoiceDetails?.message.name,
       supplier: purchaseInvoiceDetails?.message.supplier,
       total: serialTableData.reduce((acc, curr) => acc + (curr.amount ?? 0), 0),
       total_qty: serialTableData.reduce((acc, curr) => acc + (curr.qty ?? 0), 0),
       warehouse: data.warehouse,
       items: Object.values(MakeMergeItems),
+      warranty_date:
+        dayjs(serialTableData[0]?.warranty_date).format('YYYY-MM-DD') ||
+        dayjs(data.date).format('YYYY-MM-DD'),
     };
+
+    console.log(payload);
+
     await SerialAssignCall(payload)
       .then((res) => {
         notify.success({ message: JSON.parse(res.message)?.message });

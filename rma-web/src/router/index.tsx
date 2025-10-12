@@ -16,6 +16,7 @@ import {
   URLStockSerial,
   URLStockLedger,
   URLCustomerBrandLimit,
+  URLSerialListSearch,
 } from './routes.url';
 import PrivateGuard from '@/guard/PrivateGuard';
 import PublicGuard from '@/guard/PublicGuard';
@@ -54,6 +55,7 @@ const StockLadger = Loadable(lazy(() => import('../pages/Stock/ladger')));
 const CustomerBrandLimitLadger = Loadable(
   lazy(() => import('../pages/Customer/brand-limit-ladger'))
 );
+const SerialListSearch = Loadable(lazy(() => import('../pages/warrantyPortal/serial-list-search')));
 
 const routes = [
   {
@@ -152,6 +154,14 @@ const routes = [
             path: URLStockLedger(),
             element: <StockLadger />,
           },
+          {
+            path: URLSerialListSearch(),
+            element: <SerialListSearch />,
+          },
+          // {
+          //   path: URLSerialSearch(),
+          //   element: <SerialSearch />,
+          // },
         ],
       },
     ],

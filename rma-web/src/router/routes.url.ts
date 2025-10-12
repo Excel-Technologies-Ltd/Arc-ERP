@@ -30,5 +30,9 @@ export const URLCustomerBrandLimit = () => '/customer-brand-limit';
 export const URLServer = () => '/settings-server';
 export const URLItemPrice = () => '/settings-item-price';
 
+// Warranty URLS
+export const URLSerialListSearch = () => '/serial-list-search';
+export const URLSerialSearch = () => '/serial-search';
+
 // Error URLS
 export const URLErrorPage = () => '/error-page';

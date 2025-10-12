@@ -14,6 +14,8 @@ import {
   URLCustomerBrandLimit,
   URLServer,
   URLItemPrice,
+  URLSerialListSearch,
+  URLSerialSearch,
 } from '@/router/routes.url';
 
 const MainMenu = () => {
@@ -93,6 +95,22 @@ const MainMenu = () => {
           icon: <FaHome />,
           pathname: URLCustomerBrandLimit(),
           title: 'Brand Limit Ladger',
+        },
+      ],
+    },
+    {
+      icon: <FaHome />,
+      title: 'Warranty Portal',
+      subMenu: [
+        {
+          icon: <FaHome />,
+          pathname: URLSerialListSearch(),
+          title: 'Serial List Search',
+        },
+        {
+          icon: <FaHome />,
+          pathname: URLSerialSearch(),
+          title: 'Serial Search',
         },
       ],
     },
