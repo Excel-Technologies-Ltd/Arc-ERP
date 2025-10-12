@@ -23,3 +23,9 @@ EVENT_TYPE = {
     "READY_TO_DELIVERED": "Ready to Deliver",
     "SENT_TO_REPAIR_DEPT": "Sent to Repair Section",
 }
+
+SERIAL_BATCH_SIZE = 30000
+
+DOCUMENT_TYPE = {
+    "PurchaseReceipt": "Purchase Receipt",
+}

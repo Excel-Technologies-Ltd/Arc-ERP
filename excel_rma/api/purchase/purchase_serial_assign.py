@@ -1,4 +1,5 @@
-from excel_rma.utils.constants import EVENT_TYPE
+from time import clock_getres
+from excel_rma.utils.constants import DOCUMENT_TYPE, EVENT_TYPE, SERIAL_BATCH_SIZE
 from excel_rma.utils.mongo import get_db
 import frappe
 
@@ -10,9 +11,6 @@ def assign_serial(**payload):
     Uses batch processing for validation and insertion.
     """
     data = frappe.parse_json(payload)
-
-    # Constants
-    BATCH_SIZE = 30000
 
     # Extract data
     pi_name = data["purchase_invoice_name"]
@@ -34,16 +32,14 @@ def assign_serial(**payload):
     # Extract and validate serials
     serials = _extract_serials(items)
     if serials:
-        _validate_serials_batched(serials, serial_coll, BATCH_SIZE)
+        _validate_serials_batched(serials, serial_coll)
 
     # Prepare payloads
     pr_payload = _build_pr_payload(items, pi_name, po_ref, data)
     mongo_docs = _build_mongo_docs(items, data)
 
     # ===== PHASE 2: EXECUTION =====
-    return _execute_transaction(
-        serial_coll, pr_payload, mongo_docs, pi_name, BATCH_SIZE
-    )
+    return _execute_transaction(serial_coll, pr_payload, mongo_docs, pi_name)
 
 
 def _extract_serials(items):
@@ -57,7 +53,7 @@ def _extract_serials(items):
     ]
 
 
-def _validate_serials_batched(serials, collection, batch_size):
+def _validate_serials_batched(serials, collection):
     """Validate serials in batches for duplicates and existence."""
 
     # Check input duplicates
@@ -66,8 +62,8 @@ def _validate_serials_batched(serials, collection, batch_size):
 
     # Check existing serials in MongoDB (batched)
     existing = set()
-    for i in range(0, len(serials), batch_size):
-        batch = serials[i : i + batch_size]
+    for i in range(0, len(serials), SERIAL_BATCH_SIZE):
+        batch = serials[i : i + SERIAL_BATCH_SIZE]
         batch_existing = {
             doc["serial_no"]
             for doc in collection.find(
@@ -109,6 +105,15 @@ def _build_pr_payload(items, pi_name, po_ref, data):
 
 def _build_mongo_docs(items, data):
     """Build MongoDB documents for serial numbers."""
+
+    # Use Frappe's get_datetime to combine date and time, then convert to ISO format
+    purchased_on = (
+        frappe.utils.get_datetime(
+            f"{data['posting_date']} {data['posting_time']}"
+        ).isoformat()
+        + "Z"
+    )
+
     return [
         {
             "serial_no": sn.strip(),
@@ -117,6 +122,14 @@ def _build_mongo_docs(items, data):
             "purchase_time": data["posting_time"],
             "warehouse": data["warehouse"],
             "purchase_date": data["posting_date"],
+            "purchase_rate": item.get("rate"),
+            "supplier": data["supplier"],
+            "purchase_document_type": DOCUMENT_TYPE["PurchaseReceipt"],
+            "purchase_invoice_name": data["purchase_invoice_name"],
+            "warranty": {
+                "purchaseWarrantyDate": data["warranty_date"],
+                "purchasedOn": purchased_on,
+            },
         }
         for item in items
         if item.get("has_serial_no") == 1
@@ -125,17 +138,17 @@ def _build_mongo_docs(items, data):
     ]
 
 
-def _insert_batched(collection, docs, batch_size, session):
+def _insert_batched(collection, docs, session):
     """Insert documents in batches within transaction."""
     total = 0
-    for i in range(0, len(docs), batch_size):
-        batch = docs[i : i + batch_size]
+    for i in range(0, len(docs), SERIAL_BATCH_SIZE):
+        batch = docs[i : i + SERIAL_BATCH_SIZE]
         result = collection.insert_many(batch, ordered=False, session=session)
         total += len(result.inserted_ids)
     return total
 
 
-def _execute_transaction(serial_coll, pr_payload, mongo_docs, pi_name, batch_size):
+def _execute_transaction(serial_coll, pr_payload, mongo_docs, pi_name):
     """Execute transaction with proper rollback handling."""
 
     session = serial_coll.database.client.start_session()
@@ -148,10 +161,14 @@ def _execute_transaction(serial_coll, pr_payload, mongo_docs, pi_name, batch_siz
         pr_doc = frappe.get_doc(pr_payload)
         pr_doc.insert()
 
+        # Add PR name to all mongo documents
+        for doc in mongo_docs:
+            doc["purchase_document_no"] = pr_doc.name
+
         # Insert serials in batches
         inserted = 0
         if mongo_docs:
-            inserted = _insert_batched(serial_coll, mongo_docs, batch_size, session)
+            inserted = _insert_batched(serial_coll, mongo_docs, session)
 
         # Commit both transactions
         session.commit_transaction()
@@ -239,9 +256,6 @@ def __create_serial_history(mongo_docs, pi_name):
     mongo_db = get_db()
     serial_history_coll = mongo_db["serial_no_history"]
 
-    # Constants
-    BATCH_SIZE = 30000
-
     # Get Purchase Invoice document for reference
     pi_doc = frappe.get_doc("Purchase Invoice", pi_name)
 
@@ -273,8 +287,8 @@ def __create_serial_history(mongo_docs, pi_name):
     # Insert history records in batches
     try:
         total_inserted = 0
-        for i in range(0, len(history_docs), BATCH_SIZE):
-            batch = history_docs[i : i + BATCH_SIZE]
+        for i in range(0, len(history_docs), SERIAL_BATCH_SIZE):
+            batch = history_docs[i : i + SERIAL_BATCH_SIZE]
             result = serial_history_coll.insert_many(batch, ordered=False)
             total_inserted += len(result.inserted_ids)
 
@@ -288,3 +302,9 @@ def __create_serial_history(mongo_docs, pi_name):
             f"Failed to create serial history for {pi_name}: {str(e)}",
             "Serial History Creation Error",
         )
+
+
+# TODO Wok in later
+# @frappe.whitelist()
+# def cancel_purchase_serial():
+#     return frappe.as_json({"success": True, "message": "Purchase Serial Canceled"})
