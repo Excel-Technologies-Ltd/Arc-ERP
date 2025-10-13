@@ -7,5 +7,5 @@ export const PURCHASE_SELECT_STATUS = [
 ];
 
 export const COMPANY_NAME = 'Excel technologies Limited';
-export const UPLOAD_FILE_HEADER = ['item_name', 'serial_no'];
+export const UPLOAD_FILE_HEADER = ['item_name', 'serial_no', 'mac_no'];
 export const ANT_UPLOAD_FILE_LIST_IGNORE = Upload.LIST_IGNORE;

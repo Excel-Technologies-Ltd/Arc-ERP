@@ -45,10 +45,16 @@ export interface ProductDataType {
   warrenty_months: number;
 }
 
+export type SerialWithMacTypes = {
+  serial_no: string;
+  mac_no: string;
+};
+
 export interface SerialItemType extends Pick<ProductDataType, 'key' | 'item_name'> {
   item_code: string;
   warranty_date: Dayjs;
-  serial_no: string[];
+  brand_name: string;
+  serial_with_mac: SerialWithMacTypes[];
   amount: number;
   rate: number;
   has_serial_no: boolean;

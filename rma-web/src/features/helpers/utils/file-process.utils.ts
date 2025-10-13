@@ -1,6 +1,6 @@
 import { PurchaseInvoiceItem } from '@/types/Accounts/PurchaseInvoiceItem';
 import { ParseResult } from '@/types/common.types';
-import { type SerialItemType } from '@/types/pages/purchase';
+import { SerialWithMacTypes, type SerialItemType } from '@/types/pages/purchase';
 import { validateFileUploadQuantities } from './file-validation.utils';
 import { addSerials } from '@/stores/serialSlice';
 import { NotifyType } from '@/components/Notification/NotificationProvider';
@@ -51,14 +51,13 @@ export const processAndGroupFileData = (
       const key = item.item_name;
 
       if (!acc[key]) {
-        // Find matching item from the items array
         const matchingItem = items.find((invItem) => invItem.item_name === item.item_name);
 
         acc[key] = {
           item_name: item.item_name,
           item_code: matchingItem?.item_code || '',
           qty: 0,
-          serial_no: [],
+          serial_with_mac: [],
           has_serial_no: matchingItem?.custom_has_excel_serial === 'Yes' ? true : false,
           matchingItem,
         };
@@ -67,9 +66,12 @@ export const processAndGroupFileData = (
       // Count quantity (each serial represents 1 item)
       acc[key].qty += 1;
 
-      // Collect all serial numbers
+      // Collect serial and MAC as objects instead of separate arrays
       if (item.serial_no && item.serial_no.trim()) {
-        acc[key].serial_no.push(item.serial_no.trim());
+        acc[key].serial_with_mac.push({
+          serial_no: item.serial_no.trim(),
+          mac_no: item.mac_no?.trim() || '', // Handle MAC from file
+        });
       }
 
       return acc;
@@ -81,7 +83,7 @@ export const processAndGroupFileData = (
         item_code: string;
         qty: number;
         has_serial_no: boolean;
-        serial_no: string[];
+        serial_with_mac: SerialWithMacTypes[];
         matchingItem?: PurchaseInvoiceItem;
       }
     >
@@ -100,7 +102,7 @@ export const convertGroupedDataToSerials = (
       item_name: string;
       item_code: string;
       qty: number;
-      serial_no: string[];
+      serial_with_mac: SerialWithMacTypes[];
       has_serial_no: boolean;
       matchingItem?: PurchaseInvoiceItem;
     }
@@ -112,11 +114,12 @@ export const convertGroupedDataToSerials = (
     item_name: group.item_name,
     item_code: group.item_code,
     qty: group.qty,
-    serial_no: group.serial_no, // Join all serials with separator
+    serial_with_mac: group.serial_with_mac, // Use the new structure
     warranty_date: warrantyDate,
     has_serial_no: group.has_serial_no,
     amount: group.matchingItem?.amount || 0,
     rate: group.matchingItem?.rate || 0,
+    brand_name: group.matchingItem?.brand || '',
   }));
 };
 
@@ -142,12 +145,22 @@ export const generateSerialItems = (
     qty: 1,
     has_serial_no: item.custom_has_excel_serial === 'Yes' ? true : false,
     warranty_date: warrantyDate,
-    serial_no: [],
+    serial_with_mac: [], // Initialize empty array for manual entry
     rate: item.rate,
     amount: Number(item.rate) * 1 || 0,
+    brand_name: item.brand || '',
   }));
 };
 
+/**
+ * Process file data
+ * @param parsedData - The parsed file data
+ * @param items - Available purchase invoice items
+ * @param serialTableData - Current serial table data for generating unique keys
+ * @param notify - Notification function
+ * @param dispatch - Dispatch function
+ * @param warrantyDate - Warranty date
+ */
 export const processFile = (
   parsedData: ParseResult['data'],
   items: PurchaseInvoiceItem[],

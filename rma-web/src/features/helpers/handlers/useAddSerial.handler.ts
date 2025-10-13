@@ -4,12 +4,12 @@ import {
   generateSerialNumbersFromRange,
   validateQuantityAssignment,
 } from '../utils';
-import { AssignSerialFormData, SerialItemType } from '@/types/pages/purchase';
+import { AssignSerialFormData, SerialItemType, SerialWithMacTypes } from '@/types/pages/purchase';
 import { addSerials } from '@/stores/serialSlice';
 import { useAppDispatch } from '@/stores/hooks';
 import { useNotify } from '@/hooks/useNotify';
 import { Control, useWatch } from 'react-hook-form';
-import dayjs, { Dayjs } from 'dayjs';
+import { Dayjs } from 'dayjs';
 
 export const useAddSerialHandler = ({
   inputValues,
@@ -25,7 +25,6 @@ export const useAddSerialHandler = ({
   const { fromRange, toRange, totalRangeValue, date } = useWatch({ control });
 
   const handleAddSerial = (record: PurchaseInvoiceItem) => {
-    console.log(record.custom_purchase_warranty_period_in_months);
     const inputValue = inputValues?.[record.name]?.[0] || ''; // Access first element of array
     const assignedQuantity =
       Number(totalRangeValue) > 0 ? Number(totalRangeValue) : parseInt(inputValue || '0');
@@ -45,19 +44,21 @@ export const useAddSerialHandler = ({
       'month'
     );
 
-    // if fromRange and toRange are provided, generate serials using utility function
+    // For range-based serial generation:
     if (fromRange && toRange) {
       const serials = generateSerialNumbersFromRange(fromRange, toRange);
 
-      // check if serials length is 0
       if (serials.length === 0) {
-        notify.error({
-          message: 'Invalid range',
-        });
+        notify.error({ message: 'Invalid range' });
         return;
       }
 
-      // dispatch the prepared serials
+      // Convert serials to SerialWithMacTypes format
+      const serialWithMac: SerialWithMacTypes[] = serials.map((serial) => ({
+        serial_no: serial,
+        mac_no: '', // Empty MAC for range generation
+      }));
+
       dispatch(
         addSerials({
           serials: [
@@ -68,9 +69,10 @@ export const useAddSerialHandler = ({
               qty: Number(totalRangeValue),
               has_serial_no: record.custom_has_excel_serial === 'Yes' ? true : false,
               warranty_date: warrantyDate,
-              serial_no: serials,
+              serial_with_mac: serialWithMac, // Use new structure
               rate: record.rate,
               amount: Number(record.rate) * Number(totalRangeValue) || 0,
+              brand_name: record.brand || '',
             },
           ],
           recordName: record.name,
@@ -79,8 +81,8 @@ export const useAddSerialHandler = ({
       return;
     }
 
+    // For non-serialized items:
     if (record.custom_has_excel_serial === 'No') {
-      // dispatch the prepared serials
       dispatch(
         addSerials({
           serials: [
@@ -91,9 +93,10 @@ export const useAddSerialHandler = ({
               qty: Number(inputValue),
               has_serial_no: false,
               warranty_date: warrantyDate,
-              serial_no: [],
+              serial_with_mac: [], // Empty for non-serialized
               rate: record.rate,
               amount: Number(record.rate) * Number(inputValue) || 0,
+              brand_name: record.brand || '',
             },
           ],
           recordName: record.name,

@@ -95,8 +95,8 @@ const ViewPurchase = () => {
           acc[key].qty += curr.qty;
           // Sum the amounts for merged items
           acc[key].amount += curr.amount;
-          // Merge serials arrays
-          acc[key].serial_no = [...acc[key].serial_no, ...curr.serial_no];
+          // Merge serial_with_mac arrays instead of separate arrays
+          acc[key].serial_with_mac = [...acc[key].serial_with_mac, ...curr.serial_with_mac];
         }
         return acc;
       },
@@ -125,8 +125,6 @@ const ViewPurchase = () => {
         dayjs(serialTableData[0]?.warranty_date).format('YYYY-MM-DD') ||
         dayjs(data.date).format('YYYY-MM-DD'),
     };
-
-    console.log(payload);
 
     await SerialAssignCall(payload)
       .then((res) => {

@@ -1,4 +1,3 @@
-import AntDatePicker from '@/components/Base/DatePicker/AntDatePicker';
 import { AntInput } from '@/components/Base/Form';
 import { type TableProps } from 'antd';
 import dayjs from 'dayjs';
@@ -68,37 +67,44 @@ export const PurchaseDetailsSerialTableColumns = (): TableProps<SerialItemType>[
       dataIndex: 'warranty_date',
       key: 'warranty_date',
       render: (_, record) => {
-        return (
-          <AntDatePicker
-            value={dayjs(record.warranty_date || new Date())}
-            placeholder='Select Date'
-            size='small'
-            onChange={(date) => {
-              if (date) {
-                dispatch(
-                  updateSerialTableItem({
-                    key: record.key,
-                    field: 'warranty_date',
-                    value: [date.toISOString()],
-                  })
-                );
-              }
-            }}
-          />
+        return record.warranty_date ? (
+          <span>{dayjs(record.warranty_date).format('YYYY-MM-DD')}</span>
+        ) : (
+          <span>N/A</span>
         );
+        // return (
+        //   <AntDatePicker
+        //     value={dayjs(record.warranty_date || new Date())}
+        //     placeholder='Select Date'
+        //     size='small'
+        //     disabled
+        //     onChange={(date) => {
+        //       if (date) {
+        //         dispatch(
+        //           updateSerialTableItem({
+        //             key: record.key,
+        //             field: 'warranty_date',
+        //             value: [date.toISOString()],
+        //           })
+        //         );
+        //       }
+        //     }}
+        //   />
+        // );
       },
     },
     {
       title: 'Serials',
       key: 'serials',
-      dataIndex: 'serial_no',
+      dataIndex: 'serial_with_mac',
       render: (value, record) => {
         if (!record.has_serial_no) return <span>Non Serialized Item</span>;
 
-        if (value.length > 1) {
+        if (value?.length > 1) {
           return (
             <span>
-              {value[0]?.toUpperCase()} - {value[value.length - 1]?.toUpperCase()}
+              {value[0].serial_no?.toUpperCase()} -{' '}
+              {value[value.length - 1]?.serial_no?.toUpperCase()}
             </span>
           );
         }
@@ -106,17 +112,65 @@ export const PurchaseDetailsSerialTableColumns = (): TableProps<SerialItemType>[
         return (
           <AntInput
             type='text'
-            value={record.serial_no || ''}
-            placeholder='Enter Serial Number'
+            value={value?.[0]?.serial_no || ''}
+            placeholder='Enter Serial'
             size='small'
             onKeyUp={(e) => handleKeyUp(e, record.key)}
             data-serial-key={record.key}
             onChange={(e) => {
+              const existingData = value?.[0] || { serial_no: '', mac_no: '' };
               dispatch(
                 updateSerialTableItem({
                   key: record.key,
-                  field: 'serial_no',
-                  value: [e.target.value],
+                  field: 'serial_with_mac',
+                  value: [
+                    {
+                      ...existingData,
+                      serial_no: e.target.value,
+                    },
+                  ],
+                })
+              );
+            }}
+          />
+        );
+      },
+    },
+    {
+      title: 'Mac No',
+      key: 'mac_no',
+      dataIndex: 'serial_with_mac',
+      render: (value, record) => {
+        if (!record.has_serial_no) return <span>Non Serialized Item</span>;
+
+        if (value?.length > 1) {
+          return (
+            <span>
+              {value[0]?.mac_no?.toUpperCase()} - {value[value.length - 1]?.mac_no?.toUpperCase()}
+            </span>
+          );
+        }
+
+        return (
+          <AntInput
+            type='text'
+            value={value?.[0]?.mac_no || ''}
+            placeholder='Enter Mac'
+            size='small'
+            onKeyUp={(e) => handleKeyUp(e, record.key)}
+            data-serial-key={record.key}
+            onChange={(e) => {
+              const existingData = value?.[0] || { serial_no: '', mac_no: '' };
+              dispatch(
+                updateSerialTableItem({
+                  key: record.key,
+                  field: 'serial_with_mac',
+                  value: [
+                    {
+                      ...existingData,
+                      mac_no: e.target.value,
+                    },
+                  ],
                 })
               );
             }}
@@ -129,7 +183,8 @@ export const PurchaseDetailsSerialTableColumns = (): TableProps<SerialItemType>[
       title: 'Actions',
       key: 'actions',
       width: 80,
-      render: (_, __, index) => {
+      render: (_, record, index) => {
+        console.log(record);
         return (
           <Button onClick={() => handleSerialDelete(index)} variant='outline-danger' size='sm'>
             <DeleteOutlined />

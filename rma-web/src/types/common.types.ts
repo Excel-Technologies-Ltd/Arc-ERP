@@ -11,6 +11,7 @@ export type FormField = {
 export type SerialFileDataType = {
   item_name: string;
   serial_no: string;
+  mac_no: string;
 };
 
 export interface ParseResult {

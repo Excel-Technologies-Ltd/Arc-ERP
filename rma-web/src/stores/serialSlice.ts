@@ -1,4 +1,4 @@
-import { SerialItemType } from '@/types/pages/purchase';
+import { SerialItemType, SerialWithMacTypes } from '@/types/pages/purchase';
 import { createSelector, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { RootState } from './store';
 
@@ -42,7 +42,7 @@ const SerialSlice = createSlice({
       action: PayloadAction<{
         key: string;
         field: keyof SerialItemType;
-        value: string[];
+        value: SerialWithMacTypes[];
       }>
     ) => {
       const { key, field, value } = action.payload;

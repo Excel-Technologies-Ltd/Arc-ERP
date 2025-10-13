@@ -18,6 +18,7 @@ export const handleCSVValidation = (
   items: PurchaseInvoiceItem[],
   notify: NotifyType
 ): boolean => {
+  // Validate Csv Header
   if (!validateCSVHeader(fileMeta)) {
     notify.error({
       message: 'Invalid file',
@@ -26,6 +27,7 @@ export const handleCSVValidation = (
     return false;
   }
 
+  // Validate Items Exist
   if (!validateItemsExist(parsedData, items)) {
     notify.error({
       message: 'Invalid items',
