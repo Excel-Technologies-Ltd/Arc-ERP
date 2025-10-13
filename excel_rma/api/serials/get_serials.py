@@ -1,13 +1,14 @@
 from excel_rma.utils.mongo import get_db
 import frappe
-from typing import Dict, Any, List
 import json
 
 
-@frappe.whitelist()
-def get_serials_list(skip=0, take=20, sort=None, filter_query=None):
-    """Fetch serials using aggregation pipeline"""
-    collection = get_db()["serial_no"]
+@frappe.whitelist(methods="GET")
+def get_serials_list(skip=0, limit=10, sort=None, filter_query=None):
+
+    # Connect to MongoDB
+    mongo_db = get_db()
+    serial_collection = mongo_db["serial_no"]
 
     # Build pipeline
     pipeline = []
@@ -23,18 +24,19 @@ def get_serials_list(skip=0, take=20, sort=None, filter_query=None):
                 "docs": [
                     {"$sort": json.loads(sort) if sort else {"_id": -1}},
                     {"$skip": int(skip)},
-                    {"$limit": int(take)},
-                    {"$project": {"_id": 0}},
+                    {"$limit": int(limit)},
+                    {"$addFields": {"_id": {"$toString": "$_id"}}},
                 ],
                 "count": [{"$count": "total"}],
             }
         }
     )
 
-    result = list(collection.aggregate(pipeline))[0]
+    # get the result
+    result = list(serial_collection.aggregate(pipeline))[0]
 
     return {
-        "docs": result["docs"],
-        "length": result["count"][0]["total"] if result["count"] else 0,
+        "data": result["docs"],
+        "count": result["count"][0]["total"] if result["count"] else 0,
         "offset": int(skip),
     }
