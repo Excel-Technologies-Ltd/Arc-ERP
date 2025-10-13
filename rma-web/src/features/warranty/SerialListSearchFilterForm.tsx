@@ -1,7 +1,12 @@
+import AntRangePicker from '@/components/Base/DatePicker/AntRangePicker';
 import { AntCheckBox, AntInput, AntSelect } from '@/components/Base/Form';
 import useDebouncedSearch from '@/hooks/debounce/useDebounceSearch';
 import { RenderController } from '@/lib/hook-form/RenderController';
-import { getItemDropdownList, getWarehouseDropdownList } from '@/services/common/dropdownApi';
+import {
+  getBrandDropdownList,
+  getItemDropdownList,
+  getWarehouseDropdownList,
+} from '@/services/common/dropdownApi';
 import { SerialListSearchFilterFormData } from '@/types/pages/warranty';
 import { Control, useWatch } from 'react-hook-form';
 import { twMerge } from 'tailwind-merge';
@@ -32,13 +37,26 @@ const SerialListSearchFilterForm = ({
   } = useDebouncedSearch({
     fetchFunction: getWarehouseDropdownList,
   });
+
+  // Brand Dropdown Fetch
+  const {
+    setSearchInput: setBrandSearch,
+    data: { data: Brands, isLoading: isLoadingBrands },
+  } = useDebouncedSearch({
+    fetchFunction: getBrandDropdownList,
+  });
   // Api Call end
   return (
     <div className={twMerge(className)}>
       {RenderController<SerialListSearchFilterFormData>(
         control,
-        'serial_number',
+        'serial_no',
         <AntInput type='text' placeholder='Serial Number' />
+      )}
+      {RenderController<SerialListSearchFilterFormData>(
+        control,
+        'mac_address',
+        <AntInput type='text' placeholder='Mac Address' />
       )}
       {RenderController<SerialListSearchFilterFormData>(
         control,
@@ -58,7 +76,7 @@ const SerialListSearchFilterForm = ({
       )}
       {RenderController<SerialListSearchFilterFormData>(
         control,
-        'warehouse_name',
+        'warehouse',
         <AntSelect
           placeholder='Select Warehouse Name'
           onSearch={(value: string) => setWarehouseSearch(value)}
@@ -74,14 +92,38 @@ const SerialListSearchFilterForm = ({
       )}
       {RenderController<SerialListSearchFilterFormData>(
         control,
-        'is_sold',
-        <AntCheckBox label='Is Sold' className='min-w-fit' checked={is_sold} />
+        'brand_name',
+        <AntSelect
+          placeholder='Select Brand Name'
+          onSearch={(value: string) => setBrandSearch(value)}
+          notFoundText='No Brand Found'
+          loading={isLoadingBrands}
+          options={Brands?.map((w) => ({
+            value: w.name,
+            label: w.brand,
+          }))}
+          onClear={() => setBrandSearch(null)}
+          filterOption={false}
+        />
       )}
+
       {RenderController<SerialListSearchFilterFormData>(
         control,
-        'is_purchase',
-        <AntCheckBox label='Is Purchase' className='min-w-fit' checked={is_purchase} />
+        'date_range',
+        <AntRangePicker placeholder={['Start Date', 'End Date']} />
       )}
+      <div className='w-full'>
+        {RenderController<SerialListSearchFilterFormData>(
+          control,
+          'is_sold',
+          <AntCheckBox label='Is Sold' className='min-w-fit' checked={is_sold} />
+        )}
+        {RenderController<SerialListSearchFilterFormData>(
+          control,
+          'is_purchase',
+          <AntCheckBox label='Is Purchase' className='min-w-fit' checked={is_purchase} />
+        )}
+      </div>
     </div>
   );
 };

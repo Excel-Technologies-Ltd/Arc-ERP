@@ -7,3 +7,4 @@ export const WAREHOUSE = 'Warehouse';
 export const TERRITORY = 'Territory';
 export const SUPPLIER = 'Supplier';
 export const ITEM = 'Item';
+export const BRAND = 'Brand';

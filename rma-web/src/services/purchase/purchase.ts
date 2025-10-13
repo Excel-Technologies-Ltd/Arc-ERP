@@ -31,12 +31,7 @@ export const getPurchaseInvoiceList = ({
     ...(formDate && toDate ? [['posting_date', 'between', [formDate, toDate]] as Filter] : []),
   ];
 
-  const {
-    data: purchaseInvoiceList,
-    isLoading: isLoadingPurchaseInvoiceList,
-    isValidating: isValidatingPurchaseInvoiceList,
-    error: errorPurchaseInvoiceList,
-  } = useFrappeGetCall<FrappeGetCallListResponseWithCount<PurchaseInvoice>>(
+  return useFrappeGetCall<FrappeGetCallListResponseWithCount<PurchaseInvoice>>(
     GET_PURCHASE_INVOICE_LIST,
     {
       fields: PURCHASE_INVOICE_LIST_FIELDS,
@@ -49,14 +44,6 @@ export const getPurchaseInvoiceList = ({
       },
     }
   );
-
-  return {
-    data: purchaseInvoiceList?.message.data,
-    isLoading: isLoadingPurchaseInvoiceList,
-    isValidating: isValidatingPurchaseInvoiceList,
-    error: errorPurchaseInvoiceList,
-    total: purchaseInvoiceList?.message.count,
-  };
 };
 
 // API Call to get purchase invoice details

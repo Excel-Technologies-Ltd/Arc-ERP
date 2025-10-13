@@ -40,6 +40,7 @@ export interface FrappeGetCallListResponseWithCount<T> {
   message: {
     data: T[];
     count?: number;
+    offset?: number;
   };
 }
 

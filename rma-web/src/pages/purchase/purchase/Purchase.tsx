@@ -19,11 +19,7 @@ const Purchase = () => {
   });
 
   // API Call start
-  const {
-    data: purchaseInvoices,
-    isLoading: isLoadingPurchaseInvoices,
-    total,
-  } = getPurchaseInvoiceList({
+  const { data: purchaseInvoices, isLoading: isLoadingPurchaseInvoices } = getPurchaseInvoiceList({
     invoice_number: appliedFilterData?.invoice_number ?? '',
     status: appliedFilterData?.status ?? '',
     supplier: appliedFilterData?.supplier ?? '',
@@ -66,10 +62,10 @@ const Purchase = () => {
         {/* BEGIN: Data List */}
         <div className='col-span-12 overflow-auto intro-y 2xl:overflow-visible'>
           <CustomTable<PurchaseInvoice>
-            data={purchaseInvoices || []}
+            data={purchaseInvoices?.message.data || []}
             tableHeader={Column}
             loading={isLoadingPurchaseInvoices}
-            totalItems={total}
+            totalItems={purchaseInvoices?.message.count}
           />
         </div>
         {/* END: Data List */}

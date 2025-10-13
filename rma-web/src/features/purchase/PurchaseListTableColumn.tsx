@@ -5,8 +5,8 @@ import { PurchaseInvoice } from '@/types/Accounts/PurchaseInvoice';
 import { TableColumn } from '@/types/Table/table-types';
 import { getProgress, getStatusColor, getStatusText } from '@/utils/tableUtils';
 
-export const PurchaseListTableColumn = () => {
-  const TableHeader: TableColumn<PurchaseInvoice>[] = [
+export const PurchaseListTableColumn = (): TableColumn<PurchaseInvoice>[] => {
+  return [
     {
       key: 'sl',
       title: 'SL',
@@ -21,7 +21,6 @@ export const PurchaseListTableColumn = () => {
       key: 'custom_excel_status',
       title: 'STATUS',
       render: (value) => {
-        // const progress = getProgress(record.total_qty ?? 0, record.receipt_data);
         const color = getStatusColor(value.toString());
         const text = getStatusText(value.toString());
         return <AntTags color={color}>{text}</AntTags>;
@@ -51,6 +50,4 @@ export const PurchaseListTableColumn = () => {
       },
     },
   ];
-
-  return TableHeader;
 };
