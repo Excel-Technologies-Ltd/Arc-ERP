@@ -1,6 +1,7 @@
 import { parsePaginationParams } from '@/components/Pagination/pagination.utils';
-import { GET_SERIAL_LIST } from '@/constants/api-strings';
+import { GET_SERIAL_DETAILS, GET_SERIAL_HISTORY, GET_SERIAL_LIST } from '@/constants/api-strings';
 import {
+  FrappeGetCallDocResponse,
   FrappeGetCallListResponseWithCount,
   MongoFilter,
   MongoOperators,
@@ -9,6 +10,7 @@ import {
   SerialListSearchFilterFormData,
   type SerialListSearchMongoQueryFilterTypes,
   SerialNoDataType,
+  SerialNoHistoryType,
 } from '@/types/pages/warranty';
 import dayjs from 'dayjs';
 import { useFrappeGetCall } from 'frappe-react-sdk';
@@ -68,4 +70,30 @@ export const getSerialsList = (filterData: SerialListSearchFilterFormData | null
     skip: limit_start,
     limit: pageSize,
   });
+};
+
+export const getSerialDetails = (serial_no: string | null) => {
+  return useFrappeGetCall<FrappeGetCallDocResponse<SerialNoDataType>>(
+    GET_SERIAL_DETAILS,
+    {
+      serial_no: serial_no,
+    },
+    undefined,
+    {
+      isPaused: () => !serial_no,
+    }
+  );
+};
+
+export const getSerialHistory = (serial_no: string | null) => {
+  return useFrappeGetCall<FrappeGetCallDocResponse<SerialNoHistoryType[]>>(
+    GET_SERIAL_HISTORY,
+    {
+      serial_no: serial_no,
+    },
+    undefined,
+    {
+      isPaused: () => !serial_no,
+    }
+  );
 };

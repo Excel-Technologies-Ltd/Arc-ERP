@@ -15,7 +15,7 @@ import {
   URLServer,
   URLItemPrice,
   URLSerialListSearch,
-  URLSerialSearch,
+  URLSerialDetailSearch,
 } from '@/router/routes.url';
 
 const MainMenu = () => {
@@ -109,8 +109,8 @@ const MainMenu = () => {
         },
         {
           icon: <FaHome />,
-          pathname: URLSerialSearch(),
-          title: 'Serial Search',
+          pathname: URLSerialDetailSearch(),
+          title: 'Serial Detail Search',
         },
       ],
     },

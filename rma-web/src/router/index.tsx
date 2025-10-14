@@ -17,12 +17,14 @@ import {
   URLStockLedger,
   URLCustomerBrandLimit,
   URLSerialListSearch,
+  URLSerialDetailSearch,
 } from './routes.url';
 import PrivateGuard from '@/guard/PrivateGuard';
 import PublicGuard from '@/guard/PublicGuard';
 import { lazy } from 'react';
 import Loadable from '@/components/loadable/Loadable';
 import PermissionGuard from '@/guard/PermissionGuard';
+import SerialDetailSearch from '@/pages/warrantyPortal/serial-detail-search';
 
 // Lazy Components
 const DashboardOverview = Loadable(lazy(() => import('../pages/DashboardOverview')));
@@ -158,10 +160,10 @@ const routes = [
             path: URLSerialListSearch(),
             element: <SerialListSearch />,
           },
-          // {
-          //   path: URLSerialSearch(),
-          //   element: <SerialSearch />,
-          // },
+          {
+            path: URLSerialDetailSearch(),
+            element: <SerialDetailSearch />,
+          },
         ],
       },
     ],

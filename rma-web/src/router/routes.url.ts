@@ -32,7 +32,7 @@ export const URLItemPrice = () => '/settings-item-price';
 
 // Warranty URLS
 export const URLSerialListSearch = () => '/serial-list-search';
-export const URLSerialSearch = () => '/serial-search';
+export const URLSerialDetailSearch = () => '/serial-detail-search';
 
 // Error URLS
 export const URLErrorPage = () => '/error-page';

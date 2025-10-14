@@ -1,3 +1,5 @@
+import { ColumnLink } from '@/components/Table/TableColumnUi';
+import { URLSerialDetailSearch } from '@/router/routes.url';
 import { SerialNoDataType } from '@/types/pages/warranty';
 import { TableColumn } from '@/types/Table/table-types';
 
@@ -11,42 +13,36 @@ export const SerialListSearchtableColumns = (): TableColumn<SerialNoDataType>[] 
     {
       key: 'serial_no',
       title: 'SERIAL NO',
-      render: (value) => value,
+      render: (value) =>
+        ColumnLink(`${URLSerialDetailSearch()}?serial_no=${value.toString()}`, value.toString()),
     },
     {
       key: 'item_name',
       title: 'ITEM NAME',
-      render: (value) => value,
     },
     {
       key: 'item_code',
       title: 'ITEM CODE',
-      render: (value) => value,
     },
     {
       key: 'warehouse',
       title: 'WAREHOUSE',
-      render: (value) => value,
     },
     {
       key: 'purchase_document_no',
       title: 'PURCHASE RECEIPT',
-      render: (value) => value,
     },
     {
       key: 'delivary_note',
       title: 'DELIVARY NOTE',
-      render: (value) => value,
     },
     {
       key: 'customer',
       title: 'CUSTOMER',
-      render: (value) => value,
     },
     {
       key: 'supplier',
       title: 'SUPPLIER',
-      render: (value) => value,
     },
   ];
 };

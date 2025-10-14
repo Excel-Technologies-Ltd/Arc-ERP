@@ -25,11 +25,35 @@ export interface SerialNoDataType {
   purchase_invoice_name: string;
   warranty: WarrantyType;
   purchase_document_no: string;
+  brand: string;
+  mac_no: string;
+  customer: string;
+  delivery_note: string;
+  sales_invoice_name: string;
+}
+
+export interface SerialNoHistoryType {
+  eventDate: string;
+  eventType: string;
+  serial_no: string;
+  mac_no: any;
+  brand: string;
+  document_no: string;
+  transaction_from: string;
+  transaction_to: string;
+  document_type: string;
+  parent_document: string;
+  created_on: string;
+  created_by: string;
+  item_code: string;
+  item_name: string;
 }
 
 export interface WarrantyType {
-  purchaseWarrantyDate: string;
+  purchaseWarrantyDate: string | Date;
   purchasedOn: string;
+  salesWarrantyDate: string | Date;
+  soldOn: string;
 }
 
 export type SerialListSearchMongoQueryFilterTypes = {
