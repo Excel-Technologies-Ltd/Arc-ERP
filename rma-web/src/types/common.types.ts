@@ -48,3 +48,26 @@ export interface FrappeGetCallListResponseWithCount<T> {
 export interface FrappeGetCallDocResponse<T> {
   message: T;
 }
+
+// mongodb-types.ts
+export type MongoOperators<T> = {
+  $eq?: T;
+  $ne?: T;
+  $gt?: T;
+  $gte?: T;
+  $lt?: T;
+  $lte?: T;
+  $in?: T[];
+  $nin?: T[];
+  $exists?: boolean;
+  $regex?: string | RegExp;
+  $options?: string;
+};
+
+export type MongoFilter<T> = {
+  [K in keyof T]?: T[K] | MongoOperators<T[K]>;
+} & {
+  $and?: MongoFilter<T>[];
+  $or?: MongoFilter<T>[];
+  $nor?: MongoFilter<T>[];
+};

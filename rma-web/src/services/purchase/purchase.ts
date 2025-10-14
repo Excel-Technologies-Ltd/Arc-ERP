@@ -1,5 +1,5 @@
 import { type Filter, useFrappeGetCall, useFrappePostCall } from 'frappe-react-sdk';
-import { type PurchaseInvoice, type PurchaseReceiptItem } from '@/types/Accounts/PurchaseInvoice';
+import { type PurchaseInvoice } from '@/types/Accounts/PurchaseInvoice';
 import { parsePaginationParams } from '@/components/Pagination/pagination.utils';
 import { useSearchParams } from 'react-router-dom';
 import { PurchaseListFilterFormData } from '@/types/pages/purchase';

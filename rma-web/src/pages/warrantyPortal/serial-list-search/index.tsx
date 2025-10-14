@@ -1,7 +1,6 @@
 import AntButton from '@/components/Base/Button/AntButton';
 import CustomTable from '@/components/Table/CustomTable';
 import { SerialListSearchFilterForm, SerialListSearchtableColumns } from '@/features/warranty';
-import { useNotify } from '@/hooks/useNotify';
 import { getSerialsList } from '@/services/warranty/serials';
 import { SerialListSearchFilterFormData, SerialNoDataType } from '@/types/pages/warranty';
 import { ClearOutlined, CloudDownloadOutlined, SearchOutlined } from '@ant-design/icons';
@@ -9,7 +8,6 @@ import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 
 const SerialListSearch = () => {
-  const notify = useNotify();
   const [filterKey, setFilterKey] = useState<number>(0);
   const [appliedFilterData, setAppliedFilterData] = useState<SerialListSearchFilterFormData | null>(
     null
@@ -40,7 +38,6 @@ const SerialListSearch = () => {
   // handle Submit - just update state, the hook will automatically refetch
   const onSubmit = (data: SerialListSearchFilterFormData) => {
     setAppliedFilterData(data);
-    notify.open({ message: 'Search successful' });
   };
 
   return (

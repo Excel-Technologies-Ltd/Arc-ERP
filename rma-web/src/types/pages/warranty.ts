@@ -31,3 +31,18 @@ export interface WarrantyType {
   purchaseWarrantyDate: string;
   purchasedOn: string;
 }
+
+export type SerialListSearchMongoQueryFilterTypes = {
+  serial_no?: string;
+  item_code?: string;
+  warehouse?: string;
+  mac_no?: string;
+  brand?: string;
+  purchase_date?: string;
+  sales_invoice_name?: string;
+  delivery_note?: string;
+  customer?: string;
+
+  purchase_document_no?: string;
+  purchase_invoice_name?: string;
+};

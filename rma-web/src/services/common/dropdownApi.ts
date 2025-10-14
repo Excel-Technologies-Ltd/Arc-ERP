@@ -42,7 +42,7 @@ export const getCustomerDropdownList = (name?: string | null) => {
 // Api Call to Get Item based on search
 export const getItemDropdownList = (name?: string | null) => {
   return useFrappeGetDocList<Item>(ITEM, {
-    fields: ['name', 'item_name'],
+    fields: ['name', 'item_name', 'item_code'],
     filters: name ? ([['item_name', 'like', `%${name}%`]] as Filter[]) : undefined,
   });
 };
