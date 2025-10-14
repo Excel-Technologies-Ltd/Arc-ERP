@@ -218,8 +218,18 @@ doc_events = {
 fixtures = [
     {
         "doctype": "Custom Field",
-        "filters": {"name": ["in", ["Purchase Invoice-custom_excel_status"]]},
-    }
+        "filters": {
+            "name": [
+                "in",
+                [
+                    "Purchase Invoice-custom_excel_status",
+                    "Item-custom_purchase_warranty_period_in_months",
+                    "Item-custom_sales_warranty_period_in_months",
+                    "Purchase Invoice Item-custom_purchase_warranty_period_in_months",
+                ],
+            ]
+        },
+    },
 ]
 
 website_route_rules = [
