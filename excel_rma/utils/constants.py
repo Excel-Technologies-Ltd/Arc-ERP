@@ -24,8 +24,14 @@ EVENT_TYPE = {
     "SENT_TO_REPAIR_DEPT": "Sent to Repair Section",
 }
 
-SERIAL_BATCH_SIZE = 40000
+SERIAL_BATCH_SIZE = 30000
 
 DOCUMENT_TYPE = {
     "PurchaseReceipt": "Purchase Receipt",
+}
+
+PURCHASE_INVOICE_CUSTOM_STATUS = {
+    "SUBMITTED": "Submitted",
+    "COMPLETED": "Completed",
+    "CANCELED": "Canceled",
 }
