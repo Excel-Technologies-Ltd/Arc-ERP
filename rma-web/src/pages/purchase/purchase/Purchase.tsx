@@ -2,7 +2,7 @@ import { getPurchaseInvoiceList } from '@/services/purchase/purchase';
 import CustomTable from '@/components/Table/CustomTable';
 import { PurchaseInvoice } from '@/types/Accounts/PurchaseInvoice';
 import AntButton from '@/components/Base/Button/AntButton';
-import { ClearOutlined, SearchOutlined } from '@ant-design/icons';
+import { ClearOutlined, ReloadOutlined, SearchOutlined } from '@ant-design/icons';
 import { PurchaseListFilterForm, PurchaseListTableColumn } from '@/features/purchase';
 import { useForm } from 'react-hook-form';
 import { PurchaseListFilterFormData } from '@/types/pages/purchase';
@@ -19,7 +19,11 @@ const Purchase = () => {
   });
 
   // API Call start
-  const { data: purchaseInvoices, isLoading: isLoadingPurchaseInvoices } = getPurchaseInvoiceList({
+  const {
+    data: purchaseInvoices,
+    isLoading: isLoadingPurchaseInvoices,
+    mutate,
+  } = getPurchaseInvoiceList({
     invoice_number: appliedFilterData?.invoice_number ?? '',
     status: appliedFilterData?.status ?? '',
     supplier: appliedFilterData?.supplier ?? '',
@@ -57,6 +61,7 @@ const Purchase = () => {
             <AntButton icon={<ClearOutlined />} onClick={handleClear}>
               Clear
             </AntButton>
+            <AntButton icon={<ReloadOutlined />} onClick={() => mutate()}></AntButton>
           </div>
         </div>
         {/* BEGIN: Data List */}

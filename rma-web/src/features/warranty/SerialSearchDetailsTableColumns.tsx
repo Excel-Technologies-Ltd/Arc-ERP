@@ -42,7 +42,7 @@ const SerialSearchDetailsTableColumns = (): TableProps<SerialNoHistoryType>['col
     {
       key: 'created_on',
       title: 'Created On',
-      dataIndex: 'created_on',
+      dataIndex: 'eventDate',
       render: (value) => dayjs(value).format('D MMM, YYYY'),
     },
   ];

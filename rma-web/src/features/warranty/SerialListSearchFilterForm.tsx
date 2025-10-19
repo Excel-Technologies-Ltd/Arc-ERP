@@ -83,8 +83,8 @@ const SerialListSearchFilterForm = ({
           notFoundText='No Warehouse Found'
           loading={isLoadingWarehouses}
           options={Warehouses?.map((w) => ({
-            value: w.warehouse_name,
-            label: w.warehouse_name,
+            value: w.name,
+            label: w.name,
           }))}
           onClear={() => setWarehouseSearch(null)}
           filterOption={false}

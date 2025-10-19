@@ -3,8 +3,14 @@ import { LiaFileInvoiceSolid } from '@/components/Base/Icons';
 import { PurchaseInvoice } from '@/types/Accounts/PurchaseInvoice';
 import { Tag } from 'antd';
 import { DetailsCard } from '@/components/Cards';
+import { getStatusColor, getStatusText } from '@/utils/tableUtils';
 
 export const PurchaseDetailsCard = ({ data }: { data: PurchaseInvoice }) => {
+  // Make Color for Status
+  const statusColor = getStatusColor(data.custom_excel_status.toString());
+  const statusText = getStatusText(data.custom_excel_status.toString());
+
+  // Card Items
   const cardItems: DetailsItem[] = [
     {
       icon: <LiaFileInvoiceSolid className='text-slate-500' />,
@@ -36,7 +42,7 @@ export const PurchaseDetailsCard = ({ data }: { data: PurchaseInvoice }) => {
     {
       icon: <LiaFileInvoiceSolid className='text-slate-500' />,
       label: 'Status',
-      value: <Tag color='blue'>{data.custom_excel_status || 'Unknown'}</Tag>,
+      value: <Tag color={statusColor}>{statusText || 'Unknown'}</Tag>,
     },
   ];
   return (

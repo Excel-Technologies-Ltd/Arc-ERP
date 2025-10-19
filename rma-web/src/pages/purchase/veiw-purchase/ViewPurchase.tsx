@@ -1,12 +1,16 @@
 import { useParams } from 'react-router-dom';
-import { getPurchaseInvoiceDetails, postSerialAssign } from '@/services/purchase/purchase';
+import {
+  getPurchaseInvoiceDetails,
+  postSerialAssign,
+  postSerialCancel,
+} from '@/services/purchase/purchase';
 import { useForm } from 'react-hook-form';
 import dayjs from 'dayjs';
 import { useMemo, useEffect } from 'react';
 import { AssignSerialFormData, SerialItemType } from '@/types/pages/purchase';
 import { PurchaseDetailsCard, PurchaseDetailsSerialTables } from '@/features/purchase';
 import { useNotify } from '@/hooks/useNotify';
-import { calculateRangeTotal } from '@/utils/helper';
+import { calculateRangeTotal, Extract_Frappe_Error } from '@/utils/helper';
 import LottieLoader from '@/components/Loader/LottieLoder';
 import { PurchaseInvoice } from '@/types/Accounts/PurchaseInvoice';
 import SerialAssignForm from '@/features/shared/SerialAssignForm';
@@ -38,6 +42,7 @@ const ViewPurchase = () => {
     mutate,
   } = getPurchaseInvoiceDetails(invoice_number ?? '');
   const { call: SerialAssignCall, loading: isLoadingSerialAssign } = postSerialAssign();
+  const { call: SerialCancelCall, loading: isLoadingSerialCancel } = postSerialCancel();
   // Api Call end
 
   // Build reactive "values" from API data
@@ -133,10 +138,21 @@ const ViewPurchase = () => {
         handleClear();
       })
       .catch((err) => {
-        notify.error({ message: 'ERROR', description: err.exception });
+        notify.error({ message: 'ERROR', description: Extract_Frappe_Error(err) });
+      });
+  };
+
+  // Handle Cancel Serial
+  const handleCancelSerial = () => {
+    SerialCancelCall({ purchase_invoice_name: purchaseInvoiceDetails?.message.name })
+      .then((res) => {
+        notify.success({ message: res.message.message });
+        mutate();
+        handleClear();
+        dispatch(handleModal({ type: '', isOpen: false }));
       })
-      .finally(() => {
-        notify.close('processing');
+      .catch((err) => {
+        notify.error({ message: 'ERROR', description: Extract_Frappe_Error(err) });
       });
   };
 
@@ -204,7 +220,11 @@ const ViewPurchase = () => {
       {/* END: Transaction Details */}
 
       {/* Modal */}
-      <AntModal okText='Reset'>
+      <AntModal
+        okText={isLoadingSerialCancel ? 'Resetting...' : 'Reset'}
+        onOk={handleCancelSerial}
+        okButtonProps={{ loading: isLoadingSerialCancel }}
+      >
         <ResetSerialUi
           bulletPoints={[
             'Purchase Order',

@@ -14,12 +14,16 @@ export const SerialSearchDetailsCard = ({
       value: data?.serial_no ?? 'N/A',
     },
     {
-      label: 'Supplier',
-      value: data?.supplier ?? 'N/A',
+      label: 'Brand',
+      value: data?.brand ?? 'N/A',
     },
     {
-      label: 'Item Name',
-      value: data?.item_name ?? 'N/A',
+      label: 'MAC Address',
+      value: data?.mac_no ?? 'N/A',
+    },
+    {
+      label: 'Supplier',
+      value: data?.supplier ?? 'N/A',
     },
     {
       label: 'Item Code',
@@ -30,8 +34,8 @@ export const SerialSearchDetailsCard = ({
       value: data?.purchase_document_no ?? 'N/A',
     },
     {
-      label: 'Delivery Note',
-      value: data?.delivery_note ?? 'N/A',
+      label: 'Item Name',
+      value: data?.item_name ?? 'N/A',
     },
     {
       label: 'Customer',
@@ -40,6 +44,10 @@ export const SerialSearchDetailsCard = ({
     {
       label: 'Warehouse',
       value: data?.warehouse ?? 'N/A',
+    },
+    {
+      label: 'Delivery Note',
+      value: data?.delivery_note ?? 'N/A',
     },
   ];
   return (

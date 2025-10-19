@@ -8,6 +8,7 @@ import { AntUpload } from '@/components/Base/Form';
 import { getWarehouseDropdownList } from '@/services/common/dropdownApi';
 import { PurchaseInvoiceItem } from '@/types/Accounts/PurchaseInvoiceItem';
 import { useSerialFileUploadHandler } from '../helpers/handlers';
+import useDebouncedSearch from '@/hooks/debounce/useDebounceSearch';
 
 const SerialAssignForm = ({
   control,
@@ -17,7 +18,13 @@ const SerialAssignForm = ({
   items: PurchaseInvoiceItem[];
 }) => {
   // Api Call start
-  const { data: warehouseList, isLoading: isLoadingWarehouses } = getWarehouseDropdownList(null);
+  // Warehouse Dropdown Fetch
+  const {
+    setSearchInput: setWarehouseSearch,
+    data: { data: warehouseList, isLoading: isLoadingWarehouses },
+  } = useDebouncedSearch({
+    fetchFunction: getWarehouseDropdownList,
+  });
   // Api Call end
 
   // Handle File Upload
@@ -29,15 +36,18 @@ const SerialAssignForm = ({
         control,
         'warehouse',
         <AntSelect
-          placeholder='Select Warehouse'
+          placeholder='Select Warehouse Name'
+          onSearch={(value: string) => setWarehouseSearch(value)}
+          notFoundText='No Warehouse Found'
+          loading={isLoadingWarehouses}
           options={warehouseList?.map((w) => ({
             value: w.name,
-            label: w.warehouse_name,
+            label: w.name,
           }))}
-          loading={isLoadingWarehouses}
-          showSearch={false}
-          notFoundText='No Warehouse Found'
+          onClear={() => setWarehouseSearch(null)}
+          filterOption={false}
           size='middle'
+          allowClear={false}
         />
       )}
 

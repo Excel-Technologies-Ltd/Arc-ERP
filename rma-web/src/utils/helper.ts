@@ -1,5 +1,6 @@
 import dayjs from 'dayjs';
 import duration from 'dayjs/plugin/duration';
+import { FrappeError } from 'frappe-react-sdk';
 import { parseColor } from 'tailwindcss/lib/util/color';
 
 dayjs.extend(duration);
@@ -36,9 +37,12 @@ const onlyNumber = (string: string) => {
 };
 
 const formatCurrency = (number: number | string) => {
-  if (!number) return '৳ 0';
+  if (!number) return '৳ 0.00';
 
-  return `৳ ${number.toLocaleString()}`;
+  return `৳ ${number.toLocaleString(undefined, {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  })}`;
 };
 
 const timeAgo = (time: string) => {
@@ -158,6 +162,15 @@ const calculateRangeTotal = (from: string, to: string): { total: number; error: 
   return { total: numTo - numFrom + 1, error: null };
 };
 
+// extract Frappe Error
+const Extract_Frappe_Error = (error: FrappeError) => {
+  return (
+    JSON.parse(JSON.parse(error._server_messages || '')[0])?.message ||
+    error.exception ||
+    'Unknown error'
+  );
+};
+
 export {
   cutText,
   formatDate,
@@ -173,4 +186,5 @@ export {
   stringToHTML,
   toTitle,
   calculateRangeTotal,
+  Extract_Frappe_Error,
 };

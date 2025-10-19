@@ -8,6 +8,7 @@ import {
   GET_PURCHASE_INVOICE_DETAILS,
   GET_PURCHASE_INVOICE_LIST,
   POST_SERIAL_ASSIGN,
+  POST_SERIAL_CANCEL,
 } from '@/constants/api-strings';
 import { FrappeGetCallDocResponse, FrappeGetCallListResponseWithCount } from '@/types/common.types';
 import { PURCHASE_INVOICE_LIST_FIELDS } from '@/constants/api-fields';
@@ -60,4 +61,9 @@ export const getPurchaseInvoiceDetails = (invoice_number: string) => {
 // Api Call to post serial assign
 export const postSerialAssign = () => {
   return useFrappePostCall(POST_SERIAL_ASSIGN);
+};
+
+// Api Call to post serial cancel
+export const postSerialCancel = () => {
+  return useFrappePostCall(POST_SERIAL_CANCEL);
 };
