@@ -35,5 +35,5 @@ DOCUMENT_TYPE = {
 PURCHASE_INVOICE_CUSTOM_STATUS = {
     "SUBMITTED": "Submitted",
     "COMPLETED": "Completed",
-    "CANCELED": "Canceled",
+    "CANCELED": "Cancelled",
 }

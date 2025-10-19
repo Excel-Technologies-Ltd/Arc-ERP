@@ -9,6 +9,11 @@ from excel_rma.rma_api_helpers.purchase.purchase_serial_helper import (
 from excel_rma.utils.constants import PURCHASE_INVOICE_CUSTOM_STATUS
 from excel_rma.utils.mongo import get_db
 import frappe
+from frappe.desk.form.linked_with import (
+    cancel_all_linked_docs,
+    get_submitted_linked_docs,
+)
+from pymongo.collection import Collection
 
 
 @frappe.whitelist(methods="POST")
@@ -50,39 +55,81 @@ def assign_serial(**payload):
 
 
 @frappe.whitelist(methods="POST")
-def cancel_serial(**payload) -> dict[str, any]:
-    payload_data = frappe.parse_json(payload)
+def cancel_serial(**payload):
+    try:
+        payload_data = frappe.parse_json(payload)
+        pi_name = payload_data.get("purchase_invoice_name")
 
-    # Extract data
-    pi_name = payload_data["purchase_invoice_name"]
+        # Validation
+        if not pi_name:
+            frappe.throw("Purchase Invoice name is required")
 
-    if not (pi_name):
-        frappe.throw("Purchase Invoice name is required")
+        pi_doc = frappe.get_doc("Purchase Invoice", pi_name)
 
-    pi_doc = frappe.get_doc("Purchase Invoice", pi_name)
-    if not pi_doc:
-        frappe.throw("Purchase Invoice does not exist")
+        if (
+            pi_doc.custom_excel_status == PURCHASE_INVOICE_CUSTOM_STATUS["CANCELED"]
+            or pi_doc.docstatus == 2
+        ):
+            frappe.throw("Purchase Invoice is already canceled")
 
-    if pi_doc.custom_excel_status == PURCHASE_INVOICE_CUSTOM_STATUS["CANCELED"]:
-        frappe.throw("Purchase Invoice is already canceled")
+        po_ref = pi_doc.items[0].purchase_order if pi_doc.items else None
+        if not po_ref:
+            frappe.throw("Purchase Order not found")
 
-    po_ref = pi_doc.items[0].purchase_order if pi_doc.items else None
-    if not po_ref:
-        frappe.throw("Purchase Order not found")
+        po_doc = frappe.get_doc("Purchase Order", po_ref)
+        if po_doc.docstatus == 2:
+            frappe.throw("Canceled Purchase order cannot be reset.")
 
-    po_doc = frappe.get_doc("Purchase Order", po_ref)
-    if po_doc.docstatus == 2:
-        frappe.throw("Canceled Purchase order cannot be reseted.")
+        # Get MongoDB collections
+        mongo_db = get_db()
+        serial_collection: Collection = mongo_db["serial_no"]
+        history_collection: Collection = mongo_db["serial_no_history"]
 
-    # Validate purchase serial cancelation
-    serials = validate_purchase_cancelation_serial(pi_name)
+        # Validate purchase serial cancelation
+        validate_purchase_cancelation_serial(
+            pi_name=pi_name,
+            serial_collection=serial_collection,
+            history_collection=history_collection,
+        )
 
-    return {
-        "success": True,
-        "message": "Purchase Serial Canceled",
-        "data": {
-            # "purchase_invoice": pi_doc,
-            # "purchase_order": po_ref,
-            "serials": serials,
-        },
-    }
+        submitted_linked_docs = get_submitted_linked_docs(
+            doctype="Purchase Order", name=po_ref
+        )
+
+        # Use Frappe transaction to ensure atomicity
+        frappe.db.begin()
+
+        try:
+            # Cancel linked documents if any
+            if submitted_linked_docs["count"] > 0:
+                cancel_all_linked_docs(
+                    frappe.as_json(submitted_linked_docs["docs"]),
+                    ignore_doctypes_on_cancel_all=[
+                        "Unreconcile Payment",
+                        "Unreconcile Payment Entries",
+                    ],
+                )
+
+            # Delete MongoDB records
+            serial_collection.delete_many({"purchase_invoice_name": pi_name})
+            history_collection.delete_many({"parent_document": pi_name})
+
+            # Commit Frappe transaction
+            frappe.db.commit()
+
+            return {
+                "success": True,
+                "message": "Purchase Serial Canceled Successfully",
+            }
+
+        except Exception as e:
+            # Rollback Frappe transaction on error
+            frappe.db.rollback()
+            frappe.log_error(
+                title="Cancel Serial Transaction Error", message=frappe.get_traceback()
+            )
+            raise
+
+    except Exception as e:
+        frappe.log_error(title="Cancel Serial Error", message=frappe.get_traceback())
+        frappe.throw(f"Error canceling purchase serial: {str(e)}", exc=e)

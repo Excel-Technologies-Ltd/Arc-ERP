@@ -1,4 +1,3 @@
-import threading
 from excel_rma.rma_api_helpers.models.purchase_serial_model import (
     ItemInput,
     MongoSerialDocument,
@@ -408,7 +407,7 @@ def execute_transaction(
             "message": "Purchase Receipt and serials created successfully",
         }
 
-        return frappe.as_json(response_data.dict())
+        return frappe.as_json(response_data)
 
     except Exception as e:
         if session.in_transaction:
@@ -454,11 +453,6 @@ def _make_purchase_invoice_completed(pi_name: str) -> None:
 
 def _create_serial_history(mongo_docs: List[Dict[str, Any]], pi_name: str) -> None:
     """Create serial history records in MongoDB using batch processing."""
-    if not isinstance(mongo_docs, list):
-        frappe.throw(f"Type Error: 'mongo_docs' must be a list")
-
-    if not isinstance(pi_name, str) or not pi_name.strip():
-        frappe.throw("Type Error: 'pi_name' must be a non-empty string")
 
     if not mongo_docs:
         return
@@ -466,7 +460,7 @@ def _create_serial_history(mongo_docs: List[Dict[str, Any]], pi_name: str) -> No
     mongo_db = get_db()
     serial_history_coll: Collection = mongo_db["serial_no_history"]
 
-    pi_doc = frappe.get_doc("Purchase Invoice", pi_name)
+    # pi_doc = frappe.get_doc("Purchase Invoice", pi_name)
     current_user: str = frappe.session.user
     current_datetime: str = frappe.utils.now()
 
@@ -474,13 +468,13 @@ def _create_serial_history(mongo_docs: List[Dict[str, Any]], pi_name: str) -> No
 
     for doc in mongo_docs:
         history_data = {
-            "eventDate": current_datetime,
+            "eventDate": doc.get("purchase_date"),
             "eventType": EVENT_TYPE["SerialPurchased"],
             "serial_no": doc.get("serial_no"),
             "mac_no": doc.get("mac_no"),
             "brand": doc.get("brand"),
-            "document_no": pi_doc.name,
-            "transaction_from": pi_doc.supplier,
+            "document_no": doc.get("purchase_document_no"),
+            "transaction_from": doc.get("supplier"),
             "transaction_to": doc.get("warehouse"),
             "document_type": "Purchase Receipt",
             "parent_document": pi_name,
@@ -523,14 +517,12 @@ def _create_serial_history(mongo_docs: List[Dict[str, Any]], pi_name: str) -> No
 
 def validate_purchase_cancelation_serial(
     pi_name: str,
+    serial_collection: Collection,
+    history_collection: Collection,
     max_workers: int = PURCHASE_SERIAL_CANCEL_MAX_WORKERS,
     batch_size: int = PURCHASE_SERIAL_CANCEL_BATCH_SIZE,
 ) -> List[str]:
     """Validate purchase serial cancelation."""
-    mongo_db = get_db()
-    serial_collection: Collection = mongo_db["serial_no"]
-    history_collection: Collection = mongo_db["serial_no_history"]
-
     serials: List[str] = [
         s["serial_no"]
         for s in serial_collection.find(
