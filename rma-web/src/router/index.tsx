@@ -24,7 +24,6 @@ import PublicGuard from '@/guard/PublicGuard';
 import { lazy } from 'react';
 import Loadable from '@/components/loadable/Loadable';
 import PermissionGuard from '@/guard/PermissionGuard';
-import SerialDetailSearch from '@/pages/warrantyPortal/serial-detail-search';
 
 // Lazy Components
 const DashboardOverview = Loadable(lazy(() => import('../pages/DashboardOverview')));
@@ -58,6 +57,9 @@ const CustomerBrandLimitLadger = Loadable(
   lazy(() => import('../pages/Customer/brand-limit-ladger'))
 );
 const SerialListSearch = Loadable(lazy(() => import('../pages/warrantyPortal/serial-list-search')));
+const SerialDetailSearch = Loadable(
+  lazy(() => import('../pages/warrantyPortal/serial-detail-search'))
+);
 
 const routes = [
   {

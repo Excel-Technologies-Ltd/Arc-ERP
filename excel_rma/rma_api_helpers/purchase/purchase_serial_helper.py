@@ -10,8 +10,14 @@ from excel_rma.rma_api_helpers.models.purchase_serial_model import (
 from excel_rma.rma_api_helpers.models.validate_pydentic_model import (
     validate_pydantic_model,
 )
-from excel_rma.utils.constants import DOCUMENT_TYPE, EVENT_TYPE, SERIAL_BATCH_SIZE
-from concurrent.futures import ThreadPoolExecutor, as_completed
+from excel_rma.utils.constants import (
+    DOCUMENT_TYPE,
+    EVENT_TYPE,
+    PURCHASE_SERIAL_CANCEL_BATCH_SIZE,
+    PURCHASE_SERIAL_CANCEL_MAX_WORKERS,
+    SERIAL_BATCH_SIZE,
+)
+from concurrent.futures import ThreadPoolExecutor, as_completed, Future
 from typing import List, Dict, Any, Set, Tuple, Optional
 import frappe
 from excel_rma.utils.mongo import get_db
@@ -515,94 +521,56 @@ def _create_serial_history(mongo_docs: List[Dict[str, Any]], pi_name: str) -> No
         )
 
 
-def validate_serials_ultra_fast(pi_name, max_workers=2, batch_size=50000):
-    """
-    Ultra-fast version with aggressive optimization.
-    Uses exists check instead of counting for maximum speed.
-    """
+def validate_purchase_cancelation_serial(
+    pi_name: str,
+    max_workers: int = PURCHASE_SERIAL_CANCEL_MAX_WORKERS,
+    batch_size: int = PURCHASE_SERIAL_CANCEL_BATCH_SIZE,
+) -> List[str]:
+    """Validate purchase serial cancelation."""
     mongo_db = get_db()
-    serial_collection = mongo_db["serial_no"]
-    history_collection = mongo_db["serial_no_history"]
+    serial_collection: Collection = mongo_db["serial_no"]
+    history_collection: Collection = mongo_db["serial_no_history"]
 
-    # Get serials with projection
-    serials_cursor = serial_collection.find(
-        {"purchase_invoice_name": pi_name}, {"serial_no": 1, "_id": 0}
-    ).batch_size(40000)
-
-    serial_list = [s["serial_no"] for s in serials_cursor]
-
-    if not serial_list:
+    serials: List[str] = [
+        s["serial_no"]
+        for s in serial_collection.find(
+            {"purchase_invoice_name": pi_name}, {"serial_no": 1, "_id": 0}
+        )
+    ]
+    if not serials:
         return
 
-    # Divide into smaller batches for faster processing
-    batches = [
-        serial_list[i : i + batch_size] for i in range(0, len(serial_list), batch_size)
+    batches: List[List[str]] = [
+        serials[i : i + batch_size] for i in range(0, len(serials), batch_size)
     ]
 
-    found_problematic = threading.Event()
-    problematic_serials = []
-    lock = threading.Lock()
-
-    def check_batch_ultra_fast(batch):
-        """Ultra-fast batch checking using aggregation pipeline."""
-        if found_problematic.is_set():
-            return []
-
-        # Direct aggregation on history collection (usually faster)
+    def check_batch(batch: List[str]) -> List[Dict[str, Any]]:
+        """Check batch of serials."""
         pipeline = [
             {"$match": {"serial_no": {"$in": batch}}},
             {"$group": {"_id": "$serial_no", "count": {"$sum": 1}}},
             {"$match": {"count": {"$gt": 1}}},
             {"$limit": 50},
         ]
+        return [
+            {"serial_no": r["_id"], "historyEvents": r["count"]}
+            for r in history_collection.aggregate(pipeline)
+        ]
 
-        try:
-            result = list(
-                history_collection.aggregate(
-                    pipeline,
-                    allowDiskUse=False,  # Keep in memory for speed
-                    hint={"serial_no": 1},  # Use index hint
-                )
-            )
-
-            if result:
-                with lock:
-                    for r in result:
-                        problematic_serials.append(
-                            {"serial_no": r["_id"], "historyEvents": r["count"]}
-                        )
-                    if len(problematic_serials) >= 50:
-                        found_problematic.set()
-                        return result[: 50 - len(problematic_serials) + len(result)]
-
-            return result
-        except Exception as e:
-            print(f"Error in ultra-fast batch check: {e}")
-            return []
-
-    # Process with more workers for smaller batches
     with ThreadPoolExecutor(max_workers=max_workers) as executor:
-        futures = [executor.submit(check_batch_ultra_fast, batch) for batch in batches]
+        problems: List[Dict[str, Any]] = []
+        futures: List[Future[List[Dict[str, Any]]]] = [
+            executor.submit(check_batch, batch) for batch in batches
+        ]
 
         for future in as_completed(futures):
-            if len(problematic_serials) >= 50:
-                # Cancel remaining futures
-                for f in futures:
-                    if not f.done():
-                        f.cancel()
+            batch_problems: List[Dict[str, Any]] = future.result()
+            problems.extend(batch_problems)
+            if len(problems) >= 50:
                 break
 
-            try:
-                future.result(timeout=10)  # Shorter timeout for faster batches
-            except Exception as e:
-                print(f"Batch failed: {e}")
-
-    # Report results
-    if problematic_serials:
-        serials_to_report = problematic_serials[:50]
-        serial_events_message = ", ".join(
-            f"{s['serial_no']} has {s['historyEvents']}" for s in serials_to_report
+    if problems:
+        msg = ", ".join(
+            f"{p['serial_no']} has {p['historyEvents']}" for p in problems[:50]
         )
-        frappe.throw(
-            f"The following serials have more than one event: {serial_events_message}"
-        )
+        frappe.throw(f"Serials with multiple events: {msg}")

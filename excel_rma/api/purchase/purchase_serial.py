@@ -3,8 +3,8 @@ from excel_rma.rma_api_helpers.purchase.purchase_serial_helper import (
     build_pr_payload,
     execute_transaction,
     extract_serials_and_macs,
+    validate_purchase_cancelation_serial,
     validate_serials_and_macs_optimized,
-    validate_serials_ultra_fast,
 )
 from excel_rma.utils.constants import PURCHASE_INVOICE_CUSTOM_STATUS
 from excel_rma.utils.mongo import get_db
@@ -50,7 +50,7 @@ def assign_serial(**payload):
 
 
 @frappe.whitelist(methods="POST")
-def cancel_serial(**payload):
+def cancel_serial(**payload) -> dict[str, any]:
     payload_data = frappe.parse_json(payload)
 
     # Extract data
@@ -74,55 +74,8 @@ def cancel_serial(**payload):
     if po_doc.docstatus == 2:
         frappe.throw("Canceled Purchase order cannot be reseted.")
 
-    # Connect to MongoDB
-    # mongo_db = get_db()
-    # serial_collection = mongo_db["serial_no"]
-
-    # pipeline = [
-    #     {
-    #         "$match": {
-    #             "purchase_invoice_name": pi_name,
-    #         }
-    #     },
-    #     {
-    #         "$project": {
-    #             "_id": 0,
-    #             "serial_no": 1,
-    #         }
-    #     },
-    #     {
-    #         "$lookup": {
-    #             "from": "serial_no_history",
-    #             "let": {"serial": "$serial_no"},
-    #             "pipeline": [
-    #                 {"$match": {"$expr": {"$eq": ["$serial_no", "$$serial"]}}},
-    #                 {"$limit": 2},  # We only need to know if count > 1
-    #                 {"$count": "count"},
-    #             ],
-    #             "as": "history_count",
-    #         }
-    #     },
-    #     {"$match": {"history_count.count": {"$gt": 1}}},
-    #     {"$limit": 50},  # Early limit
-    #     {
-    #         "$project": {
-    #             "serial_no": 1,
-    #             "historyEvents": {"$arrayElemAt": ["$history_count.count", 0]},
-    #         }
-    #     },
-    # ]
-
-    # serials = list(serial_collection.aggregate(pipeline, allowDiskUse=True))
-
-    # if serials:
-    #     serial_events_message = ", ".join(
-    #         f"{s['serial_no']} has {s['historyEvents']}" for s in serials
-    #     )
-    #     frappe.throw(
-    #         f"The following serials have more than one event: {serial_events_message}"
-    #     )
-
-    serials = validate_serials_ultra_fast(pi_name)
+    # Validate purchase serial cancelation
+    serials = validate_purchase_cancelation_serial(pi_name)
 
     return {
         "success": True,
