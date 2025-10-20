@@ -95,6 +95,7 @@ const SerialDetailSearch = () => {
                 icon={<SnippetsOutlined />}
                 size='middle'
                 disabled={!serial_no}
+                loading={serialHistoryLoading}
               >
                 Get Serial History
               </AntButton>

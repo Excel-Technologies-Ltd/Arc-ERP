@@ -58,8 +58,8 @@ export interface WarrantyType {
 
 export type SerialListSearchMongoQueryFilterTypes = {
   serial_no?: string;
-  item_code?: string;
-  warehouse?: string;
+  item_code?: string | null;
+  warehouse?: string | null;
   mac_no?: string;
   brand?: string;
   purchase_date?: string;
