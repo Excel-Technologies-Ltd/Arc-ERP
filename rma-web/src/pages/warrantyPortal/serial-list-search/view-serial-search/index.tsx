@@ -5,27 +5,24 @@ import { getSerialDetails, getSerialHistory } from '@/services/warranty/serials'
 import { SerialNoHistoryType } from '@/types/pages/warranty';
 import { SnippetsOutlined } from '@ant-design/icons';
 import { Input } from 'antd';
+import { useParams } from 'react-router-dom';
 import { useState } from 'react';
 
-const SerialDetailSearch = () => {
+const ViewSerialSearch = () => {
+  const params = useParams();
+  const serial_no = params.serial_no;
   const [shouldFetchHistory, setShouldFetchHistory] = useState(false);
-  const [shouldFetchDetails, setShouldFetchDetails] = useState(false);
-  const [searchValue, setSearchValue] = useState('');
+  const [searchValue, setSearchValue] = useState(serial_no ?? '');
+  const [activeSerialNo, setActiveSerialNo] = useState(serial_no ?? ''); // This triggers the API
 
   // Api Call Start Here
-  const {
-    data: serialDetails,
-    isLoading: serialDetailsLoading,
-    mutate: mutateSerialDetails,
-  } = getSerialDetails(searchValue, {
-    isPaused: () => !shouldFetchDetails,
-  });
+  const { data: serialDetails, isLoading: serialDetailsLoading } = getSerialDetails(activeSerialNo);
 
   const {
     data: serialHistory,
     isLoading: serialHistoryLoading,
     mutate: mutateSerialHistory,
-  } = getSerialHistory(searchValue, {
+  } = getSerialHistory(activeSerialNo, {
     isPaused: () => !shouldFetchHistory,
   });
   // Api Call End Here
@@ -41,13 +38,10 @@ const SerialDetailSearch = () => {
   };
 
   const handleSearch = (value: string) => {
-    setSearchValue(value); // This automatically triggers the API call via SWR
+    setActiveSerialNo(value); // This automatically triggers the API call via SWR
     setShouldFetchHistory(false); // Reset history fetch state
-    setShouldFetchDetails(true); // Reset details fetch state
-    setTimeout(() => {
-      mutateSerialDetails();
-    }, 50);
   };
+
   return (
     <>
       <div className='flex flex-col lg:flex-row items-center gap-2 justify-between mt-5 intro-y'>
@@ -81,7 +75,7 @@ const SerialDetailSearch = () => {
                 type='primary'
                 icon={<SnippetsOutlined />}
                 size='middle'
-                disabled={!searchValue}
+                disabled={!activeSerialNo}
                 loading={serialHistoryLoading}
               >
                 Get Serial History
@@ -95,4 +89,4 @@ const SerialDetailSearch = () => {
   );
 };
 
-export default SerialDetailSearch;
+export default ViewSerialSearch;

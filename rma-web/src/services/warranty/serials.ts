@@ -13,7 +13,7 @@ import {
   SerialNoHistoryType,
 } from '@/types/pages/warranty';
 import dayjs from 'dayjs';
-import { useFrappeGetCall } from 'frappe-react-sdk';
+import { SWRConfiguration, useFrappeGetCall } from 'frappe-react-sdk';
 import { useSearchParams } from 'react-router-dom';
 
 export const getSerialsList = (filterData: SerialListSearchFilterFormData | null) => {
@@ -29,29 +29,25 @@ export const getSerialsList = (filterData: SerialListSearchFilterFormData | null
   });
 };
 
-export const getSerialDetails = (serial_no: string | null) => {
+export const getSerialDetails = (serial_no: string, options?: SWRConfiguration) => {
   return useFrappeGetCall<FrappeGetCallDocResponse<SerialNoDataType>>(
     GET_SERIAL_DETAILS,
     {
       serial_no: serial_no,
     },
     undefined,
-    {
-      isPaused: () => !serial_no,
-    }
+    options
   );
 };
 
-export const getSerialHistory = (serial_no: string | null) => {
+export const getSerialHistory = (serial_no: string | null, options?: SWRConfiguration) => {
   return useFrappeGetCall<FrappeGetCallDocResponse<SerialNoHistoryType[]>>(
     GET_SERIAL_HISTORY,
     {
       serial_no: serial_no,
     },
     undefined,
-    {
-      isPaused: () => !serial_no,
-    }
+    options
   );
 };
 
