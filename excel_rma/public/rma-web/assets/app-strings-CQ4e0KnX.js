@@ -1,0 +1,1 @@
+import{U as e}from"./index-BNaSwIGj.js";const a=[{value:"completed",label:"Completed"},{value:"cancelled",label:"Cancelled"},{value:"submitted",label:"Submitted"}],t="Excel technologies Limited",o=["item_name","serial_no","mac_no"],_=e.LIST_IGNORE;export{_ as A,t as C,a as P,o as U};
