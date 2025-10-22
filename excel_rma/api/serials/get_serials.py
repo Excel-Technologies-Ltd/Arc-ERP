@@ -1,16 +1,8 @@
+from typing import Optional
+from excel_rma.rma_api_helpers.serials.serials_helper import parse_serial_filter_query
 from excel_rma.utils.mongo import get_db
 import frappe
 import json
-
-
-SERIAL_FILTER_KEYS = [
-    "item_code",
-    "warehouse",
-    "serial_no",
-    "sales_invoice_name",
-    "purchase_invoice_name",
-    "sales_return_name",
-]
 
 
 @frappe.whitelist(methods="GET")
@@ -110,35 +102,6 @@ def get_serials_list(skip=0, limit=10, sort=None, filter_query=None):
     }
 
 
-def parse_serial_filter_query(filter_query):
-    """
-    Parse and clean the filter query
-    Args:
-        filter_query (dict): The filter query dictionary
-    Returns:
-        dict: Cleaned filter query
-    """
-    # Create a copy to avoid modifying the original
-    cleaned_query = filter_query.copy()
-
-    # Remove keys that are not in SERIAL_FILTER_KEYS (except $or)
-    keys_to_remove = []
-    for key in cleaned_query.keys():
-        if key != "$or" and key not in SERIAL_FILTER_KEYS:
-            keys_to_remove.append(key)
-
-    for key in keys_to_remove:
-        del cleaned_query[key]
-
-    # Remove item_code and warehouse if they are empty/falsy
-    if "item_code" in cleaned_query and not cleaned_query["item_code"]:
-        del cleaned_query["item_code"]
-    if "warehouse" in cleaned_query and not cleaned_query["warehouse"]:
-        del cleaned_query["warehouse"]
-
-    return cleaned_query
-
-
 @frappe.whitelist(methods="GET")
 def get_serial_details(serial_no):
     """
@@ -191,3 +154,68 @@ def get_serial_history(serial_no):
 
     except Exception as e:
         frappe.throw(f"Error fetching serial history: {str(e)}")
+
+
+@frappe.whitelist(methods=["GET"])
+def get_delivered_serials(
+    skip: int = 0,
+    limit: int = 20,
+    sort: Optional[str] = None,
+    filter_query: Optional[str] = None,
+):
+    """
+    Get paginated list of delivered serial numbers from MongoDB
+    Optimized with $facet for single-pass aggregation
+    """
+
+    if not filter_query:
+        return frappe.throw("Filter query is required")
+
+    try:
+        # Parse JSON parameters
+        try:
+            filter_dict = json.loads(filter_query) if filter_query else {}
+            sorting = json.loads(sort) if sort else {"serial_no": -1}
+        except json.JSONDecodeError as e:
+            frappe.throw(f"Invalid JSON in parameters: {str(e)}")
+
+        # Get MongoDB connection
+        mongo_db = get_db()
+        serial_collection = mongo_db["serial_no"]
+
+        # Convert to int once
+        skip_val = int(skip)
+        limit_val = int(limit)
+
+        pipeline = [
+            {"$match": filter_dict},
+            {
+                "$facet": {
+                    "docs": [
+                        {"$sort": sorting},
+                        {"$skip": skip_val},
+                        {"$limit": limit_val},
+                        {"$addFields": {"_id": {"$toString": "$_id"}}},
+                    ],
+                    "count": [{"$count": "total"}],
+                }
+            },
+        ]
+
+        # Execute aggregation with allowDiskUse for large datasets
+        result = list(serial_collection.aggregate(pipeline, allowDiskUse=True))[0]
+
+        total = result["count"][0]["total"] if result["count"] else 0
+
+        # Return structured response
+        return {
+            "data": result["docs"],
+            "count": total,
+            "offset": skip_val,
+        }
+
+    except frappe.exceptions.ValidationError:
+        raise
+    except Exception as e:
+        frappe.log_error(f"Error in get_delivered_serials: {str(e)}")
+        frappe.throw(f"Error fetching delivered serial numbers: {str(e)}")

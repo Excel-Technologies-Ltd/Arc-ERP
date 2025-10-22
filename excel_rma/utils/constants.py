@@ -37,3 +37,13 @@ PURCHASE_INVOICE_CUSTOM_STATUS = {
     "COMPLETED": "Completed",
     "CANCELED": "Cancelled",
 }
+
+
+SERIAL_FILTER_KEYS = [
+    "item_code",
+    "warehouse",
+    "serial_no",
+    "sales_invoice_name",
+    "purchase_invoice_name",
+    "sales_return_name",
+]
