@@ -47,7 +47,7 @@ export const getSerialDetails = (serial_no: string, options?: SWRConfiguration) 
   return useFrappeGetCall<FrappeGetCallDocResponse<SerialNoDataType>>(
     GET_SERIAL_DETAILS,
     {
-      serial_no: serial_no,
+      ...(serial_no && { serial_no: serial_no }),
     },
     `${GET_SERIAL_DETAILS}_${serial_no}`,
     options
@@ -112,16 +112,18 @@ const buildGetSerialMongoQuery = (filterData: SerialListSearchFilterFormData | n
 
 export const getDeliveredSerials = (
   filterQuery: GetDeliveredSerialsFilterQueryType,
+  limitStart: number,
+  pageSize: number,
   options?: SWRConfiguration
 ) => {
   return useFrappeGetCall<FrappeGetCallListResponseWithCount<SerialNoDataType>>(
     GET_DELIVERED_SERIALS,
     {
       filter_query: filterQuery,
-      skip: 0,
-      limit: 10,
+      skip: limitStart,
+      limit: pageSize,
     },
-    `${GET_DELIVERED_SERIALS}_${JSON.stringify(filterQuery)}`,
+    `${GET_DELIVERED_SERIALS}_${JSON.stringify(filterQuery)}_${limitStart}_${pageSize}`,
     options
   );
 };

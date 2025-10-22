@@ -155,6 +155,7 @@ const ViewPurchase = () => {
 
   const isCompleted =
     purchaseInvoiceDetails?.message.custom_excel_status === PURCHASE_CUSTOM_STATUS.COMPLETED;
+
   const isCancelled =
     purchaseInvoiceDetails?.message.custom_excel_status === PURCHASE_CUSTOM_STATUS.CANCELLED;
   const isSubmitted =

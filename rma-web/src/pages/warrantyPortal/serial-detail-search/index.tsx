@@ -2,8 +2,10 @@ import AntButton from '@/components/Base/Button/AntButton';
 import { AntSearchInput } from '@/components/Base/Form';
 import AntCustomTable from '@/components/Table/AntCustomTable';
 import { SerialSearchDetailsCard, SerialSearchDetailsTableColumns } from '@/features/warranty';
+import { useNotify } from '@/hooks/useNotify';
 import { getSerialDetails, getSerialHistory } from '@/services/warranty/serials';
 import { SerialNoHistoryType } from '@/types/pages/warranty';
+import { Extract_Frappe_Error } from '@/utils/helper';
 import { SnippetsOutlined } from '@ant-design/icons';
 import { useEffect, useState } from 'react';
 
@@ -11,6 +13,7 @@ const SerialDetailSearch = () => {
   const [shouldFetchHistory, setShouldFetchHistory] = useState(false);
   const [shouldFetchDetails, setShouldFetchDetails] = useState(false);
   const [searchValue, setSearchValue] = useState('');
+  const notify = useNotify();
 
   // Api Call Start Here
   const {
@@ -19,6 +22,9 @@ const SerialDetailSearch = () => {
     mutate: mutateSerialDetails,
   } = getSerialDetails(searchValue, {
     isPaused: () => !shouldFetchDetails,
+    onError: (error) => {
+      notify.error({ message: Extract_Frappe_Error(error) });
+    },
   });
 
   const {

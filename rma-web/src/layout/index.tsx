@@ -1,6 +1,6 @@
 import '@/assets/css/themes/enigma/side-nav.css';
 import { useState, useEffect } from 'react';
-import { Outlet, useLocation, useNavigate } from 'react-router-dom';
+import { Link, Outlet, useLocation, useNavigate } from 'react-router-dom';
 import {
   FormattedMenu,
   linkTo,
@@ -67,13 +67,13 @@ function Main() {
                 ) : (
                   <li key={menuKey}>
                     <Tippy
-                      as='a'
+                      as={Link}
+                      to={menu.pathname || ''}
                       content={menu.title}
                       options={{
                         placement: 'right',
                       }}
                       disable={windowWidth > 1260}
-                      href={menu.subMenu ? '#' : menu.pathname}
                       onClick={(event: React.MouseEvent) => {
                         event.preventDefault();
                         linkTo(menu, navigate);
@@ -106,13 +106,13 @@ function Main() {
                         {menu.subMenu.map((subMenu, subMenuKey) => (
                           <li key={subMenuKey}>
                             <Tippy
-                              as='a'
+                              as={Link}
+                              to={subMenu.pathname || ''}
                               content={subMenu.title}
                               options={{
                                 placement: 'right',
                               }}
                               disable={windowWidth > 1260}
-                              href={subMenu.subMenu ? '#' : subMenu.pathname}
                               onClick={(event: React.MouseEvent) => {
                                 event.preventDefault();
                                 linkTo(subMenu, navigate);
@@ -149,13 +149,13 @@ function Main() {
                                 {subMenu.subMenu.map((lastSubMenu, lastSubMenuKey) => (
                                   <li key={lastSubMenuKey}>
                                     <Tippy
-                                      as='a'
+                                      as={Link}
+                                      to={lastSubMenu.pathname || ''}
                                       content={lastSubMenu.title}
                                       options={{
                                         placement: 'right',
                                       }}
                                       disable={windowWidth > 1260}
-                                      href={lastSubMenu.subMenu ? '#' : lastSubMenu.pathname}
                                       onClick={(event: React.MouseEvent) => {
                                         event.preventDefault();
                                         linkTo(lastSubMenu, navigate);
