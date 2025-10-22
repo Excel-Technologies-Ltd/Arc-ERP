@@ -9,3 +9,4 @@ export const POST_SERIAL_CANCEL = 'excel_rma.api.purchase.purchase_serial.cancel
 export const GET_SERIAL_LIST = 'excel_rma.api.serials.get_serials.get_serials_list';
 export const GET_SERIAL_DETAILS = 'excel_rma.api.serials.get_serials.get_serial_details';
 export const GET_SERIAL_HISTORY = 'excel_rma.api.serials.get_serials.get_serial_history';
+export const GET_DELIVERED_SERIALS = 'excel_rma.api.serials.get_serials.get_delivered_serials';

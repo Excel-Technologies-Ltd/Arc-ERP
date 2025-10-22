@@ -7,6 +7,7 @@ import AntPagination from '../Pagination/AntPagination';
 import { useSearchParams } from 'react-router-dom';
 import AntEmpty from '../Empty/Empty';
 import { transformCellData } from '@/utils/tableUtils';
+import LottieLoader from '../Loader/LottieLoder';
 
 interface ReusableTableProps<T> {
   data: T[];
@@ -25,7 +26,7 @@ const CustomTable = <T extends Record<string, any>>({
   const pageSize = Number(searchParams.get('pageSize')) || 10;
   const limit_start = Number(searchParams.get('limit_start')) || 0;
 
-  if (loading) return <div>Loading...</div>;
+  if (loading) return <LottieLoader pageLoader />;
   if (!data || data?.length === 0) return <AntEmpty />;
 
   return (

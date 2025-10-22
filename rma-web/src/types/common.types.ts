@@ -71,3 +71,17 @@ export type MongoFilter<T> = {
   $or?: MongoFilter<T>[];
   $nor?: MongoFilter<T>[];
 };
+
+export interface GetSerialItemType {
+  serial_no: string;
+  item_name: string;
+  warehouse: string;
+  warranty_date: string;
+  purchased_on: string;
+}
+
+export type GetDeliveredSerialsFilterQueryType = {
+  purchase_invoice_name?: string;
+  sales_invoice_name?: string;
+  serial_no?: string;
+};

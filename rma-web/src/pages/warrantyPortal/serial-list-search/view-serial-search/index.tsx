@@ -6,7 +6,7 @@ import { SerialNoHistoryType } from '@/types/pages/warranty';
 import { SnippetsOutlined } from '@ant-design/icons';
 import { Input } from 'antd';
 import { useParams } from 'react-router-dom';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 const ViewSerialSearch = () => {
   const params = useParams();
@@ -30,11 +30,16 @@ const ViewSerialSearch = () => {
   // Serial Items table Columns
   const Column = SerialSearchDetailsTableColumns();
 
+  // Refetch Call
+  useEffect(() => {
+    if (shouldFetchHistory) {
+      mutateSerialHistory();
+      setShouldFetchHistory(false);
+    }
+  }, [shouldFetchHistory, mutateSerialHistory]);
+
   const handleGetSerialHistory = () => {
     setShouldFetchHistory(true);
-    setTimeout(() => {
-      mutateSerialHistory();
-    }, 50);
   };
 
   const handleSearch = (value: string) => {

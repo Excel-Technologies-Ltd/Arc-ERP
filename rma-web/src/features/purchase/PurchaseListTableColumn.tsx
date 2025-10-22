@@ -39,8 +39,7 @@ export const PurchaseListTableColumn = (): TableColumn<PurchaseInvoice>[] => {
     {
       key: 'total',
       title: 'TOTAL',
-      render: (value, record) => {
-        console.log(record);
+      render: (value) => {
         return ColumnCurrency(Number(value));
       },
     },

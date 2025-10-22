@@ -1,11 +1,11 @@
 import AntButton from '@/components/Base/Button/AntButton';
+import { AntSearchInput } from '@/components/Base/Form';
 import AntCustomTable from '@/components/Table/AntCustomTable';
 import { SerialSearchDetailsCard, SerialSearchDetailsTableColumns } from '@/features/warranty';
 import { getSerialDetails, getSerialHistory } from '@/services/warranty/serials';
 import { SerialNoHistoryType } from '@/types/pages/warranty';
 import { SnippetsOutlined } from '@ant-design/icons';
-import { Input } from 'antd';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 const SerialDetailSearch = () => {
   const [shouldFetchHistory, setShouldFetchHistory] = useState(false);
@@ -30,35 +30,45 @@ const SerialDetailSearch = () => {
   });
   // Api Call End Here
 
+  // Trigger details fetch when search is performed
+  useEffect(() => {
+    if (shouldFetchDetails && searchValue) {
+      mutateSerialDetails();
+      setShouldFetchDetails(false);
+    }
+  }, [shouldFetchDetails, searchValue, mutateSerialDetails]);
+
+  // Trigger history fetch when button is clicked
+  useEffect(() => {
+    if (shouldFetchHistory && searchValue) {
+      mutateSerialHistory();
+      setShouldFetchHistory(false);
+    }
+  }, [shouldFetchHistory, searchValue, mutateSerialHistory]);
+
   // Serial Items table Columns
   const Column = SerialSearchDetailsTableColumns();
 
   const handleGetSerialHistory = () => {
     setShouldFetchHistory(true);
-    setTimeout(() => {
-      mutateSerialHistory();
-    }, 50);
   };
 
   const handleSearch = (value: string) => {
-    setSearchValue(value); // This automatically triggers the API call via SWR
-    setShouldFetchHistory(false); // Reset history fetch state
-    setShouldFetchDetails(true); // Reset details fetch state
-    setTimeout(() => {
-      mutateSerialDetails();
-    }, 50);
+    setSearchValue(value);
+    setShouldFetchDetails(true);
   };
+
   return (
     <>
-      <div className='flex flex-col lg:flex-row items-center gap-2 justify-between mt-5 intro-y'>
-        <h1 className='text-xl font-medium'>Serial Detail Search</h1>
-        <Input.Search
+      <div className='flex flex-col lg:flex-row items-center gap-2 justify-between mt-5 intro-y w-full'>
+        <h1 className='text-xl font-medium w-full'>Serial Detail Search</h1>
+        <AntSearchInput
           placeholder='Serial Number'
           size='large'
           value={searchValue}
-          style={{ width: 300 }}
+          style={{ width: 400 }}
           onSearch={handleSearch}
-          onChange={(e) => {
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
             setSearchValue(e.target.value);
           }}
         />

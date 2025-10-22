@@ -1,8 +1,14 @@
 import { parsePaginationParams } from '@/components/Pagination/pagination.utils';
-import { GET_SERIAL_DETAILS, GET_SERIAL_HISTORY, GET_SERIAL_LIST } from '@/constants/api-strings';
+import {
+  GET_DELIVERED_SERIALS,
+  GET_SERIAL_DETAILS,
+  GET_SERIAL_HISTORY,
+  GET_SERIAL_LIST,
+} from '@/constants/api-strings';
 import {
   FrappeGetCallDocResponse,
   FrappeGetCallListResponseWithCount,
+  GetDeliveredSerialsFilterQueryType,
   MongoFilter,
   MongoOperators,
 } from '@/types/common.types';
@@ -16,17 +22,25 @@ import dayjs from 'dayjs';
 import { SWRConfiguration, useFrappeGetCall } from 'frappe-react-sdk';
 import { useSearchParams } from 'react-router-dom';
 
-export const getSerialsList = (filterData: SerialListSearchFilterFormData | null) => {
+export const getSerialsList = (
+  filterData: SerialListSearchFilterFormData | null,
+  options?: SWRConfiguration
+) => {
   const [searchParams] = useSearchParams();
   const { limit_start, pageSize } = parsePaginationParams(searchParams);
 
   const filterQuery = buildGetSerialMongoQuery(filterData);
 
-  return useFrappeGetCall<FrappeGetCallListResponseWithCount<SerialNoDataType>>(GET_SERIAL_LIST, {
-    filter_query: filterQuery,
-    skip: limit_start,
-    limit: pageSize,
-  });
+  return useFrappeGetCall<FrappeGetCallListResponseWithCount<SerialNoDataType>>(
+    GET_SERIAL_LIST,
+    {
+      filter_query: filterQuery,
+      skip: limit_start,
+      limit: pageSize,
+    },
+    `${GET_SERIAL_LIST}_${JSON.stringify(filterData)}`,
+    options
+  );
 };
 
 export const getSerialDetails = (serial_no: string, options?: SWRConfiguration) => {
@@ -35,7 +49,7 @@ export const getSerialDetails = (serial_no: string, options?: SWRConfiguration) 
     {
       serial_no: serial_no,
     },
-    undefined,
+    `${GET_SERIAL_DETAILS}_${serial_no}`,
     options
   );
 };
@@ -46,7 +60,7 @@ export const getSerialHistory = (serial_no: string | null, options?: SWRConfigur
     {
       serial_no: serial_no,
     },
-    undefined,
+    `${GET_SERIAL_HISTORY}_${serial_no}`,
     options
   );
 };
@@ -94,4 +108,20 @@ const buildGetSerialMongoQuery = (filterData: SerialListSearchFilterFormData | n
   }
 
   return Object.keys(query).length > 0 ? JSON.stringify(query) : null;
+};
+
+export const getDeliveredSerials = (
+  filterQuery: GetDeliveredSerialsFilterQueryType,
+  options?: SWRConfiguration
+) => {
+  return useFrappeGetCall<FrappeGetCallListResponseWithCount<SerialNoDataType>>(
+    GET_DELIVERED_SERIALS,
+    {
+      filter_query: filterQuery,
+      skip: 0,
+      limit: 10,
+    },
+    `${GET_DELIVERED_SERIALS}_${JSON.stringify(filterQuery)}`,
+    options
+  );
 };

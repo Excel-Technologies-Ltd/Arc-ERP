@@ -7,7 +7,7 @@ import {
 import { useForm } from 'react-hook-form';
 import dayjs from 'dayjs';
 import { useMemo, useEffect } from 'react';
-import { AssignSerialFormData, SerialItemType } from '@/types/pages/purchase';
+import { AssignSerialFormData } from '@/types/pages/purchase';
 import { PurchaseDetailsCard, PurchaseDetailsSerialTables } from '@/features/purchase';
 import { useNotify } from '@/hooks/useNotify';
 import { calculateRangeTotal, Extract_Frappe_Error } from '@/utils/helper';
@@ -20,6 +20,12 @@ import AntButton from '@/components/Base/Button/AntButton';
 import { handleModal } from '@/stores/modalSlice';
 import AntModal from '@/components/Modal/AntModal';
 import ResetSerialUi from '@/features/shared/ResetSerialUi';
+import { makeSerialTableDataMergeItems } from '@/features/helpers/utils';
+import { PURCHASE_CUSTOM_STATUS } from '@/constants/app-strings';
+import AlertComponent from '@/components/Base/Alert';
+import AntCustomTable from '@/components/Table/AntCustomTable';
+import { PurchaseInvoiceItem } from '@/types/Accounts/PurchaseInvoiceItem';
+import DeliveredSerialUi from '@/features/shared/DeliveredSerialUi';
 
 const mapApiToForm = (pi?: PurchaseInvoice): AssignSerialFormData => ({
   warehouse: pi?.set_warehouse ?? undefined,
@@ -39,6 +45,7 @@ const ViewPurchase = () => {
   const {
     data: purchaseInvoiceDetails,
     isLoading,
+    error: purchaseInvoiceError,
     mutate,
   } = getPurchaseInvoiceDetails(invoice_number ?? '');
   const { call: SerialAssignCall, loading: isLoadingSerialAssign } = postSerialAssign();
@@ -88,29 +95,10 @@ const ViewPurchase = () => {
     dispatch(clearAllSerialTableData());
   };
 
-  // Item Merge
-  const MakeMergeItems = useMemo(() => {
-    return serialTableData.reduce(
-      (acc, curr) => {
-        const key = curr.item_name;
-        if (!acc[key]) {
-          acc[key] = { ...curr };
-        } else {
-          // Sum the quantities for items with same name and amount
-          acc[key].qty += curr.qty;
-          // Sum the amounts for merged items
-          acc[key].amount += curr.amount;
-          // Merge serial_with_mac arrays instead of separate arrays
-          acc[key].serial_with_mac = [...acc[key].serial_with_mac, ...curr.serial_with_mac];
-        }
-        return acc;
-      },
-      {} as Record<string, SerialItemType>
-    );
-  }, [serialTableData]);
-
   // Handle Submit
   const onSubmit = async (data: AssignSerialFormData) => {
+    const MakeMergeItems = makeSerialTableDataMergeItems(serialTableData);
+
     if (Object.values(MakeMergeItems).length === 0) {
       notify.error({ message: 'No items to assign' });
       return;
@@ -158,35 +146,56 @@ const ViewPurchase = () => {
 
   // Render Loader
   if (isLoading) return <LottieLoader pageLoader />;
+  if (purchaseInvoiceError)
+    return (
+      <AlertComponent variant='soft-danger' className='text-center text-2xl font-bold mt-5'>
+        {Extract_Frappe_Error(purchaseInvoiceError)}
+      </AlertComponent>
+    );
+
+  const isCompleted =
+    purchaseInvoiceDetails?.message.custom_excel_status === PURCHASE_CUSTOM_STATUS.COMPLETED;
+  const isCancelled =
+    purchaseInvoiceDetails?.message.custom_excel_status === PURCHASE_CUSTOM_STATUS.CANCELLED;
+  const isSubmitted =
+    purchaseInvoiceDetails?.message.custom_excel_status === PURCHASE_CUSTOM_STATUS.SUBMITTED;
+
+  const hasReceiptDataWithQuantity = purchaseInvoiceDetails?.message.items.some((item) =>
+    item.receipt_data?.some((r) => r.qty > 0)
+  );
 
   return (
     <>
       <div className='flex flex-col items-center mt-8 intro-y sm:flex-row'>
         <h2 className='mr-auto text-lg font-medium'>Transaction Details</h2>
         <div className='flex w-full mt-4 sm:w-auto sm:mt-0'>
-          <AntButton
-            color='red'
-            variant='solid'
-            className='mr-2'
-            onClick={() =>
-              dispatch(
-                handleModal({
-                  isOpen: true,
-                  type: 'purchase_serial_reset',
-                })
-              )
-            }
-          >
-            Reset
-          </AntButton>
-          <AntButton
-            color='primary'
-            variant='solid'
-            onClick={handleSubmit(onSubmit)}
-            loading={isLoadingSerialAssign}
-          >
-            Submit
-          </AntButton>
+          {!isCancelled && (
+            <AntButton
+              color='red'
+              variant='solid'
+              className='mr-2'
+              onClick={() =>
+                dispatch(
+                  handleModal({
+                    isOpen: true,
+                    type: 'purchase_serial_reset',
+                  })
+                )
+              }
+            >
+              Reset
+            </AntButton>
+          )}
+          {isSubmitted && (
+            <AntButton
+              color='primary'
+              variant='solid'
+              onClick={handleSubmit(onSubmit)}
+              loading={isLoadingSerialAssign}
+            >
+              Submit
+            </AntButton>
+          )}
         </div>
       </div>
       {/* BEGIN: Transaction Details */}
@@ -196,25 +205,54 @@ const ViewPurchase = () => {
           {purchaseInvoiceDetails && <PurchaseDetailsCard data={purchaseInvoiceDetails?.message} />}
 
           {/* Serial Details Box */}
-          <div className='p-5 rounded-md box mt-5'>
-            <div className='flex items-center pb-5 mb-5 border-b border-slate-200/60 dark:border-darkmode-400'>
-              <div className='text-base font-medium truncate'>Serial Assign</div>
+          {isSubmitted && (
+            <div className='p-5 rounded-md box mt-5'>
+              <div className='flex items-center pb-5 mb-5 border-b border-slate-200/60 dark:border-darkmode-400'>
+                <div className='text-base font-medium truncate'>Serial Assign</div>
+              </div>
+              <div className='space-y-4 w-full'>
+                <SerialAssignForm
+                  control={control}
+                  items={purchaseInvoiceDetails?.message.items || []}
+                />
+                <p className='text-lg text-primary'>Total : {total}</p>
+              </div>
             </div>
-            <div className='space-y-4 w-full'>
-              <SerialAssignForm
-                control={control}
-                items={purchaseInvoiceDetails?.message.items || []}
-              />
-              <p className='text-lg text-primary'>Total : {total}</p>
-            </div>
-          </div>
+          )}
         </div>
         <div className='col-span-12 lg:col-span-7 2xl:col-span-8 intro-x'>
-          <PurchaseDetailsSerialTables
-            data={purchaseInvoiceDetails?.message}
-            control={control}
-            setValue={setValue}
-          />
+          {isSubmitted && (
+            <PurchaseDetailsSerialTables
+              data={purchaseInvoiceDetails?.message}
+              control={control}
+              setValue={setValue}
+            />
+          )}
+          {isCompleted && (
+            <AlertComponent variant='soft-primary' className='text-center text-2xl font-bold'>
+              All serials assigned
+            </AlertComponent>
+          )}
+          {(isCompleted || hasReceiptDataWithQuantity) && (
+            <div className='mt-5 w-full'>
+              <DeliveredSerialUi />
+            </div>
+          )}
+          {isCancelled && (
+            <div className='w-full'>
+              <AntCustomTable<PurchaseInvoiceItem>
+                columns={[
+                  { title: 'Item Name', dataIndex: 'item_name', key: 'item_name' },
+                  { title: 'Quantity', dataIndex: 'qty', key: 'qty' },
+                  { title: 'Rate', dataIndex: 'rate', key: 'rate' },
+                  { title: 'Amount', dataIndex: 'amount', key: 'amount' },
+                ]}
+                rowKey={(record) => record.name}
+                data={purchaseInvoiceDetails?.message.items || []}
+                title={() => <div className='text-lg font-bold text-center'>Product Items</div>}
+              />
+            </div>
+          )}
         </div>
       </div>
       {/* END: Transaction Details */}

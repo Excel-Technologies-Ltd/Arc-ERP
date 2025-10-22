@@ -4,7 +4,7 @@ import { SerialListSearchFilterForm, SerialListSearchtableColumns } from '@/feat
 import { getSerialsList } from '@/services/warranty/serials';
 import { SerialListSearchFilterFormData, SerialNoDataType } from '@/types/pages/warranty';
 import { ClearOutlined, CloudDownloadOutlined, SearchOutlined } from '@ant-design/icons';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 
 const SerialListSearch = () => {
@@ -12,10 +12,20 @@ const SerialListSearch = () => {
   const [appliedFilterData, setAppliedFilterData] = useState<SerialListSearchFilterFormData | null>(
     null
   );
+  const [shouldFetchData, setShouldFetchData] = useState(false);
 
   // Api Call Start - will automatically refetch when appliedFilterData changes
-  const { data, isLoading } = getSerialsList(appliedFilterData);
+  const { data, isLoading, mutate } = getSerialsList(appliedFilterData, {
+    isPaused: () => !shouldFetchData,
+  });
   // Api Call End
+
+  // Refetch Call
+  useEffect(() => {
+    if (shouldFetchData) {
+      mutate();
+    }
+  }, [shouldFetchData, mutate]);
 
   const { control, reset, handleSubmit } = useForm<SerialListSearchFilterFormData>({
     mode: 'onChange',
@@ -38,6 +48,7 @@ const SerialListSearch = () => {
   // handle Submit - just update state, the hook will automatically refetch
   const onSubmit = (data: SerialListSearchFilterFormData) => {
     setAppliedFilterData(data);
+    setShouldFetchData(true);
   };
 
   return (

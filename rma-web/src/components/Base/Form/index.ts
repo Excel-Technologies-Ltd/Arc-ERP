@@ -11,6 +11,7 @@ import AntUpload from './Upload/AntUpload';
 import AntInput from './FormInput/AntInput';
 import AntSelect from './FormSelect/AntSelect';
 import AntCheckBox from './FormCheck/AntCheckBox';
+import AntSearchInput from './FormInput/AntSearchInput';
 
 export {
   FormCheck,
@@ -26,4 +27,5 @@ export {
   AntInput,
   AntSelect,
   AntCheckBox,
+  AntSearchInput,
 };
