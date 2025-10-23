@@ -14,13 +14,20 @@ import { UserOutlined } from '@ant-design/icons';
 import { CgProfile } from 'react-icons/cg';
 import { LuLogOut } from 'react-icons/lu';
 import { getCurrentUser } from '@/services/user/user';
+import { useEffect } from 'react';
 
 function Main() {
   const { logout, currentUser } = useFrappeAuth();
   const dispatch = useAppDispatch();
   const notify = useNotify();
   const activeDarkMode = useAppSelector(selectDarkMode);
-  const { data: currentUserDetails } = getCurrentUser(currentUser || '');
+  const { data: currentUserDetails, mutate } = getCurrentUser(currentUser || '');
+
+  useEffect(() => {
+    if (currentUser) {
+      mutate();
+    }
+  }, [currentUser, mutate]);
 
   const setDarkModeClass = () => {
     const el = document.querySelectorAll('html')[0] as any;

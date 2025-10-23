@@ -27,8 +27,10 @@ function Main() {
     formState: { errors, isSubmitting },
   } = useForm({
     defaultValues: {
-      username: 'jahidhossain',
-      password: 'jahidjr#$420',
+      username: '',
+      password: '',
+      // username: 'jahidhossain',
+      // password: 'jahidjr#$420',
     },
     resolver: zodResolver(schema),
   });
