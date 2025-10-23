@@ -69,15 +69,8 @@ const ViewPurchase = () => {
 
   // Calculate Total Range safely without notifications during render
   const [from, to] = watch(['fromRange', 'toRange']);
-  const { total, error } = useMemo(() => calculateRangeTotal(from, to), [from, to]);
+  const { total } = useMemo(() => calculateRangeTotal(from, to), [from, to]);
   const serialTableData = useAppSelector(selectSerialTableData);
-
-  // Handle notifications in useEffect to avoid setState during render
-  useEffect(() => {
-    if (error && from && to) {
-      notify.error({ message: error });
-    }
-  }, [error, from, to, notify]);
 
   // Update totalRange field whenever fromRange or toRange changes
   useEffect(() => {

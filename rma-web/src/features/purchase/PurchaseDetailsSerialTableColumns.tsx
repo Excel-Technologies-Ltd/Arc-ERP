@@ -112,6 +112,7 @@ export const PurchaseDetailsSerialTableColumns = (): TableProps<SerialItemType>[
         return (
           <AntInput
             type='text'
+            isCapitalised
             value={value?.[0]?.serial_no || ''}
             placeholder='Enter Serial'
             size='small'
@@ -183,8 +184,7 @@ export const PurchaseDetailsSerialTableColumns = (): TableProps<SerialItemType>[
       title: 'Actions',
       key: 'actions',
       width: 80,
-      render: (_, record, index) => {
-        console.log(record);
+      render: (_, __, index) => {
         return (
           <Button onClick={() => handleSerialDelete(index)} variant='outline-danger' size='sm'>
             <DeleteOutlined />

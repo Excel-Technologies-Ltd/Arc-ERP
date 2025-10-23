@@ -1,7 +1,7 @@
 import AntDatePicker from '@/components/Base/DatePicker/AntDatePicker';
 import AntSelect from '@/components/Base/Form/FormSelect/AntSelect';
 import { RenderController } from '@/lib/hook-form/RenderController';
-import { Control } from 'react-hook-form';
+import { Control, useWatch } from 'react-hook-form';
 import AntInput from '@/components/Base/Form/FormInput/AntInput';
 import { AssignSerialFormData } from '@/types/pages/purchase';
 import { AntUpload } from '@/components/Base/Form';
@@ -9,6 +9,9 @@ import { getWarehouseDropdownList } from '@/services/common/dropdownApi';
 import { PurchaseInvoiceItem } from '@/types/Accounts/PurchaseInvoiceItem';
 import { useSerialFileUploadHandler } from '../helpers/handlers';
 import useDebouncedSearch from '@/hooks/debounce/useDebounceSearch';
+// import { useMemo } from 'react';
+import { calculateRangeTotal } from '@/utils/helper';
+import { useNotify } from '@/hooks/useNotify';
 
 const SerialAssignForm = ({
   control,
@@ -17,6 +20,7 @@ const SerialAssignForm = ({
   control: Control<AssignSerialFormData>;
   items: PurchaseInvoiceItem[];
 }) => {
+  const notify = useNotify();
   // Api Call start
   // Warehouse Dropdown Fetch
   const {
@@ -27,8 +31,22 @@ const SerialAssignForm = ({
   });
   // Api Call end
 
+  const { fromRange, toRange } = useWatch({ control });
+  // console.log(fromRange, toRange);
+  // const { total, error } = useMemo(
+  //   () => calculateRangeTotal(fromRange ?? '', toRange ?? ''),
+  //   [fromRange, toRange]
+  // );
+
   // Handle File Upload
   const { handleBeforeFileUpload, isFileLoading } = useSerialFileUploadHandler(items, control);
+
+  const handleOnBlurCapture = () => {
+    const { error } = calculateRangeTotal(fromRange ?? '', toRange ?? '');
+    if (error) {
+      notify.error({ message: error });
+    }
+  };
 
   return (
     <>
@@ -79,7 +97,13 @@ const SerialAssignForm = ({
       {RenderController<AssignSerialFormData>(
         control,
         'toRange',
-        <AntInput type='text' placeholder='To Range' size='middle' isCapitalised />
+        <AntInput
+          type='text'
+          placeholder='To Range'
+          size='middle'
+          isCapitalised
+          onBlurCapture={handleOnBlurCapture}
+        />
       )}
     </>
   );

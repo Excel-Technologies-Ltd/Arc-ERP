@@ -16,12 +16,20 @@ export const SerialListSearchtableColumns = (): TableColumn<SerialNoDataType>[] 
       render: (value) => ColumnLink(`${URLViewSerialSearch(value.toString())}`, value.toString()),
     },
     {
+      key: 'mac_no',
+      title: 'MAC NO',
+    },
+    {
       key: 'item_name',
       title: 'ITEM NAME',
     },
     {
       key: 'item_code',
       title: 'ITEM CODE',
+    },
+    {
+      key: 'brand',
+      title: 'BRAND',
     },
     {
       key: 'warehouse',
@@ -42,6 +50,10 @@ export const SerialListSearchtableColumns = (): TableColumn<SerialNoDataType>[] 
     {
       key: 'supplier',
       title: 'SUPPLIER',
+    },
+    {
+      key: 'purchase_date',
+      title: 'PURCHASE DATE',
     },
   ];
 };
