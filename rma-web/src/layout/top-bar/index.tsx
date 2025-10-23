@@ -1,8 +1,5 @@
 import { Link } from 'react-router-dom';
 import logoUrl from '@/assets/images/logo.svg';
-import { Menu, Popover } from '@/components/Base/Headless';
-import fakerData from '@/utils/faker';
-import _ from 'lodash';
 import clsx from 'clsx';
 import { useFrappeAuth } from 'frappe-react-sdk';
 import { resetPermissions } from '@/stores/permissionSlice';
@@ -12,23 +9,18 @@ import Breadcrumbs from './BreadCumbs';
 import { selectDarkMode } from '@/stores/darkModeSlice';
 import { useAppDispatch, useAppSelector } from '@/stores/hooks';
 import { switchDarkMode } from './toggle.animate';
+import { Avatar, Dropdown, MenuProps } from 'antd';
+import { UserOutlined } from '@ant-design/icons';
+import { CgProfile } from 'react-icons/cg';
+import { LuLogOut } from 'react-icons/lu';
+import { getCurrentUser } from '@/services/user/user';
 
 function Main() {
-  const { logout } = useFrappeAuth();
+  const { logout, currentUser } = useFrappeAuth();
   const dispatch = useAppDispatch();
   const notify = useNotify();
   const activeDarkMode = useAppSelector(selectDarkMode);
-
-  // handle logout
-  const handleLogout = async () => {
-    await logout().then(() => {
-      dispatch(resetPermissions());
-
-      notify.success({
-        message: 'Log Out Successfully',
-      });
-    });
-  };
+  const { data: currentUserDetails } = getCurrentUser(currentUser || '');
 
   const setDarkModeClass = () => {
     const el = document.querySelectorAll('html')[0] as any;
@@ -36,6 +28,96 @@ function Main() {
   };
 
   setDarkModeClass();
+
+  const handleMenuClick = async ({ key }: { key: string }) => {
+    if (key === 'logout') {
+      await logout().then(() => {
+        dispatch(resetPermissions());
+        notify.success({
+          message: 'Log Out Successfully',
+        });
+      });
+    }
+  };
+
+  // Sample notification data
+  const notifications = [
+    {
+      id: 1,
+      title: 'New message received',
+      description: 'John sent you a message',
+      time: '5 minutes ago',
+      unread: false,
+    },
+    {
+      id: 2,
+      title: 'System update',
+      description: 'Your system has been updated successfully',
+      time: '1 hour ago',
+      unread: false,
+    },
+    {
+      id: 3,
+      title: 'Payment received',
+      description: 'Payment of $500 has been credited',
+      time: '2 hours ago',
+      unread: false,
+    },
+  ];
+
+  const items: MenuProps['items'] = [
+    {
+      key: 'header',
+      label: (
+        <div className='flex items-center justify-between px-2 py-2 border-b border-gray-200 dark:border-slate-700'>
+          <h3 className='text-base font-semibold text-gray-900 dark:text-white'>Notifications</h3>
+          <span className='px-2 py-1 text-xs font-medium text-white bg-blue-500 rounded-full'>
+            {notifications.filter((n) => !n.unread).length}
+          </span>
+        </div>
+      ),
+      disabled: true,
+      className: '!cursor-default hover:!bg-transparent',
+    },
+
+    ...notifications.map((notification) => ({
+      key: notification.id,
+      label: (
+        <div
+          className={`py-2 px-2 ${notification.unread ? 'bg-blue-50 dark:bg-slate-700/50' : ''}`}
+        >
+          <div className='flex items-start gap-3'>
+            {notification.unread && (
+              <div className='w-2 h-2 mt-2 bg-blue-500 rounded-full flex-shrink-0'></div>
+            )}
+            <div className='flex-1 min-w-0'>
+              <p className='text-sm font-medium text-gray-900 dark:text-white'>
+                {notification.title}
+              </p>
+              <p className='text-sm text-gray-500 dark:text-slate-400 mt-1'>
+                {notification.description}
+              </p>
+              <p className='text-xs text-gray-400 dark:text-slate-500 mt-2'>{notification.time}</p>
+            </div>
+          </div>
+        </div>
+      ),
+    })),
+    {
+      type: 'divider',
+      className: 'my-0',
+    },
+    {
+      key: 'footer',
+      label: (
+        <div className='py-2 text-center'>
+          <span className='text-sm font-medium text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300'>
+            View all notifications
+          </span>
+        </div>
+      ),
+    },
+  ];
 
   return (
     <>
@@ -73,77 +155,60 @@ function Main() {
               <CiDark className='w-5 h-5 dark:text-slate-500 text-white/70' />
             </button>
           )}
-          {/* END: Dark Mode */}
-          {/* BEGIN: Notifications */}
-          <Popover className='mr-4 intro-x sm:mr-6'>
-            <Popover.Button
-              className="
-              relative text-white/70 outline-none block
-              before:content-[''] before:w-[8px] before:h-[8px] before:rounded-full before:absolute before:top-[-2px] before:right-0 before:bg-danger
-            "
+
+          <button className='mr-4 intro-x sm:mr-6'>
+            <Dropdown
+              menu={{
+                items,
+              }}
+              trigger={['click']}
             >
-              <IoIosNotificationsOutline className='w-5 h-5 dark:text-slate-500' />
-            </Popover.Button>
-            <Popover.Panel className='w-[280px] sm:w-[350px] p-5 mt-2'>
-              <div className='mb-5 font-medium'>Notifications</div>
-              {_.take(fakerData, 5).map((faker, fakerKey) => (
-                <div
-                  key={fakerKey}
-                  className={clsx([
-                    'cursor-pointer relative flex items-center',
-                    { 'mt-5': fakerKey },
-                  ])}
-                >
-                  <div className='relative flex-none w-12 h-12 mr-1 image-fit'>
-                    <img
-                      alt='Midone Tailwind HTML Admin Template'
-                      className='rounded-full'
-                      src={faker.photos[0]}
-                    />
-                    <div className='absolute bottom-0 right-0 w-3 h-3 border-2 border-white rounded-full bg-success dark:border-darkmode-600'></div>
-                  </div>
-                  <div className='ml-2 overflow-hidden'>
-                    <div className='flex items-center'>
-                      <a href='' className='mr-5 font-medium truncate'>
-                        {faker.users[0].name}
-                      </a>
-                      <div className='ml-auto text-xs text-slate-400 whitespace-nowrap'>
-                        {faker.times[0]}
+              <IoIosNotificationsOutline className='w-5 h-5 dark:text-slate-500 text-white/70' />
+            </Dropdown>
+          </button>
+
+          <button className='relative block overflow-hidden intro-x'>
+            <Dropdown
+              onOpenChange={() => {}}
+              menu={{
+                items: [
+                  {
+                    label: (
+                      <div className='flex items-center space-x-3'>
+                        <Avatar style={{ backgroundColor: '#F07416' }} icon={<UserOutlined />} />
+                        <div>
+                          <div className='font-semibold'>
+                            {`${currentUserDetails?.first_name || ''} ${currentUserDetails?.last_name || ''}`}
+                          </div>
+                          <div className='text-sm text-gray-500'>
+                            {currentUserDetails?.email || 'admin@gmail.com'}
+                          </div>
+                        </div>
                       </div>
-                    </div>
-                    <div className='w-full truncate text-slate-500 mt-0.5'>
-                      {faker.news[0].shortContent}
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </Popover.Panel>
-          </Popover>
-          {/* END: Notifications */}
-          {/* BEGIN: Account Menu */}
-          <Menu>
-            <Menu.Button className='block w-8 h-8 overflow-hidden rounded-full shadow-lg image-fit zoom-in intro-x'>
-              <img alt='Midone Tailwind HTML Admin Template' src={fakerData[9].photos[0]} />
-            </Menu.Button>
-            <Menu.Items className='w-56 mt-px relative bg-primary/80 before:block before:absolute before:bg-black before:inset-0 before:rounded-md before:z-[-1] text-white'>
-              <Menu.Header className='font-normal'>
-                <div className='font-medium'>{fakerData[0].users[0].name}</div>
-                <div className='text-xs text-white/70 mt-0.5 dark:text-slate-500'>
-                  {fakerData[0].jobs[0]}
-                </div>
-              </Menu.Header>
-              <Menu.Divider className='bg-white/[0.08]' />
-              <Menu.Item className='hover:bg-white/5'>Profile</Menu.Item>
-              <Menu.Item className='hover:bg-white/5'>Add Account</Menu.Item>
-              <Menu.Item className='hover:bg-white/5'>Reset Password</Menu.Item>
-              <Menu.Item className='hover:bg-white/5'>Help</Menu.Item>
-              <Menu.Divider className='bg-white/[0.08]' />
-              <Menu.Item className='hover:bg-white/5' onClick={handleLogout}>
-                Logout
-              </Menu.Item>
-            </Menu.Items>
-          </Menu>
-          {/* END: Account Menu */}
+                    ),
+                    key: 'user-info',
+                  },
+                  { type: 'divider' },
+                  {
+                    label: 'Profile',
+                    key: 'profile',
+                    icon: <CgProfile className='text-gray-400' size={20} />,
+                    disabled: true,
+                  },
+                  { type: 'divider' },
+                  {
+                    label: 'Log out',
+                    key: 'logout',
+                    icon: <LuLogOut className='text-gray-400' size={20} />,
+                  },
+                ],
+                onClick: handleMenuClick,
+              }}
+              trigger={['click']}
+            >
+              <Avatar shape='circle' icon={<UserOutlined />} />
+            </Dropdown>
+          </button>
         </div>
       </div>
     </>

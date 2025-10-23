@@ -115,7 +115,10 @@ export const convertGroupedDataToSerials = (
     item_code: group.item_code,
     qty: group.qty,
     serial_with_mac: group.serial_with_mac, // Use the new structure
-    warranty_date: warrantyDate,
+    warranty_date: warrantyDate.add(
+      Number(group.matchingItem?.custom_purchase_warranty_period_in_months) || 0,
+      'month'
+    ),
     has_serial_no: group.has_serial_no,
     amount: group.matchingItem?.amount || 0,
     rate: group.matchingItem?.rate || 0,

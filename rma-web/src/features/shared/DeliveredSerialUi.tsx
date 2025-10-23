@@ -13,7 +13,6 @@ const DeliveredSerialUi = () => {
   const [fetchData, setFetchData] = useState(false);
   const [searchValue, setSearchValue] = useState<string | null>(null);
   const { page, pageSize, limitStart, handlePageChange } = usePagination();
-
   // APi Call Start Here
   const { data, isLoading, mutate } = getDeliveredSerials(
     {
@@ -36,6 +35,7 @@ const DeliveredSerialUi = () => {
   }, [fetchData, mutate, page]);
 
   const deliveredSerialsColumn = DeliveredSerialsTableColumn();
+
   return (
     <>
       <AntCustomTable<SerialNoDataType>
