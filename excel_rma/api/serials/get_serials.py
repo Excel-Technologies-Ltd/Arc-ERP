@@ -54,6 +54,7 @@ def get_serials_list(skip=0, limit=10, sort=None, filter_query=None):
     ):
         del where["purchase_invoice_name"]
 
+    print(where)
     # Handle showBoth logic
     if show_both:
         # Remove these fields if they exist

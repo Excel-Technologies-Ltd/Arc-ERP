@@ -46,4 +46,7 @@ SERIAL_FILTER_KEYS = [
     "sales_invoice_name",
     "purchase_invoice_name",
     "sales_return_name",
+    "mac_no",
+    "brand",
+    "purchase_date",
 ]
