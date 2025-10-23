@@ -1,3 +1,4 @@
+import time
 from excel_rma.rma_api_helpers.purchase.purchase_serial_helper import (
     build_mongo_docs,
     build_pr_payload,
@@ -109,6 +110,10 @@ def cancel_serial(**payload):
                         "Unreconcile Payment Entries",
                     ],
                 )
+
+            # Cancel Purchase Order Document
+            po_doc_new = frappe.get_doc("Purchase Order", po_ref)
+            po_doc_new.cancel()
 
             # Delete MongoDB records
             serial_collection.delete_many({"purchase_invoice_name": pi_name})

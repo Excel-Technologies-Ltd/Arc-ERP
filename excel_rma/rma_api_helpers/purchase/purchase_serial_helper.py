@@ -260,7 +260,7 @@ def build_pr_payload(
         PurchaseReceiptPayload, payload_data, "build_pr_payload - payload"
     )
 
-    return validated_payload.dict()
+    return validated_payload.model_dump()
 
 
 def build_mongo_docs(
@@ -321,7 +321,7 @@ def build_mongo_docs(
                 f"build_mongo_docs - serial {sn_obj.serial_no}",
             )
 
-            mongo_docs.append(validated_doc.dict())
+            mongo_docs.append(validated_doc.model_dump())
 
     return mongo_docs
 
@@ -491,7 +491,7 @@ def _create_serial_history(mongo_docs: List[Dict[str, Any]], pi_name: str) -> No
                 history_data,
                 f"_create_serial_history - serial {doc.get('serial_no')}",
             )
-            history_docs.append(validated_history.dict())
+            history_docs.append(validated_history.model_dump())
         except Exception as e:
             frappe.log_error(
                 f"Failed to validate history for serial {doc.get('serial_no')}: {str(e)}",
