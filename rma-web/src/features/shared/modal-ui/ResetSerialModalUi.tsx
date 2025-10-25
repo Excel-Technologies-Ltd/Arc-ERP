@@ -1,6 +1,6 @@
 import { AiOutlineClose, AiOutlineWarning } from '@/components/Base/Icons';
 
-const ResetSerialUi = ({ bulletPoints }: { bulletPoints: string[] }) => {
+const ResetSerialModalUi = ({ bulletPoints }: { bulletPoints: string[] }) => {
   return (
     <>
       <div>
@@ -49,4 +49,4 @@ const ResetSerialUi = ({ bulletPoints }: { bulletPoints: string[] }) => {
   );
 };
 
-export default ResetSerialUi;
+export default ResetSerialModalUi;

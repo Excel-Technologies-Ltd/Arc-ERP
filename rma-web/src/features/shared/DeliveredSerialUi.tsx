@@ -7,9 +7,14 @@ import { useParams } from 'react-router-dom';
 import { SerialNoDataType } from '@/types/pages/warranty';
 import { useEffect, useState } from 'react';
 import { usePagination } from '@/hooks/usePagination';
+import { useAppDispatch } from '@/stores/hooks';
+import { handleModal } from '@/stores/modalSlice';
+import { MODAL_TYPE } from '@/constants/app-strings';
+import DumpModalUi from './modal-ui/DumpModalUi';
 
 const DeliveredSerialUi = () => {
   const params = useParams();
+  const dispatch = useAppDispatch();
   const [fetchData, setFetchData] = useState(false);
   const [searchValue, setSearchValue] = useState<string | null>(null);
   const { page, pageSize, limitStart, handlePageChange } = usePagination();
@@ -65,7 +70,19 @@ const DeliveredSerialUi = () => {
                   setSearchValue(value);
                 }}
               />
-              <AntButton disabled size='middle' type='primary'>
+              <AntButton
+                disabled={(data?.message.data?.length ?? 0) === 0}
+                size='middle'
+                type='primary'
+                onClick={() =>
+                  dispatch(
+                    handleModal({
+                      type: MODAL_TYPE.DOWNLOAD_DELIVERED_CSV,
+                      isOpen: true,
+                    })
+                  )
+                }
+              >
                 Download CSV
               </AntButton>
               <AntButton
@@ -82,6 +99,14 @@ const DeliveredSerialUi = () => {
           </div>
         )}
         size='small'
+      />
+
+      {/* Modal */}
+      {/* Modal */}
+      <DumpModalUi<SerialNoDataType>
+        data={data?.message?.data ?? []}
+        dumpDefaultColumns={[]}
+        modalType={MODAL_TYPE.DOWNLOAD_DELIVERED_CSV}
       />
     </>
   );

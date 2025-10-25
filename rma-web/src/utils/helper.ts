@@ -171,6 +171,16 @@ const Extract_Frappe_Error = (error: FrappeError) => {
   );
 };
 
+const formatExportLabel = (snakeCase: string): string => {
+  return snakeCase
+    .trim() // Remove whitespace
+    .replace(/^_+|_+$/g, '') // Remove leading/trailing underscores
+    .replace(/([a-z])([A-Z])/g, '$1 $2') // Handle camelCase
+    .replace(/[_\-\s]+/g, ' ') // Replace underscores, hyphens, spaces with single space
+    .replace(/\b\w/g, (char) => char.toUpperCase()) // Capitalize first letter of each word
+    .trim(); // Final trim
+};
+
 export {
   cutText,
   formatDate,
@@ -187,4 +197,5 @@ export {
   toTitle,
   calculateRangeTotal,
   Extract_Frappe_Error,
+  formatExportLabel,
 };

@@ -15,3 +15,8 @@ export const PURCHASE_CUSTOM_STATUS = {
   CANCELLED: 'Cancelled',
   SUBMITTED: 'Submitted',
 };
+
+export const MODAL_TYPE = {
+  DOWNLOAD_DELIVERED_CSV: 'download-delivered-csv',
+  PURCHASE_SERIAL_RESET: 'purchase_serial_reset',
+};

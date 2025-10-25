@@ -19,13 +19,13 @@ import { useAppDispatch, useAppSelector } from '@/stores/hooks';
 import AntButton from '@/components/Base/Button/AntButton';
 import { handleModal } from '@/stores/modalSlice';
 import AntModal from '@/components/Modal/AntModal';
-import ResetSerialUi from '@/features/shared/ResetSerialUi';
 import { makeSerialTableDataMergeItems } from '@/features/helpers/utils';
-import { PURCHASE_CUSTOM_STATUS } from '@/constants/app-strings';
+import { MODAL_TYPE, PURCHASE_CUSTOM_STATUS } from '@/constants/app-strings';
 import AlertComponent from '@/components/Base/Alert';
 import AntCustomTable from '@/components/Table/AntCustomTable';
 import { PurchaseInvoiceItem } from '@/types/Accounts/PurchaseInvoiceItem';
 import DeliveredSerialUi from '@/features/shared/DeliveredSerialUi';
+import { ResetSerialModalUi } from '@/features/shared/modal-ui';
 
 const mapApiToForm = (pi?: PurchaseInvoice): AssignSerialFormData => ({
   warehouse: pi?.set_warehouse ?? undefined,
@@ -172,7 +172,7 @@ const ViewPurchase = () => {
                 dispatch(
                   handleModal({
                     isOpen: true,
-                    type: 'purchase_serial_reset',
+                    type: MODAL_TYPE.PURCHASE_SERIAL_RESET,
                   })
                 )
               }
@@ -253,11 +253,12 @@ const ViewPurchase = () => {
 
       {/* Modal */}
       <AntModal
+        modalType={MODAL_TYPE.PURCHASE_SERIAL_RESET}
         okText={isLoadingSerialCancel ? 'Resetting...' : 'Reset'}
         onOk={handleCancelSerial}
         okButtonProps={{ loading: isLoadingSerialCancel }}
       >
-        <ResetSerialUi
+        <ResetSerialModalUi
           bulletPoints={[
             'Purchase Order',
             'Purchase Invoice',
