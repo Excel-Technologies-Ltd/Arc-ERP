@@ -30,6 +30,7 @@ export const getSerialsList = (
   const { limit_start, pageSize } = parsePaginationParams(searchParams);
 
   const filterQuery = buildGetSerialMongoQuery(filterData);
+  const cacheKey = `${GET_SERIAL_LIST}_${JSON.stringify(filterData)}_${limit_start}_${pageSize}`;
 
   return useFrappeGetCall<FrappeGetCallListResponseWithCount<SerialNoDataType>>(
     GET_SERIAL_LIST,
@@ -38,7 +39,7 @@ export const getSerialsList = (
       skip: limit_start,
       limit: pageSize,
     },
-    `${GET_SERIAL_LIST}_${JSON.stringify(filterData)}`,
+    cacheKey,
     options
   );
 };
