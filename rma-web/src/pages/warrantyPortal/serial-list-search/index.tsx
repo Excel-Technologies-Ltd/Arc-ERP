@@ -1,13 +1,18 @@
 import AntButton from '@/components/Base/Button/AntButton';
 import CustomTable from '@/components/Table/CustomTable';
+import { MODAL_TYPE } from '@/constants/app-strings';
+import DumpModalUi from '@/features/shared/modal-ui/DumpModalUi';
 import { SerialListSearchFilterForm, SerialListSearchtableColumns } from '@/features/warranty';
 import { getSerialsList } from '@/services/warranty/serials';
+import { useAppDispatch } from '@/stores/hooks';
+import { handleModal } from '@/stores/modalSlice';
 import { SerialListSearchFilterFormData, SerialNoDataType } from '@/types/pages/warranty';
 import { ClearOutlined, CloudDownloadOutlined, SearchOutlined } from '@ant-design/icons';
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 
 const SerialListSearch = () => {
+  const dispatch = useAppDispatch();
   const [filterKey, setFilterKey] = useState<number>(0);
   const [appliedFilterData, setAppliedFilterData] = useState<SerialListSearchFilterFormData | null>(
     null
@@ -51,6 +56,10 @@ const SerialListSearch = () => {
     setShouldFetchData(true);
   };
 
+  const handleDownloadClick = () => {
+    dispatch(handleModal({ type: MODAL_TYPE.DOWNLOAD_SERIAL_LIST_SEARCH, isOpen: true }));
+  };
+
   return (
     <>
       <div className='flex flex-col lg:flex-row items-start gap-2 justify-between mt-5 intro-y'>
@@ -64,7 +73,13 @@ const SerialListSearch = () => {
           <AntButton icon={<SearchOutlined />} onClick={handleSubmit(onSubmit)} loading={isLoading}>
             Search
           </AntButton>
-          <AntButton icon={<CloudDownloadOutlined />}>Download CSV</AntButton>
+          <AntButton
+            icon={<CloudDownloadOutlined />}
+            disabled={(data?.message.count ?? 0) === 0}
+            onClick={handleDownloadClick}
+          >
+            Download CSV
+          </AntButton>
           <AntButton onClick={handleClear} icon={<ClearOutlined />}>
             Clear
           </AntButton>
@@ -81,6 +96,13 @@ const SerialListSearch = () => {
         />
       </div>
       {/* END: Data List */}
+
+      {/* Modal */}
+      <DumpModalUi<SerialNoDataType>
+        data={data?.message?.data ?? []}
+        dumpDefaultColumns={['item_name', 'serial_no']}
+        modalType={MODAL_TYPE.DOWNLOAD_SERIAL_LIST_SEARCH}
+      />
     </>
   );
 };

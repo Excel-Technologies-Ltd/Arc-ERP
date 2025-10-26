@@ -18,5 +18,6 @@ export const PURCHASE_CUSTOM_STATUS = {
 
 export const MODAL_TYPE = {
   DOWNLOAD_DELIVERED_CSV: 'download-delivered-csv',
-  PURCHASE_SERIAL_RESET: 'purchase_serial_reset',
+  PURCHASE_SERIAL_RESET: 'purchase-serial-reset',
+  DOWNLOAD_SERIAL_LIST_SEARCH: 'download-serial-list-search',
 };

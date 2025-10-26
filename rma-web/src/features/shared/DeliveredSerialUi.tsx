@@ -102,10 +102,9 @@ const DeliveredSerialUi = () => {
       />
 
       {/* Modal */}
-      {/* Modal */}
       <DumpModalUi<SerialNoDataType>
         data={data?.message?.data ?? []}
-        dumpDefaultColumns={[]}
+        dumpDefaultColumns={['item_name', 'serial_no']}
         modalType={MODAL_TYPE.DOWNLOAD_DELIVERED_CSV}
       />
     </>

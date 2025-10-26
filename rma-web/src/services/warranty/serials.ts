@@ -68,7 +68,6 @@ export const getSerialHistory = (serial_no: string | null, options?: SWRConfigur
 // Build MongoDB query for get serial list
 const buildGetSerialMongoQuery = (filterData: SerialListSearchFilterFormData | null) => {
   if (!filterData) return null;
-  console.log(filterData);
 
   const query: MongoFilter<SerialListSearchMongoQueryFilterTypes> = {
     item_code: null,
@@ -107,8 +106,6 @@ const buildGetSerialMongoQuery = (filterData: SerialListSearchFilterFormData | n
 
     query.purchase_date = { $gte: startDate, $lte: endDate } as MongoOperators<string>;
   }
-
-  console.log(query);
 
   return Object.keys(query).length > 0 ? JSON.stringify(query) : null;
 };

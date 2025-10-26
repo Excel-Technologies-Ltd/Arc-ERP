@@ -85,3 +85,9 @@ export type GetDeliveredSerialsFilterQueryType = {
   sales_invoice_name?: string;
   serial_no?: string;
 };
+
+export interface DumpModalUiProps<T extends Record<string, any>> {
+  data: T[];
+  dumpDefaultColumns: string[];
+  modalType: string;
+}
