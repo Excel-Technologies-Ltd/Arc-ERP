@@ -1,1 +1,0 @@
-import{U as e}from"./index-CoxI-s-T.js";const a=[{value:"completed",label:"Completed"},{value:"cancelled",label:"Cancelled"},{value:"submitted",label:"Submitted"}],t="Excel technologies Limited",E=["item_name","serial_no","mac_no"],o=e.LIST_IGNORE,_={COMPLETED:"Completed",CANCELLED:"Cancelled",SUBMITTED:"Submitted"};export{o as A,t as C,a as P,E as U,_ as a};
