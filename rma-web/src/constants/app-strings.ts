@@ -20,4 +20,6 @@ export const MODAL_TYPE = {
   DOWNLOAD_DELIVERED_CSV: 'download-delivered-csv',
   PURCHASE_SERIAL_RESET: 'purchase-serial-reset',
   DOWNLOAD_SERIAL_LIST_SEARCH: 'download-serial-list-search',
+  SALES_SERIAL_RESET: 'sales-serial-reset',
+  CUSTOMER_BRAND_LIMIT_DETAILS: 'customer-brand-limit-details',
 };

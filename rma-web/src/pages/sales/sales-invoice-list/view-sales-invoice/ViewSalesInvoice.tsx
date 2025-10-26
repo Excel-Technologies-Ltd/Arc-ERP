@@ -1,9 +1,10 @@
 import AntButton from '@/components/Base/Button/AntButton';
 import AntDrawer from '@/components/Drawer/AntDrawer';
 import AntModal from '@/components/Modal/AntModal';
+import { MODAL_TYPE } from '@/constants/app-strings';
 import { PurchaseDetailsSerialTables } from '@/features/purchase';
 import { SalesDetailsCard, SalesDetailsConnectionsView } from '@/features/sales';
-import ResetSerialUi from '@/features/shared/ResetSerialUi';
+import { ResetSerialModalUi } from '@/features/shared/modal-ui';
 import SerialAssignForm from '@/features/shared/SerialAssignForm';
 import { handleDrawer } from '@/stores/drawerSlice';
 import { useAppDispatch } from '@/stores/hooks';
@@ -49,7 +50,7 @@ const ViewSalesInvoice = () => {
               dispatch(
                 handleModal({
                   isOpen: true,
-                  type: 'sales_serial_reset',
+                  type: MODAL_TYPE.SALES_SERIAL_RESET,
                 })
               )
             }
@@ -120,8 +121,8 @@ const ViewSalesInvoice = () => {
       </AntDrawer>
 
       {/* Modal */}
-      <AntModal title='Reset Serial' okText='Reset'>
-        <ResetSerialUi
+      <AntModal modalType={MODAL_TYPE.SALES_SERIAL_RESET} title='Reset Serial' okText='Reset'>
+        <ResetSerialModalUi
           bulletPoints={[
             'Sales Invoice',
             'Delivery Notes',

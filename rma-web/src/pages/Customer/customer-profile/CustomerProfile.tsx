@@ -8,6 +8,7 @@ import AntButton from '@/components/Base/Button/AntButton';
 import { ClearOutlined, SearchOutlined } from '@ant-design/icons';
 import { CustomerDetailsModal, CustomerProfileTableColumns } from '@/features/customer';
 import { getTerritoryDropdownList } from '@/services/common/dropdownApi';
+import { MODAL_TYPE } from '@/constants/app-strings';
 
 const CustomerProfile = () => {
   const [customerName, setCustomerName] = useState<string>('');
@@ -94,6 +95,7 @@ const CustomerProfile = () => {
       </div>
 
       <AntModal
+        modalType={MODAL_TYPE.CUSTOMER_BRAND_LIMIT_DETAILS}
         footer={false}
         title={
           <div className='text-xl font-semibold text-center border-b border-gray-200 pb-2'>

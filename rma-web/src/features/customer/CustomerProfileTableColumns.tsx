@@ -1,4 +1,5 @@
 import AntButton from '@/components/Base/Button/AntButton';
+import { MODAL_TYPE } from '@/constants/app-strings';
 import { useAppDispatch } from '@/stores/hooks';
 import { handleModal } from '@/stores/modalSlice';
 import { Customer } from '@/types/Selling/Customer';
@@ -48,7 +49,9 @@ export const CustomerProfileTableColumns = (
             type='primary'
             onClick={() => {
               setCustomerName(record.customer_name);
-              dispatch(handleModal({ type: 'brand-wise-limit', isOpen: true }));
+              dispatch(
+                handleModal({ type: MODAL_TYPE.CUSTOMER_BRAND_LIMIT_DETAILS, isOpen: true })
+              );
             }}
           >
             Details
