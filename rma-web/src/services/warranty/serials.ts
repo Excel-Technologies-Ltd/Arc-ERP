@@ -22,10 +22,7 @@ import dayjs from 'dayjs';
 import { SWRConfiguration, useFrappeGetCall } from 'frappe-react-sdk';
 import { useSearchParams } from 'react-router-dom';
 
-export const getSerialsList = (
-  filterData: SerialListSearchFilterFormData | null,
-  options?: SWRConfiguration
-) => {
+export const getSerialsList = (filterData: SerialListSearchFilterFormData | null) => {
   const [searchParams] = useSearchParams();
   const { limit_start, pageSize } = parsePaginationParams(searchParams);
 
@@ -40,7 +37,9 @@ export const getSerialsList = (
       limit: pageSize,
     },
     cacheKey,
-    options
+    {
+      revalidateOnMount: false,
+    }
   );
 };
 
@@ -114,9 +113,10 @@ const buildGetSerialMongoQuery = (filterData: SerialListSearchFilterFormData | n
 export const getDeliveredSerials = (
   filterQuery: GetDeliveredSerialsFilterQueryType,
   limitStart: number,
-  pageSize: number,
-  options?: SWRConfiguration
+  pageSize: number
+  // options?: SWRConfiguration
 ) => {
+  // const cacheKey = [GET_DELIVERED_SERIALS, JSON.stringify(filterQuery), limitStart, pageSize];
   return useFrappeGetCall<FrappeGetCallListResponseWithCount<SerialNoDataType>>(
     GET_DELIVERED_SERIALS,
     {
@@ -124,7 +124,10 @@ export const getDeliveredSerials = (
       skip: limitStart,
       limit: pageSize,
     },
-    [GET_DELIVERED_SERIALS, JSON.stringify(filterQuery), limitStart, pageSize],
-    options
+    undefined,
+    {
+      revalidateOnMount: false,
+      fallbackData: null,
+    }
   );
 };

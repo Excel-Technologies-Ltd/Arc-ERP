@@ -3,17 +3,19 @@ import CustomTable from '@/components/Table/CustomTable';
 import { MODAL_TYPE } from '@/constants/app-strings';
 import DumpModalUi from '@/features/shared/modal-ui/DumpModalUi';
 import { SerialListSearchFilterForm, SerialListSearchtableColumns } from '@/features/warranty';
+import { useNotify } from '@/hooks/useNotify';
 import { getSerialsList } from '@/services/warranty/serials';
 import { useAppDispatch } from '@/stores/hooks';
 import { handleModal } from '@/stores/modalSlice';
 import { SerialListSearchFilterFormData, SerialNoDataType } from '@/types/pages/warranty';
+import { Extract_Frappe_Error } from '@/utils/helper';
 import {
   ClearOutlined,
   CloudDownloadOutlined,
   ReloadOutlined,
   SearchOutlined,
 } from '@ant-design/icons';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 
 const SerialListSearch = () => {
@@ -22,20 +24,11 @@ const SerialListSearch = () => {
   const [appliedFilterData, setAppliedFilterData] = useState<SerialListSearchFilterFormData | null>(
     null
   );
-  const [shouldFetchData, setShouldFetchData] = useState(false);
+  const notify = useNotify();
 
   // Api Call Start - will automatically refetch when appliedFilterData changes
-  const { data, isLoading, mutate } = getSerialsList(appliedFilterData, {
-    isPaused: () => !shouldFetchData,
-  });
+  const { data, isLoading, mutate, isValidating } = getSerialsList(appliedFilterData);
   // Api Call End
-
-  // Refetch Call
-  useEffect(() => {
-    if (shouldFetchData) {
-      mutate();
-    }
-  }, [shouldFetchData, mutate]);
 
   const { control, reset, handleSubmit } = useForm<SerialListSearchFilterFormData>({
     mode: 'onChange',
@@ -58,11 +51,21 @@ const SerialListSearch = () => {
   // handle Submit - just update state, the hook will automatically refetch
   const onSubmit = (data: SerialListSearchFilterFormData) => {
     setAppliedFilterData(data);
-    setShouldFetchData(true);
   };
 
   const handleDownloadClick = () => {
     dispatch(handleModal({ type: MODAL_TYPE.DOWNLOAD_SERIAL_LIST_SEARCH, isOpen: true }));
+  };
+
+  // handle Refetch
+  const handleRefetchClick = () => {
+    mutate()
+      .then(() => {
+        notify.success({ message: 'Data refetched successfully' });
+      })
+      .catch((error) => {
+        notify.error({ message: Extract_Frappe_Error(error) });
+      });
   };
 
   return (
@@ -88,7 +91,11 @@ const SerialListSearch = () => {
           <AntButton onClick={handleClear} icon={<ClearOutlined />}>
             Clear
           </AntButton>
-          <AntButton icon={<ReloadOutlined />} onClick={() => mutate()}></AntButton>
+          <AntButton
+            disabled={isValidating || !appliedFilterData}
+            icon={<ReloadOutlined spin={isValidating} />}
+            onClick={handleRefetchClick}
+          ></AntButton>
         </div>
       </div>
 

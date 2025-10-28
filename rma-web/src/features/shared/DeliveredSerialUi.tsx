@@ -29,28 +29,28 @@ const DeliveredSerialUi = () => {
       ...(searchValue && { serial_no: searchValue }),
     },
     limitStart,
-    pageSize,
-    {
-      isPaused: () => !fetchData,
-    }
+    pageSize
+    // {
+    //   isPaused: () => !fetchData,
+    // }
   );
   // Api Call End Here
 
-  // Clear all delivered serials cache on unmount
-  useEffect(() => {
-    return () => {
-      globalMutate((key) => Array.isArray(key) && key[0] === GET_DELIVERED_SERIALS, undefined, {
-        revalidate: false,
-      });
-    };
-  }, []); // Empty dependency array - only run on mount/unmount
+  // // Clear all delivered serials cache on unmount
+  // useEffect(() => {
+  //   return () => {
+  //     globalMutate((key) => Array.isArray(key) && key[0] === GET_DELIVERED_SERIALS, undefined, {
+  //       revalidate: false,
+  //     });
+  //   };
+  // }, []); // Empty dependency array - only run on mount/unmount
 
-  // Refetch Call
-  useEffect(() => {
-    if (fetchData) {
-      mutate();
-    }
-  }, [fetchData, mutate, page]);
+  // // Refetch Call
+  // useEffect(() => {
+  //   if (fetchData) {
+  //     mutate();
+  //   }
+  // }, [fetchData, mutate, page]);
 
   const deliveredSerialsColumn = DeliveredSerialsTableColumn();
 
@@ -103,7 +103,8 @@ const DeliveredSerialUi = () => {
                 type='primary'
                 loading={isLoading}
                 onClick={() => {
-                  setFetchData(true);
+                  mutate();
+                  // setFetchData(true);
                 }}
               >
                 Get Serials
