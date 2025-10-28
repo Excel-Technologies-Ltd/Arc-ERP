@@ -7,7 +7,12 @@ import { getSerialsList } from '@/services/warranty/serials';
 import { useAppDispatch } from '@/stores/hooks';
 import { handleModal } from '@/stores/modalSlice';
 import { SerialListSearchFilterFormData, SerialNoDataType } from '@/types/pages/warranty';
-import { ClearOutlined, CloudDownloadOutlined, SearchOutlined } from '@ant-design/icons';
+import {
+  ClearOutlined,
+  CloudDownloadOutlined,
+  ReloadOutlined,
+  SearchOutlined,
+} from '@ant-design/icons';
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 
@@ -83,6 +88,7 @@ const SerialListSearch = () => {
           <AntButton onClick={handleClear} icon={<ClearOutlined />}>
             Clear
           </AntButton>
+          <AntButton icon={<ReloadOutlined />} onClick={() => mutate()}></AntButton>
         </div>
       </div>
 

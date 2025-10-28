@@ -11,6 +11,8 @@ import { useAppDispatch } from '@/stores/hooks';
 import { handleModal } from '@/stores/modalSlice';
 import { MODAL_TYPE } from '@/constants/app-strings';
 import DumpModalUi from './modal-ui/DumpModalUi';
+import { useSWRConfig } from 'frappe-react-sdk';
+import { GET_DELIVERED_SERIALS } from '@/constants/api-strings';
 
 const DeliveredSerialUi = () => {
   const params = useParams();
@@ -18,6 +20,8 @@ const DeliveredSerialUi = () => {
   const [fetchData, setFetchData] = useState(false);
   const [searchValue, setSearchValue] = useState<string | null>(null);
   const { page, pageSize, limitStart, handlePageChange } = usePagination();
+  const { mutate: globalMutate } = useSWRConfig();
+
   // APi Call Start Here
   const { data, isLoading, mutate } = getDeliveredSerials(
     {
@@ -31,6 +35,15 @@ const DeliveredSerialUi = () => {
     }
   );
   // Api Call End Here
+
+  // Clear all delivered serials cache on unmount
+  useEffect(() => {
+    return () => {
+      globalMutate((key) => Array.isArray(key) && key[0] === GET_DELIVERED_SERIALS, undefined, {
+        revalidate: false,
+      });
+    };
+  }, []); // Empty dependency array - only run on mount/unmount
 
   // Refetch Call
   useEffect(() => {

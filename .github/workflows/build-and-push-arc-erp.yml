@@ -37,11 +37,7 @@ jobs:
             {
             "url": "https://github.com/frappe/hrms.git",
             "branch": "v14.21.0"
-            },
-            {
-            "url": "https://gitlab.com/excel.azmin/whitelabel.git",
-            "branch": "main"
-            },
+            },  
             {
             "url": "https://github.com/Excel-Technologies-Ltd/Excel-ERPNext.git",
             "branch": "version-14"

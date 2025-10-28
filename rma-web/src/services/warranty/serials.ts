@@ -124,7 +124,7 @@ export const getDeliveredSerials = (
       skip: limitStart,
       limit: pageSize,
     },
-    `${GET_DELIVERED_SERIALS}_${JSON.stringify(filterQuery)}_${limitStart}_${pageSize}`,
+    [GET_DELIVERED_SERIALS, JSON.stringify(filterQuery), limitStart, pageSize],
     options
   );
 };

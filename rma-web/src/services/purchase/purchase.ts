@@ -26,6 +26,7 @@ export const getPurchaseInvoiceList = ({
   const toDate = date_range ? dayjs(date_range[1]).format('YYYY-MM-DD') : null;
 
   const conditions = [
+    ['docstatus', '=', 1],
     ...(invoice_number ? [['name', 'like', `%${invoice_number}%`] as Filter] : []),
     ...(status ? [['custom_excel_status', 'like', `%${status}%`] as Filter] : []),
     ...(supplier ? [['supplier', 'like', `%${supplier}%`] as Filter] : []),
@@ -43,6 +44,10 @@ export const getPurchaseInvoiceList = ({
         field: 'creation',
         order: 'desc',
       },
+    },
+    undefined,
+    {
+      revalidateOnFocus: true,
     }
   );
 };
