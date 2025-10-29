@@ -39,6 +39,7 @@ export const getSerialsList = (filterData: SerialListSearchFilterFormData | null
     cacheKey,
     {
       revalidateOnMount: false,
+      revalidateIfStale: false,
     }
   );
 };
@@ -116,7 +117,7 @@ export const getDeliveredSerials = (
   pageSize: number
   // options?: SWRConfiguration
 ) => {
-  // const cacheKey = [GET_DELIVERED_SERIALS, JSON.stringify(filterQuery), limitStart, pageSize];
+  const cacheKey = [GET_DELIVERED_SERIALS, JSON.stringify(filterQuery), limitStart, pageSize];
   return useFrappeGetCall<FrappeGetCallListResponseWithCount<SerialNoDataType>>(
     GET_DELIVERED_SERIALS,
     {
@@ -124,10 +125,9 @@ export const getDeliveredSerials = (
       skip: limitStart,
       limit: pageSize,
     },
-    undefined,
+    cacheKey,
     {
       revalidateOnMount: false,
-      fallbackData: null,
     }
   );
 };

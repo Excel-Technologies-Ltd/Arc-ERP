@@ -5,34 +5,31 @@ import AntButton from '@/components/Base/Button/AntButton';
 import { getDeliveredSerials } from '@/services/warranty/serials';
 import { useParams } from 'react-router-dom';
 import { SerialNoDataType } from '@/types/pages/warranty';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { usePagination } from '@/hooks/usePagination';
 import { useAppDispatch } from '@/stores/hooks';
 import { handleModal } from '@/stores/modalSlice';
 import { MODAL_TYPE } from '@/constants/app-strings';
 import DumpModalUi from './modal-ui/DumpModalUi';
-import { useSWRConfig } from 'frappe-react-sdk';
-import { GET_DELIVERED_SERIALS } from '@/constants/api-strings';
+// import { useSWRConfig } from 'frappe-react-sdk';
+// import { GET_DELIVERED_SERIALS } from '@/constants/api-strings';
 
 const DeliveredSerialUi = () => {
   const params = useParams();
   const dispatch = useAppDispatch();
-  const [fetchData, setFetchData] = useState(false);
+  // const [fetchData, setFetchData] = useState(false);
   const [searchValue, setSearchValue] = useState<string | null>(null);
   const { page, pageSize, limitStart, handlePageChange } = usePagination();
-  const { mutate: globalMutate } = useSWRConfig();
+  // const { mutate: globalMutate } = useSWRConfig();
 
   // APi Call Start Here
-  const { data, isLoading, mutate } = getDeliveredSerials(
+  const { data, isLoading, mutate, isValidating } = getDeliveredSerials(
     {
       ...(params?.invoice_number && { purchase_invoice_name: params?.invoice_number }),
       ...(searchValue && { serial_no: searchValue }),
     },
     limitStart,
     pageSize
-    // {
-    //   isPaused: () => !fetchData,
-    // }
   );
   // Api Call End Here
 
@@ -101,13 +98,12 @@ const DeliveredSerialUi = () => {
               <AntButton
                 size='middle'
                 type='primary'
-                loading={isLoading}
+                loading={isLoading || isValidating}
                 onClick={() => {
                   mutate();
-                  // setFetchData(true);
                 }}
               >
-                Get Serials
+                {isValidating ? 'Refetching...' : 'Get Serials'}
               </AntButton>
             </div>
           </div>
