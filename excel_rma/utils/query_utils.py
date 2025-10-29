@@ -43,7 +43,6 @@ def parse_list_params(
     limit_start = cint(limit_start)
     limit = cint(limit)
 
-    print(limit, "sdfsdfsdfkhsdjfhksakfhjkasfasfjksdhj")
 
     return {
         "filters": filters,
