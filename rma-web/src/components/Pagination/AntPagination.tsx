@@ -26,6 +26,7 @@ const AntPagination: React.FC<AntPaginationProps> = ({ totalItems }) => {
       pageSizeOptions={PAGE_SIZE_OPTIONS}
       pageSize={pageSize}
       current={page}
+      className='mt-3 md:mt-0'
     />
   );
 };

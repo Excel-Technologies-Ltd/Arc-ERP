@@ -1,5 +1,5 @@
 html {
-  &.dark {
+  /* &.dark {
     body {
       color: theme('colors.slate.300');
       *,
@@ -8,13 +8,13 @@ html {
         border-color: theme('colors.white' / 5%);
       }
     }
-  }
+  } */
   body {
     letter-spacing: theme('letterSpacing.wide');
     font-size: theme('fontSize.sm');
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    font-family: theme('fontFamily.roboto');
+    font-family: theme('fontFamily.ubuntu');
     color: theme('colors.slate.600');
     line-height: theme('lineHeight.5');
   }

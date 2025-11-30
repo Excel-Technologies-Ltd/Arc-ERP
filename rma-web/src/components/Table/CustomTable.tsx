@@ -31,8 +31,8 @@ const CustomTable = <T extends Record<string, any>>({
 
   return (
     <>
-      <div className='max-w-full relative'>
-        <Table className='max-w-full border-spacing-y-[10px] border-separate'>
+      <div className='max-w-full relative overflow-auto intro-y 2xl:overflow-visible'>
+        <Table className='max-w-full border-spacing-y-[10px] border-separate '>
           <TableHeader<T> headers={tableHeader} />
           <Table.Tbody>
             {data.map((item: T, index: number) => (
@@ -43,15 +43,15 @@ const CustomTable = <T extends Record<string, any>>({
             ))}
           </Table.Tbody>
         </Table>
-        {/* BEGIN: Pagination */}
-        <div className='flex flex-wrap justify-between items-center intro-y sm:flex-row sm:flex-nowrap mt-3'>
-          <div className='hidden xl:block text-slate-500'>
-            Showing {limit_start + 1} to {limit_start + pageSize} of {totalItems} entries
-          </div>
-          <AntPagination totalItems={totalItems || 0} />
-        </div>
-        {/* END: Pagination */}
       </div>
+      {/* BEGIN: Pagination */}
+      <div className='flex flex-col flex-wrap justify-between items-end intro-y md:flex-row md:flex-nowrap mt-3'>
+        <div className='text-slate-500'>
+          Showing {limit_start + 1} to {limit_start + pageSize} of {totalItems} entries
+        </div>
+        <AntPagination totalItems={totalItems || 0} />
+      </div>
+      {/* END: Pagination */}
     </>
   );
 };

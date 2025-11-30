@@ -7,6 +7,7 @@ import { PurchaseListFilterForm, PurchaseListTableColumn } from '@/features/purc
 import { useForm } from 'react-hook-form';
 import { PurchaseListFilterFormData } from '@/types/pages/purchase';
 import { useState } from 'react';
+import { buttonColors } from '@/constants/antd-theme';
 
 const Purchase = () => {
   const [filterKey, setFilterKey] = useState<number>(0);
@@ -44,23 +45,30 @@ const Purchase = () => {
 
   return (
     <>
-      <div className='grid grid-cols-12 gap-6 mt-5'>
+      <div className='grid grid-cols-12 gap-2 mt-5'>
         {/* Filter Options */}
-        <div className='flex flex-wrap items-center col-span-12 mt-2 intro-y xl:flex-nowrap gap-3'>
-          <h2 className='text-lg font-medium intro-y whitespace-nowrap'>Purchase List</h2>
+        <h2 className='text-2xl text-primary dark:text-white/80 font-bold intro-y whitespace-nowrap col-span-full'>
+          Purchase List
+        </h2>
+        <div className='flex flex-wrap items-center col-span-12 intro-y xl:flex-nowrap gap-3 bg-white dark:bg-darkmode-800 py-5 px-3 rounded-lg border dark:border-darkmode-500'>
           {/* Purchase List Filter Form */}
           <PurchaseListFilterForm key={filterKey} control={control} />
           <div className='flex items-center gap-2'>
-            <AntButton icon={<SearchOutlined />} onClick={onSubmit}>
+            <AntButton icon={<SearchOutlined />} onClick={onSubmit} variant='solid' color='primary'>
               Search
             </AntButton>
-            <AntButton icon={<ClearOutlined />} onClick={handleClear}>
+            <AntButton
+              icon={<ClearOutlined />}
+              onClick={handleClear}
+              variant='solid'
+              color='volcano'
+            >
               Clear
             </AntButton>
           </div>
         </div>
         {/* BEGIN: Data List */}
-        <div className='col-span-12 overflow-auto intro-y 2xl:overflow-visible'>
+        <div className='col-span-12 intro-y dark:text-slate-300'>
           <CustomTable<PurchaseInvoice>
             data={purchaseInvoices?.message.data || []}
             tableHeader={Column}

@@ -67,7 +67,7 @@ module.exports = {
         },
       },
       fontFamily: {
-        roboto: ['Roboto'],
+        ubuntu: ['Ubuntu'],
       },
       container: {
         center: true,

@@ -6,8 +6,12 @@ import { Link } from 'react-router-dom';
 export const ColumnDateTime = (value: string) => {
   return (
     <div className='flex flex-col text-xs'>
-      <span className='font-medium'>{dayjs(value).format('DD MMM, YYYY')}</span>
-      <span className='text-primary dark:text-darkmode-50'>{dayjs(value).format('hh:mm A')}</span>
+      <span className='font-medium'>
+        {dayjs(value).isValid() ? dayjs(value).format('DD-MM-YYYY') : '-'}
+      </span>
+      <span className='text-primary dark:text-darkmode-50'>
+        {dayjs(value).isValid() ? dayjs(value).format('hh:mm A') : '-'}
+      </span>
     </div>
   );
 };
@@ -17,7 +21,7 @@ export const ColumnLink = (url: string, value: string) => {
   return (
     <Link
       to={url}
-      className='underline decoration-dotted whitespace-nowrap text-info dark:text-light font-semibold underline-offset-4 hover:underline hover:text-info'
+      className='underline decoration-dotted whitespace-nowrap text-info dark:text-pimary font-semibold underline-offset-4 hover:underline hover:text-info'
     >
       {value}
     </Link>
@@ -46,4 +50,8 @@ export const ColumnProgress = (percent: number, status?: string) => {
 // Currency Column UI
 export const ColumnCurrency = (value: number) => {
   return <span>{formatCurrency(value)}</span>;
+};
+
+export const ColumnSerialNumber = (index: number) => {
+  return <span>{(index + 1).toString().padStart(2, '0')}.</span>;
 };
