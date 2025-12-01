@@ -16,8 +16,12 @@ const cutText = (text: string, length: number) => {
   }
 };
 
-const formatDate = (date: string, format: string) => {
-  return dayjs(date).format(format);
+const formatDate = (date: string, format: string = 'DD-MM-YYYY') => {
+  if (dayjs(date).isValid()) {
+    return dayjs(date).format(format);
+  } else {
+    return 'N/A';
+  }
 };
 
 const capitalizeFirstLetter = (string: string) => {

@@ -7,7 +7,6 @@ import { PurchaseListFilterForm, PurchaseListTableColumn } from '@/features/purc
 import { useForm } from 'react-hook-form';
 import { PurchaseListFilterFormData } from '@/types/pages/purchase';
 import { useState } from 'react';
-import { buttonColors } from '@/constants/antd-theme';
 
 const Purchase = () => {
   const [filterKey, setFilterKey] = useState<number>(0);

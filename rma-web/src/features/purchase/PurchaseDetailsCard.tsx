@@ -9,6 +9,7 @@ import { FaRegUser } from 'react-icons/fa';
 import { CgCalendarDates } from 'react-icons/cg';
 import { MdOutlineWarehouse } from 'react-icons/md';
 import { BiSolidEdit } from 'react-icons/bi';
+import { formatDate } from '@/utils/helper';
 
 export const PurchaseDetailsCard = ({ data }: { data: PurchaseInvoice }) => {
   // Make Color for Status
@@ -31,7 +32,7 @@ export const PurchaseDetailsCard = ({ data }: { data: PurchaseInvoice }) => {
     {
       icon: <CgCalendarDates />,
       label: 'Posting Date',
-      value: data.posting_date || 'N/A',
+      value: formatDate(data.posting_date) || 'N/A',
     },
     {
       icon: <MdOutlineWarehouse />,

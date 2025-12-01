@@ -27,6 +27,7 @@ import { PurchaseInvoiceItem } from '@/types/Accounts/PurchaseInvoiceItem';
 import DeliveredSerialUi from '@/features/shared/DeliveredSerialUi';
 import { ResetSerialModalUi } from '@/features/shared/modal-ui';
 import { DetailsTitle } from '@/components/ui';
+import { ColumnCurrency, ColumnSerialNumber } from '@/components/Table/TableColumnUi';
 
 const mapApiToForm = (pi?: PurchaseInvoice): AssignSerialFormData => ({
   warehouse: pi?.set_warehouse ?? undefined,
@@ -206,7 +207,7 @@ const ViewPurchase = () => {
 
           {/* Serial Details Box */}
           {isSubmitted && (
-            <div className='p-5 rounded-md box mt-5 relative'>
+            <div className='p-5 rounded-md box mt-5 relative dark:bg-darkmode-800'>
               <div className='flex items-center justify-between pb-5 mb-5 border-b border-primary/30 dark:border-darkmode-400'>
                 <div className='text-xl font-medium truncate text-primary'>Serial Assign</div>
                 {total > 0 && (
@@ -243,14 +244,25 @@ const ViewPurchase = () => {
             <div className='w-full'>
               <AntCustomTable<PurchaseInvoiceItem>
                 columns={[
+                  { title: 'SL', key: 'sl', render: (_, __, index) => ColumnSerialNumber(index) },
                   { title: 'Item Name', dataIndex: 'item_name', key: 'item_name' },
                   { title: 'Quantity', dataIndex: 'qty', key: 'qty' },
-                  { title: 'Rate', dataIndex: 'rate', key: 'rate' },
-                  { title: 'Amount', dataIndex: 'amount', key: 'amount' },
+                  {
+                    title: 'Rate',
+                    dataIndex: 'rate',
+                    key: 'rate',
+                    render: (value) => ColumnCurrency(value),
+                  },
+                  {
+                    title: 'Amount',
+                    dataIndex: 'amount',
+                    key: 'amount',
+                    render: (value) => ColumnCurrency(value),
+                  },
                 ]}
                 rowKey={(record) => record.name}
                 data={purchaseInvoiceDetails?.message.items || []}
-                title={() => <div className='text-lg font-bold text-center'>Product Items</div>}
+                title={() => <div className='text-lg font-bold text-primary'>Product Items</div>}
               />
             </div>
           )}

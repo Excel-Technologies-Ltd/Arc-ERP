@@ -6,7 +6,10 @@ const { RangePicker } = DatePicker;
 type RangePickerRef = React.ElementRef<typeof RangePicker>;
 
 const AntRangePicker = React.forwardRef<RangePickerRef, RangePickerProps>(
-  ({ size = 'large', allowClear = true, className = 'w-full', ...rest }, ref) => {
+  (
+    { size = 'large', allowClear = true, className = 'w-full', format = 'DD-MM-YYYY', ...rest },
+    ref
+  ) => {
     return (
       <RangePicker
         ref={ref}
@@ -22,6 +25,7 @@ const AntRangePicker = React.forwardRef<RangePickerRef, RangePickerProps>(
             root: 'single-month-picker',
           },
         }}
+        format={format}
       />
     );
   }

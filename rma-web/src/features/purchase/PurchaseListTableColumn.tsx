@@ -43,7 +43,10 @@ export const PurchaseListTableColumn = (): TableColumn<PurchaseInvoice>[] => {
     {
       key: 'posting_date',
       title: 'Posting Date',
-      render: (value) => ColumnDateTime(value.toString()),
+      render: (_, record) => {
+        const value = `${record.posting_date} ${record.posting_time}`;
+        return ColumnDateTime(value);
+      },
     },
     { key: 'supplier_name', title: 'Supplier Name' },
     {
