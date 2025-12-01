@@ -2,14 +2,14 @@ import { RouterProvider } from 'react-router-dom';
 import router from './router';
 import useAuthCheck from './hooks/auth/useAuthCheck';
 import LottieLoader from './components/Loader/LottieLoder';
-import AntDConfigProvider from './providers/AntDConfigProvider';
+import AntdConfigProvider from './providers/AntdConfigProvider';
 
 const App = () => {
   const { isChecked } = useAuthCheck();
 
   return (
     <>
-      <AntDConfigProvider>
+      <AntdConfigProvider>
         {isChecked ? (
           <LottieLoader />
         ) : (
@@ -17,7 +17,7 @@ const App = () => {
             <RouterProvider router={router} />
           </>
         )}
-      </AntDConfigProvider>
+      </AntdConfigProvider>
     </>
   );
 };

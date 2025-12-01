@@ -14,6 +14,7 @@ import { getAddedSerialsCount, getRemainingQty } from '@/features/helpers/utils'
 import { useAddSerialHandler } from '../helpers/handlers/useAddSerial.handler';
 import { Control, UseFormSetValue, useWatch } from 'react-hook-form';
 import { AssignSerialFormData } from '@/types/pages/purchase';
+import { ColumnSerialNumber } from '@/components/Table/TableColumnUi';
 
 export const PurchaseDetailsProductTableColumns = (
   control: Control<AssignSerialFormData>,
@@ -30,8 +31,32 @@ export const PurchaseDetailsProductTableColumns = (
   const { handleAddSerial } = useAddSerialHandler({ inputValues, serialTableData, control });
 
   return [
+    { title: 'SL', key: 'sl', render: (_, __, index) => ColumnSerialNumber(index) },
     { title: 'Item Name', dataIndex: 'item_name', key: 'item_name' },
-    { title: 'Quantity', dataIndex: 'qty', key: 'qty' },
+    {
+      title: 'Quantity@Rate',
+      key: 'qty',
+      render: (_, record) => {
+        return (
+          <div className='flex flex-col text-xs'>
+            <div className='font-semibold'>
+              <span>{record.qty}</span>
+              <span>@</span>
+              <span>{record.rate}</span>
+            </div>
+            <div>
+              <span className='font-light'>
+                <span>৳</span>
+                {record.amount.toLocaleString('en-US', {
+                  minimumFractionDigits: 2,
+                  maximumFractionDigits: 2,
+                })}
+              </span>
+            </div>
+          </div>
+        );
+      },
+    },
     {
       title: 'Assigned',
       key: 'assigned_qty',
@@ -58,15 +83,18 @@ export const PurchaseDetailsProductTableColumns = (
         const hasSerial = value === 'Yes';
         return <Tag color={hasSerial ? 'green' : 'red'}>{hasSerial ? 'Yes' : 'No'}</Tag>;
       },
+      className: 'whitespace-nowrap',
     },
     {
       title: 'Warranty Months',
       dataIndex: 'custom_purchase_warranty_period_in_months',
       key: 'warrenty_months',
+      className: 'whitespace-nowrap',
     },
     {
       title: 'Add Serial',
       key: 'add_serial',
+      className: 'whitespace-nowrap',
       render: (_, record) => {
         const inputValue = inputValues?.[record?.name]?.[0] || ''; // Access first element
         const isDisabled = getRemainingQty(record, serialTableData) <= 0;

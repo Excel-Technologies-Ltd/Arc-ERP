@@ -5,7 +5,7 @@ import { App as AntApp, ConfigProvider, theme } from 'antd';
 import React from 'react';
 import { lightThemeTokens, darkThemeTokens, componentTokens } from '@/constants/antd-theme';
 
-const AntDConfigProvider: React.FC<React.PropsWithChildren> = ({ children }) => {
+const AntdConfigProvider: React.FC<React.PropsWithChildren> = ({ children }) => {
   const darkMode = useAppSelector(selectDarkMode);
   const componentToken = componentTokens(darkMode);
   const themeTokens = darkMode ? darkThemeTokens : lightThemeTokens;
@@ -31,4 +31,4 @@ const AntDConfigProvider: React.FC<React.PropsWithChildren> = ({ children }) => 
   );
 };
 
-export default AntDConfigProvider;
+export default AntdConfigProvider;

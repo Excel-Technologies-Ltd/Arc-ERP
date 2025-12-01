@@ -42,7 +42,22 @@ const PurchaseDetailsSerialTables = ({
         <AntCustomTable<PurchaseInvoiceItem>
           columns={ProductTableColumns}
           data={data?.items.map((item, index) => ({ ...item, key: `${index}` })) || []}
-          title={() => <div className='text-lg font-bold text-center'>Product Items</div>}
+          scroll={{ x: 1000 }}
+          title={() => (
+            <div className='flex justify-between items-center'>
+              <div className='text-lg font-bold text-primary'>Invoice Items</div>
+              <div className='text-sm text-gray-500'>
+                Total Amount:{' '}
+                <span className='inline-flex items-center gap-1'>
+                  <span>৳</span>
+                  {data?.total?.toLocaleString('en-US', {
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2,
+                  })}
+                </span>
+              </div>
+            </div>
+          )}
         />
       </div>
 
@@ -50,9 +65,10 @@ const PurchaseDetailsSerialTables = ({
         <AntCustomTable<SerialItemType>
           columns={SerialTableColumns}
           data={serialTableData}
+          scroll={{ x: 1000 }}
           title={() => (
             <div className='flex justify-between items-center'>
-              <div className='text-lg font-bold text-center flex-1'>Serial Items</div>
+              <div className='text-lg font-bold text-primary flex-1'>Serial Items</div>
               <div className='text-sm text-gray-500'>Total Items: {serialTableData.length}</div>
             </div>
           )}

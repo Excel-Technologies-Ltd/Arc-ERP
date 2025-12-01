@@ -10,6 +10,7 @@ import {
 import { useAppDispatch, useAppSelector } from '@/stores/hooks';
 import Button from '@/components/Base/Button';
 import { DeleteOutlined } from '@ant-design/icons';
+import { ColumnSerialNumber } from '@/components/Table/TableColumnUi';
 
 export const PurchaseDetailsSerialTableColumns = (): TableProps<SerialItemType>['columns'] => {
   const dispatch = useAppDispatch();
@@ -48,6 +49,11 @@ export const PurchaseDetailsSerialTableColumns = (): TableProps<SerialItemType>[
 
   return [
     {
+      title: 'SL',
+      key: 'sl',
+      render: (_, __, index) => ColumnSerialNumber(index),
+    },
+    {
       title: 'Item Code',
       dataIndex: 'item_code',
       key: 'item_code',
@@ -56,6 +62,7 @@ export const PurchaseDetailsSerialTableColumns = (): TableProps<SerialItemType>[
       title: 'Item Name',
       dataIndex: 'item_name',
       key: 'item_name',
+      className: 'whitespace-nowrap',
     },
     {
       title: 'Quantity',
@@ -66,6 +73,7 @@ export const PurchaseDetailsSerialTableColumns = (): TableProps<SerialItemType>[
       title: 'Warranty Date',
       dataIndex: 'warranty_date',
       key: 'warranty_date',
+      className: 'whitespace-nowrap',
       render: (_, record) => {
         return record.warranty_date ? (
           <span>{dayjs(record.warranty_date).format('YYYY-MM-DD')}</span>
@@ -140,6 +148,7 @@ export const PurchaseDetailsSerialTableColumns = (): TableProps<SerialItemType>[
     {
       title: 'Mac No',
       key: 'mac_no',
+      className: 'whitespace-nowrap',
       dataIndex: 'serial_with_mac',
       render: (value, record) => {
         if (!record.has_serial_no) return <span>Non Serialized Item</span>;

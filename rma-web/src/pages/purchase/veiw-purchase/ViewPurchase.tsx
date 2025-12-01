@@ -26,6 +26,7 @@ import AntCustomTable from '@/components/Table/AntCustomTable';
 import { PurchaseInvoiceItem } from '@/types/Accounts/PurchaseInvoiceItem';
 import DeliveredSerialUi from '@/features/shared/DeliveredSerialUi';
 import { ResetSerialModalUi } from '@/features/shared/modal-ui';
+import { DetailsTitle } from '@/components/ui';
 
 const mapApiToForm = (pi?: PurchaseInvoice): AssignSerialFormData => ({
   warehouse: pi?.set_warehouse ?? undefined,
@@ -161,7 +162,7 @@ const ViewPurchase = () => {
   return (
     <>
       <div className='flex flex-col items-center mt-8 intro-y sm:flex-row'>
-        <h2 className='mr-auto text-lg font-medium'>Transaction Details</h2>
+        <DetailsTitle title='Purchase Details' className='mr-auto' />
         <div className='flex w-full mt-4 sm:w-auto sm:mt-0'>
           {!isCancelled && (
             <AntButton
@@ -193,28 +194,38 @@ const ViewPurchase = () => {
         </div>
       </div>
       {/* BEGIN: Transaction Details */}
-      <div className='grid grid-cols-11 gap-5 mt-5'>
+      <div className='mt-5'>
         <div className='col-span-12 lg:col-span-4 2xl:col-span-3 intro-y'>
+          {isCompleted && (
+            <AlertComponent variant='soft-primary' className='text-center text-2xl font-bold mb-5'>
+              All serials assigned
+            </AlertComponent>
+          )}
           {/* Purchase Details Box */}
           {purchaseInvoiceDetails && <PurchaseDetailsCard data={purchaseInvoiceDetails?.message} />}
 
           {/* Serial Details Box */}
           {isSubmitted && (
-            <div className='p-5 rounded-md box mt-5'>
-              <div className='flex items-center pb-5 mb-5 border-b border-slate-200/60 dark:border-darkmode-400'>
-                <div className='text-base font-medium truncate'>Serial Assign</div>
+            <div className='p-5 rounded-md box mt-5 relative'>
+              <div className='flex items-center justify-between pb-5 mb-5 border-b border-primary/30 dark:border-darkmode-400'>
+                <div className='text-xl font-medium truncate text-primary'>Serial Assign</div>
+                {total > 0 && (
+                  <span className='text-xl font-medium truncate text-primary border border-primary/30 dark:border-darkmode-400 rounded-md px-2 '>
+                    Total Qty : <span className='text-orange-600'>{total}</span>
+                  </span>
+                )}
               </div>
               <div className='space-y-4 w-full'>
                 <SerialAssignForm
                   control={control}
                   items={purchaseInvoiceDetails?.message.items || []}
                 />
-                <p className='text-lg text-primary'>Total : {total}</p>
               </div>
             </div>
           )}
         </div>
-        <div className='col-span-12 lg:col-span-7 2xl:col-span-8 intro-x'>
+
+        <div className='col-span-12 lg:col-span-7 2xl:col-span-8 intro-x mt-5'>
           {isSubmitted && (
             <PurchaseDetailsSerialTables
               data={purchaseInvoiceDetails?.message}
@@ -222,11 +233,7 @@ const ViewPurchase = () => {
               setValue={setValue}
             />
           )}
-          {isCompleted && (
-            <AlertComponent variant='soft-primary' className='text-center text-2xl font-bold'>
-              All serials assigned
-            </AlertComponent>
-          )}
+
           {(isCompleted || hasReceiptDataWithQuantity) && (
             <div className='mt-5 w-full'>
               <DeliveredSerialUi />

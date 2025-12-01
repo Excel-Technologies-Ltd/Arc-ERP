@@ -1,4 +1,3 @@
-import AntDatePicker from '@/components/Base/DatePicker/AntDatePicker';
 import AntSelect from '@/components/Base/Form/FormSelect/AntSelect';
 import { RenderController } from '@/lib/hook-form/RenderController';
 import { Control, useWatch } from 'react-hook-form';
@@ -22,7 +21,6 @@ const SerialAssignForm = ({
 }) => {
   const notify = useNotify();
   // Api Call start
-  // Warehouse Dropdown Fetch
   const {
     setSearchInput: setWarehouseSearch,
     data: { data: warehouseList, isLoading: isLoadingWarehouses },
@@ -32,11 +30,6 @@ const SerialAssignForm = ({
   // Api Call end
 
   const { fromRange, toRange } = useWatch({ control });
-  // console.log(fromRange, toRange);
-  // const { total, error } = useMemo(
-  //   () => calculateRangeTotal(fromRange ?? '', toRange ?? ''),
-  //   [fromRange, toRange]
-  // );
 
   // Handle File Upload
   const { handleBeforeFileUpload, isFileLoading } = useSerialFileUploadHandler(items, control);
@@ -49,7 +42,7 @@ const SerialAssignForm = ({
   };
 
   return (
-    <>
+    <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-2'>
       {RenderController<AssignSerialFormData>(
         control,
         'warehouse',
@@ -64,16 +57,10 @@ const SerialAssignForm = ({
           }))}
           onClear={() => setWarehouseSearch(null)}
           filterOption={false}
-          size='middle'
           allowClear={false}
         />
       )}
 
-      {RenderController<AssignSerialFormData>(
-        control,
-        'date',
-        <AntDatePicker placeholder='Select Date' size='middle' allowClear={false} />
-      )}
       {RenderController<AssignSerialFormData>(
         control,
         'file',
@@ -85,6 +72,7 @@ const SerialAssignForm = ({
               onSuccess?.('ok');
             }, 100);
           }}
+          size='large'
           loading={isFileLoading}
           disabled={isFileLoading}
         />
@@ -92,20 +80,19 @@ const SerialAssignForm = ({
       {RenderController<AssignSerialFormData>(
         control,
         'fromRange',
-        <AntInput type='text' placeholder='From Range' size='middle' isCapitalised />
+        <AntInput type='text' placeholder='Start Range' isCapitalised />
       )}
       {RenderController<AssignSerialFormData>(
         control,
         'toRange',
         <AntInput
           type='text'
-          placeholder='To Range'
-          size='middle'
+          placeholder='End Range'
           isCapitalised
           onBlurCapture={handleOnBlurCapture}
         />
       )}
-    </>
+    </div>
   );
 };
 

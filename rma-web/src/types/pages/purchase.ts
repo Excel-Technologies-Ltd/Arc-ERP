@@ -25,6 +25,7 @@ export interface DetailsItem {
 
 export interface DetailsCardProps {
   title?: string;
+  titleIcon?: React.ReactNode;
   items: DetailsItem[];
   className?: string;
   titleClassName?: string;

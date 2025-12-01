@@ -6,6 +6,7 @@ import { CiSettings } from 'react-icons/ci';
 import { IoIosNotificationsOutline } from 'react-icons/io';
 import { CiLight, CiDark } from 'react-icons/ci';
 import { GoDotFill } from 'react-icons/go';
+import { TbInvoice } from 'react-icons/tb';
 
 export {
   LiaFileInvoiceSolid,
@@ -19,4 +20,5 @@ export {
   CiLight,
   CiDark,
   GoDotFill,
+  TbInvoice,
 };
