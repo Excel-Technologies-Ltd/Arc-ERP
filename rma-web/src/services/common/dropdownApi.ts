@@ -1,4 +1,5 @@
 import {
+  ACCOUNT,
   BRAND,
   CUSTOMER,
   ITEM,
@@ -7,6 +8,7 @@ import {
   TERRITORY,
   WAREHOUSE,
 } from '@/constants/doctype-strings';
+import { Account } from '@/types/Accounts/Account';
 import { Supplier } from '@/types/Buying/Supplier';
 import { Project } from '@/types/Projects/Project';
 import { Customer } from '@/types/Selling/Customer';
@@ -69,5 +71,13 @@ export const getProjectDropdownList = (name?: string | null) => {
   return useFrappeGetDocList<Project>(PROJECT, {
     fields: ['name', 'project_name', 'customer'],
     filters: name ? ([['project_name', 'like', `%${name}%`]] as Filter[]) : undefined,
+  });
+};
+
+// Api Call to Get Account Head based on search
+export const getAccountHeadDropdownList = (name?: string | null) => {
+  return useFrappeGetDocList<Account>(ACCOUNT, {
+    fields: ['name', 'account_name'],
+    filters: name ? ([['account_name', 'like', `%${name}%`]] as Filter[]) : undefined,
   });
 };

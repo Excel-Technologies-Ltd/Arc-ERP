@@ -181,7 +181,7 @@ export const processFile = (
   // If there are quantity validation errors, show them and return
   if (!validation.isValid) {
     notify.error({
-      message: 'Quantity Validation Failed',
+      title: 'Quantity Validation Failed',
       description: validation.errors.join('\n'),
     });
     return;
@@ -197,7 +197,7 @@ export const processFile = (
 
   // Show success message
   notify.success({
-    message: 'File processed successfully',
+    title: 'File processed successfully',
     description: `Added ${makeSerialData.reduce((acc, item) => acc + item.qty, 0)} serial items`,
   });
 };

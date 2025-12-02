@@ -41,7 +41,7 @@ function Main() {
       await logout().then(() => {
         dispatch(resetPermissions());
         notify.success({
-          message: 'Log Out Successfully',
+          title: 'Log Out Successfully',
         });
       });
     }

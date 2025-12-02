@@ -8,8 +8,16 @@ import { useState } from 'react';
 import AntDrawer from '@/components/Drawer/AntDrawer';
 import { useAppDispatch } from '@/stores/hooks';
 import { handleDrawer } from '@/stores/drawerSlice';
-import { AddSalesFormData, AddSalesItemTableDataType } from '@/types/pages/sales';
-import { AddSalesDetailsForm, AddSalesTableColumns } from '@/features/sales';
+import {
+  AddSalesFormData,
+  AddSalesItemTableDataType,
+  AddSalesTaxesAndChargesTableDataType,
+} from '@/types/pages/sales';
+import {
+  AddSalesDetailsForm,
+  AddSalesTableColumns,
+  AddSalesTaxesAndChargesColumns,
+} from '@/features/sales';
 import { addSalesInvoice } from '@/services/sales/SalesInvoice';
 import { SALES_INVOICE } from '@/constants/doctype-strings';
 import { SalesInvoice } from '@/types/Accounts/SalesInvoice';
@@ -25,6 +33,9 @@ const AddSalesInvoice = () => {
   const notify = useNotify();
   const dispatch = useAppDispatch();
   const [tableData, setTableData] = useState<AddSalesItemTableDataType[]>([]);
+  const [taxesAndChargesTableData, setTaxesAndChargesTableData] = useState<
+    AddSalesTaxesAndChargesTableDataType[]
+  >([]);
   const {
     control,
     reset,
@@ -86,13 +97,13 @@ const AddSalesInvoice = () => {
     CreateSalesInvoice(SALES_INVOICE, payload)
       .then(() => {
         notify.success({
-          message: 'Sales Invoice Submitted Successfully',
+          title: 'Sales Invoice Submitted Successfully',
         });
         handleClear();
       })
       .catch((err) => {
         notify.error({
-          message: err.message,
+          title: err.message,
           description: err.exception,
         });
       });
@@ -109,9 +120,22 @@ const AddSalesInvoice = () => {
     setTableData([...tableData, newItem]);
   };
 
+  const handleAddTaxesAndCharges = () => {
+    const newTaxesAndCharges: AddSalesTaxesAndChargesTableDataType = {
+      sl: taxesAndChargesTableData.length + 1,
+    };
+    setTaxesAndChargesTableData([...taxesAndChargesTableData, newTaxesAndCharges]);
+    notify.success({
+      title: 'Taxes and Charges Added Successfully',
+    });
+  };
+
   // Table Columns
   const Columns = AddSalesTableColumns({ tableData, setTableData, watch });
-
+  const TaxesAndChargesTableColumns = AddSalesTaxesAndChargesColumns({
+    taxesAndChargesTableData,
+    setTaxesAndChargesTableData,
+  });
   return (
     <div>
       {/* Details Section */}
@@ -152,8 +176,8 @@ const AddSalesInvoice = () => {
       {territory_name && territory_name === 'CORPORATE' && (
         <AddSalesAdditionalDetailsForm control={control} />
       )}
-
       {/* Table Section */}
+      {/* Items Table */}
       <AntCustomTable<AddSalesItemTableDataType>
         className='mt-5 drop-shadow-md intro-y'
         columns={Columns || []}
@@ -175,13 +199,47 @@ const AddSalesInvoice = () => {
         )}
         footer={() => (
           <div className='flex justify-end items-center text-primary'>
-            <div className='text-lg font-bold'>Total : </div>
+            <div className='text-lg font-bold'>Total Amount : </div>
             <div className='text-lg font-bold ml-2'>
               {formatCurrency(tableData.reduce((acc, curr) => acc + (curr.total ?? 0), 0))}
             </div>
           </div>
         )}
-        scroll={{ y: 400, x: 1000 }}
+        scroll={{ y: tableData.length > 7 ? 400 : undefined, x: 1000 }}
+        pagination={false}
+      />
+
+      {/* Sales taxes and Charges table */}
+      <AntCustomTable<AddSalesTaxesAndChargesTableDataType>
+        className='mt-5 drop-shadow-md intro-y'
+        columns={TaxesAndChargesTableColumns}
+        data={taxesAndChargesTableData}
+        loading={false}
+        title={() => (
+          <>
+            <div className='flex justify-between items-center px-2'>
+              <div className='text-lg font-bold'>Sales Taxes and Charges</div>
+              <AntButton
+                label='Add Taxes and Charges'
+                icon={<PlusCircleOutlined />}
+                onClick={handleAddTaxesAndCharges}
+                type='primary'
+                size='middle'
+              />
+            </div>
+          </>
+        )}
+        footer={() => (
+          <div className='flex justify-end items-center text-primary'>
+            <div className='text-lg font-bold'>Total Amount : </div>
+            <div className='text-lg font-bold ml-2'>
+              {formatCurrency(
+                taxesAndChargesTableData.reduce((acc, curr) => acc + (curr.tax_amount ?? 0), 0)
+              )}
+            </div>
+          </div>
+        )}
+        scroll={{ y: taxesAndChargesTableData.length > 7 ? 400 : undefined, x: 1000 }}
         pagination={false}
       />
 

@@ -38,7 +38,7 @@ export const useSerialFileUploadHandler = (
       // Check if file has data
       if (parsedData.length === 0) {
         notify.error({
-          message: 'Invalid file',
+          title: 'Invalid file',
           description: 'No data found in the file',
         });
         return ANT_UPLOAD_FILE_LIST_IGNORE;
@@ -59,14 +59,14 @@ export const useSerialFileUploadHandler = (
 
         default:
           notify.error({
-            message: 'Unsupported file type',
+            title: 'Unsupported file type',
             description: 'Please upload a CSV, XLS, or XLSX file',
           });
           return ANT_UPLOAD_FILE_LIST_IGNORE;
       }
     } catch (error) {
       notify.error({
-        message: 'File processing error',
+        title: 'File processing error',
         description: (error as Error).message || 'An error occurred while processing the file',
       });
       return ANT_UPLOAD_FILE_LIST_IGNORE;

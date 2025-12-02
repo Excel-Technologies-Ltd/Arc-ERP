@@ -34,7 +34,7 @@ export const useAddSerialHandler = ({
 
     if (!validation.isValid) {
       return notify.warning({
-        message: validation.error,
+        title: validation.error,
       });
     }
 
@@ -49,7 +49,7 @@ export const useAddSerialHandler = ({
       const serials = generateSerialNumbersFromRange(fromRange, toRange);
 
       if (serials.length === 0) {
-        notify.error({ message: 'Invalid range' });
+        notify.error({ title: 'Invalid range' });
         return;
       }
 
@@ -117,7 +117,7 @@ export const useAddSerialHandler = ({
     );
 
     notify.success({
-      message: `Successfully added ${assignedQuantity} serial items for ${record.item_name}`,
+      title: `Successfully added ${assignedQuantity} serial items for ${record.item_name}`,
     });
   };
 

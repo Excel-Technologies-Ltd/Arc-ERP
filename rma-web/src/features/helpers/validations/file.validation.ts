@@ -21,7 +21,7 @@ export const handleCSVValidation = (
   // Validate Csv Header
   if (!validateCSVHeader(fileMeta)) {
     notify.error({
-      message: 'Invalid file',
+      title: 'Invalid file',
       description: 'The file must be in CSV format with item_name and serial_no columns',
     });
     return false;
@@ -30,7 +30,7 @@ export const handleCSVValidation = (
   // Validate Items Exist
   if (!validateItemsExist(parsedData, items)) {
     notify.error({
-      message: 'Invalid items',
+      title: 'Invalid items',
       description: 'The items must be in the Product List',
     });
     return false;
@@ -45,6 +45,6 @@ export const handleCSVValidation = (
  * @returns The ANT_UPLOAD_FILE_LIST_IGNORE
  */
 export const handleExcelFile = (notify: NotifyType): typeof ANT_UPLOAD_FILE_LIST_IGNORE => {
-  notify.open({ message: 'Working on the file...' });
+  notify.open({ title: 'Working on the file...' });
   return ANT_UPLOAD_FILE_LIST_IGNORE;
 };

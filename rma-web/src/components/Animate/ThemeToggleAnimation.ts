@@ -6,121 +6,112 @@ interface Animation {
   css: string;
 }
 
-const getPositionCoords = (position: AnimationStart) => {
-  switch (position) {
-    case 'top-left':
-      return { cx: '0', cy: '0' };
-    case 'top-right':
-      return { cx: '40', cy: '0' };
-    case 'bottom-left':
-      return { cx: '0', cy: '40' };
-    case 'bottom-right':
-      return { cx: '40', cy: '40' };
-  }
-};
-
-const generateSVG = (variant: AnimationVariant, start: AnimationStart) => {
-  if (start === 'center') return;
-
-  const positionCoords = getPositionCoords(start);
-  if (!positionCoords) {
-    throw new Error(`Invalid start position: ${start}`);
-  }
-  const { cx, cy } = positionCoords;
-
-  if (variant === 'circle') {
-    return `data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40"><circle cx="${cx}" cy="${cy}" r="20" fill="white"/></svg>`;
-  }
-
-  if (variant === 'circle-blur') {
-    return `data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40"><defs><filter id="blur"><feGaussianBlur stdDeviation="2"/></filter></defs><circle cx="${cx}" cy="${cy}" r="18" fill="white" filter="url(%23blur)"/></svg>`;
-  }
-
-  return '';
-};
-
+// Map start position to CSS transform origin / clip-path anchor
 const getTransformOrigin = (start: AnimationStart) => {
   switch (start) {
     case 'top-left':
-      return 'top left';
+      return '0% 0%';
     case 'top-right':
-      return 'top right';
+      return '100% 0%';
     case 'bottom-left':
-      return 'bottom left';
+      return '0% 100%';
     case 'bottom-right':
-      return 'bottom right';
+      return '100% 100%';
+    case 'center':
+    default:
+      return '50% 50%';
   }
 };
 
 export const createAnimation = (variant: AnimationVariant, start: AnimationStart): Animation => {
-  const svg = generateSVG(variant, start);
   const transformOrigin = getTransformOrigin(start);
 
-  if (variant === 'circle' && start == 'center') {
+  // Fancy smooth animation:
+  // - For "circle": radial clip-path that grows from the toggle origin
+  // - For "circle-blur": same shape but with subtle scale/blur for a softer feel
+  if (variant === 'circle' || variant === 'circle-blur') {
+    const blurFilter =
+      variant === 'circle-blur'
+        ? `
+      filter: blur(0.5px);
+      transform: scale(1.02);
+    `
+        : '';
+
     return {
       name: `${variant}-${start}`,
       css: `
-       ::view-transition-group(root) {
-        animation-duration: 1s;
-        animation-timing-function: var(--expo-out);
-      }
-            
-      ::view-transition-new(root) {
-        animation-name: reveal-light;
-      }
+        ::view-transition-group(root) {
+          animation-duration: 1500ms;
+          animation-timing-function: var(--expo-out, cubic-bezier(0.16, 1, 0.3, 1));
+        }
 
-      ::view-transition-old(root),
-      .dark::view-transition-old(root) {
-        animation: none;
-        z-index: -1;
-      }
-      .dark::view-transition-new(root) {
-        animation-name: reveal-dark;
-      }
+        ::view-transition-new(root) {
+          animation-name: theme-reveal-${start};
+        }
 
-      @keyframes reveal-dark {
-        from {
-          clip-path: circle(0% at 50% 50%);
+        ::view-transition-old(root),
+        .dark::view-transition-old(root) {
+          animation-name: theme-fade-${start};
         }
-        to {
-          clip-path: circle(100.0% at 50% 50%);
-        }
-      }
 
-      @keyframes reveal-light {
-        from {
-           clip-path: circle(0% at 50% 50%);
+        .dark::view-transition-new(root) {
+          animation-name: theme-reveal-${start};
         }
-        to {
-          clip-path: circle(100.0% at 50% 50%);
+
+        @keyframes theme-reveal-${start} {
+          from {
+            opacity: 0;
+            clip-path: circle(0% at ${transformOrigin});
+            ${blurFilter}
+          }
+          40% {
+            opacity: 1;
+          }
+          to {
+            opacity: 1;
+            clip-path: circle(145% at ${transformOrigin});
+            filter: blur(0);
+            transform: scale(1);
+          }
         }
-      }
+
+        @keyframes theme-fade-${start} {
+          from {
+            opacity: 1;
+          }
+          to {
+            opacity: 0;
+            transform: scale(0.98);
+            filter: blur(1px);
+          }
+        }
       `,
     };
   }
 
+  // Fallback – simple cross-fade if variant is unknown
   return {
     name: `${variant}-${start}`,
     css: `
       ::view-transition-group(root) {
-        animation-timing-function: var(--expo-out);
+        animation-duration: 1500ms;
+        animation-timing-function: var(--expo-out, ease-out);
       }
       ::view-transition-new(root) {
-        mask: url('${svg}') ${start.replace('-', ' ')} / 0 no-repeat;
-        mask-origin: content-box;
-        animation: scale-${start} 1s;
-        transform-origin: ${transformOrigin};
+        animation-name: theme-fade-in;
       }
       ::view-transition-old(root),
       .dark::view-transition-old(root) {
-        animation: scale-${start} 1s;
-        transform-origin: ${transformOrigin};
-        z-index: -1;
+        animation-name: theme-fade-out;
       }
-      @keyframes scale-${start} {
-        to {
-          mask-size: 350vmax;
-        }
+      @keyframes theme-fade-in {
+        from { opacity: 0; }
+        to { opacity: 1; }
+      }
+      @keyframes theme-fade-out {
+        from { opacity: 1; }
+        to { opacity: 0; }
       }
     `,
   };

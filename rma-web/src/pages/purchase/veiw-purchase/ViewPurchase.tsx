@@ -95,7 +95,7 @@ const ViewPurchase = () => {
     const MakeMergeItems = makeSerialTableDataMergeItems(serialTableData);
 
     if (Object.values(MakeMergeItems).length === 0) {
-      notify.error({ message: 'No items to assign' });
+      notify.error({ title: 'No items to assign' });
       return;
     }
 
@@ -116,12 +116,12 @@ const ViewPurchase = () => {
 
     await SerialAssignCall(payload)
       .then((res) => {
-        notify.success({ message: JSON.parse(res.message)?.message });
+        notify.success({ title: JSON.parse(res.message)?.message });
         mutate();
         handleClear();
       })
       .catch((err) => {
-        notify.error({ message: 'ERROR', description: Extract_Frappe_Error(err) });
+        notify.error({ title: 'ERROR', description: Extract_Frappe_Error(err) });
       });
   };
 
@@ -129,13 +129,13 @@ const ViewPurchase = () => {
   const handleCancelSerial = () => {
     SerialCancelCall({ purchase_invoice_name: purchaseInvoiceDetails?.message.name })
       .then((res) => {
-        notify.success({ message: res.message.message });
+        notify.success({ title: res.message.message });
         mutate();
         handleClear();
         dispatch(handleModal({ type: '', isOpen: false }));
       })
       .catch((err) => {
-        notify.error({ message: 'ERROR', description: Extract_Frappe_Error(err) });
+        notify.error({ title: 'ERROR', description: Extract_Frappe_Error(err) });
       });
   };
 

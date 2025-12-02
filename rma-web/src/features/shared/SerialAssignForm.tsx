@@ -36,7 +36,7 @@ const SerialAssignForm = ({
   const handleOnBlurCapture = () => {
     const { error } = calculateRangeTotal(fromRange ?? '', toRange ?? '');
     if (error) {
-      notify.error({ message: error });
+      notify.error({ title: error });
     }
   };
 

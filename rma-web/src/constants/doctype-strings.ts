@@ -9,3 +9,4 @@ export const SUPPLIER = 'Supplier';
 export const ITEM = 'Item';
 export const BRAND = 'Brand';
 export const PROJECT = 'Project';
+export const ACCOUNT = 'Account';

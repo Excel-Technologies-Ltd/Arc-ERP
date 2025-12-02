@@ -106,7 +106,7 @@ export const AddSalesTableColumns = ({
           onChange={(value) => {
             if (!warehouse_name) {
               notify.error({
-                message: 'Error',
+                title: 'Error',
                 description: 'Please select warehouse first',
               });
               return;

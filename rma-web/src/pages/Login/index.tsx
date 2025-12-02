@@ -43,12 +43,12 @@ function Main() {
       .then((res) => {
         navigate('/');
         notify.success({
-          message: res.message || 'Login Successfully',
+          title: res.message || 'Login Successfully',
         });
       })
       .catch((err) => {
         notify.error({
-          message: err.message || 'Something Went Wrong!',
+          title: err.message || 'Something Went Wrong!',
         });
       });
   };

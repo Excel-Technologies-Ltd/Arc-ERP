@@ -1,6 +1,7 @@
 import { Dayjs } from 'dayjs';
 import { Customer } from '../Selling/Customer';
 import { SalesInvoice } from '../Accounts/SalesInvoice';
+import { SalesTaxesandCharges } from '../Accounts/SalesTaxesandCharges';
 
 export interface AddSalesItemTableDataType {
   item_name?: string;
@@ -8,6 +9,10 @@ export interface AddSalesItemTableDataType {
   quantity?: number;
   rate?: number;
   total?: number;
+}
+
+export interface AddSalesTaxesAndChargesTableDataType extends Partial<SalesTaxesandCharges> {
+  sl: number;
 }
 
 export type AddSalesFormData = {

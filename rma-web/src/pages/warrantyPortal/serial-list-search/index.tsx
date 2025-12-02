@@ -61,10 +61,10 @@ const SerialListSearch = () => {
   const handleRefetchClick = () => {
     mutate()
       .then(() => {
-        notify.success({ message: 'Data refetched successfully' });
+        notify.success({ title: 'Data refetched successfully' });
       })
       .catch((error) => {
-        notify.error({ message: Extract_Frappe_Error(error) });
+        notify.error({ title: Extract_Frappe_Error(error) });
       });
   };
 

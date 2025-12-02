@@ -21,7 +21,7 @@ export const useDumpFileHandler = ({
 
     // Validate selected columns
     if (!selectedColumns.length) {
-      notify.warning({ message: 'No columns selected for export' });
+      notify.warning({ title: 'No columns selected for export' });
       return;
     }
 

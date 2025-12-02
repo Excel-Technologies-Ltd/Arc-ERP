@@ -46,7 +46,6 @@ const PurchaseListFilterForm = ({
         'supplier',
         <AntSelect
           placeholder='Select Supplier'
-          onSearch={(value: string) => setSupplierSearch(value)}
           loading={isLoadingSuppliers}
           options={suppliers?.map((s) => ({
             value: s.name,
@@ -54,7 +53,10 @@ const PurchaseListFilterForm = ({
           }))}
           notFoundText='No Supplier Found'
           onClear={() => setSupplierSearch(null)}
-          filterOption={false}
+          showSearch={{
+            onSearch: (value) => setSupplierSearch(value),
+            filterOption: false,
+          }}
         />
       )}
       {RenderController<PurchaseListFilterFormData>(

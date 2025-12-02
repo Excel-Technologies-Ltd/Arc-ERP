@@ -51,7 +51,7 @@ const AddStockEntry = ({ id }: { id?: string | undefined }) => {
 
   const handleSubmit = (data: AddStockFormData) => {
     notify.open({
-      message: 'Stock Entry Added Successfully',
+      title: 'Stock Entry Added Successfully',
       description: JSON.stringify(data),
     });
   };

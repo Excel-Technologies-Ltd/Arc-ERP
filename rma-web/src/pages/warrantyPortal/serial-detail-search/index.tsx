@@ -23,7 +23,7 @@ const SerialDetailSearch = () => {
   } = getSerialDetails(searchValue, {
     isPaused: () => !shouldFetchDetails,
     onError: (error) => {
-      notify.error({ message: Extract_Frappe_Error(error) });
+      notify.error({ title: Extract_Frappe_Error(error) });
     },
   });
 
