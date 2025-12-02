@@ -26,8 +26,8 @@ import AntCustomTable from '@/components/Table/AntCustomTable';
 import { PurchaseInvoiceItem } from '@/types/Accounts/PurchaseInvoiceItem';
 import DeliveredSerialUi from '@/features/shared/DeliveredSerialUi';
 import { ResetSerialModalUi } from '@/features/shared/modal-ui';
-import { DetailsTitle } from '@/components/ui';
 import { ColumnCurrency, ColumnSerialNumber } from '@/components/Table/TableColumnUi';
+import { DetailsTitle } from '@/features/shared/details-title';
 
 const mapApiToForm = (pi?: PurchaseInvoice): AssignSerialFormData => ({
   warehouse: pi?.set_warehouse ?? undefined,

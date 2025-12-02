@@ -4,6 +4,7 @@ import React from 'react';
 
 export interface AntSelectProps extends SelectProps {
   notFoundText?: string;
+  label?: string;
 }
 
 const AntSelect: React.FC<AntSelectProps> = (props) => {
@@ -14,40 +15,48 @@ const AntSelect: React.FC<AntSelectProps> = (props) => {
     className = 'w-full',
     loading = false,
     notFoundText = 'No options',
+    label,
     ...rest
   } = props;
   return (
-    <Select
-      size={size}
-      allowClear={allowClear}
-      showSearch={showSearch}
-      className={className}
-      loading={loading}
-      notFoundContent={loading ? <Spin size='small' /> : notFoundText}
-      filterOption={(input, option) => {
-        if (loading) return true;
-        return (option?.label as string)?.toLowerCase().includes(input.toLowerCase());
-      }}
-      // styles={{
-      //   root: {
-      //     backgroundColor: 'red',
-      //   },
-      //   popup: {},
-      // }}
-      // dropdownStyle={{ minWidth: '400px' }} // Ensure dropdown is wide enough
-      // dropdownRender={(menu) => (
-      //   <div style={{ padding: '1px' }}>
-      //     {React.cloneElement(menu as React.ReactElement, {
-      //       style: {
-      //         ...((menu as React.ReactElement).props.style || {}),
-      //         whiteSpace: 'wrap', // Allow text wrapping
-      //         wordBreak: 'break-word', // Break long words if needed
-      //       },
-      //     })}
-      // </div>
-      // )}
-      {...rest}
-    />
+    <div className='flex flex-col gap-1 w-full'>
+      {label && (
+        <label className='text-xs font-medium text-gray-500 dark:text-gray-400 ant-input-label'>
+          {label}
+        </label>
+      )}
+      <Select
+        size={size}
+        allowClear={allowClear}
+        showSearch={showSearch}
+        className={className}
+        loading={loading}
+        notFoundContent={loading ? <Spin size='small' /> : notFoundText}
+        filterOption={(input, option) => {
+          if (loading) return true;
+          return (option?.label as string)?.toLowerCase().includes(input.toLowerCase());
+        }}
+        {...rest}
+      />
+    </div>
+    // styles={{
+    //   root: {
+    //     backgroundColor: 'red',
+    //   },
+    //   popup: {},
+    // }}
+    // dropdownStyle={{ minWidth: '400px' }} // Ensure dropdown is wide enough
+    // dropdownRender={(menu) => (
+    //   <div style={{ padding: '1px' }}>
+    //     {React.cloneElement(menu as React.ReactElement, {
+    //       style: {
+    //         ...((menu as React.ReactElement).props.style || {}),
+    //         whiteSpace: 'wrap', // Allow text wrapping
+    //         wordBreak: 'break-word', // Break long words if needed
+    //       },
+    //     })}
+    // </div>
+    // )}
   );
 };
 

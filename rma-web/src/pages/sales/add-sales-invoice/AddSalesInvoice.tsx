@@ -1,11 +1,10 @@
 import dayjs from 'dayjs';
 import { useForm } from 'react-hook-form';
 import AntButton from '@/components/Base/Button/AntButton';
-import { ClearOutlined, DeleteOutlined, PlusOutlined, SendOutlined } from '@ant-design/icons';
+import { ClearOutlined, PlusCircleOutlined } from '@ant-design/icons';
 import { useNotify } from '@/hooks/useNotify';
 import AntCustomTable from '@/components/Table/AntCustomTable';
 import { useState } from 'react';
-import Button from '@/components/Base/Button';
 import AntDrawer from '@/components/Drawer/AntDrawer';
 import { useAppDispatch } from '@/stores/hooks';
 import { handleDrawer } from '@/stores/drawerSlice';
@@ -17,6 +16,10 @@ import { SalesInvoice } from '@/types/Accounts/SalesInvoice';
 import { COMPANY_NAME } from '@/constants/app-strings';
 import { BrandWiseAllocations } from '@/types/ExcelERPNext/BrandWiseAllocations';
 import { formatCurrency } from '@/utils/helper';
+import { AiOutlineSave } from 'react-icons/ai';
+import { CgDanger } from 'react-icons/cg';
+import { DetailsTitle } from '@/features/shared/details-title';
+import AddSalesAdditionalDetailsForm from '@/features/sales/AddSalesAdditionalDetailsForm';
 
 const AddSalesInvoice = () => {
   const notify = useNotify();
@@ -39,7 +42,7 @@ const AddSalesInvoice = () => {
       remaining_balance: 0,
     },
   });
-  const { customer_name, customer_details, remaining_balance } = watch();
+  const { customer_name, customer_details, remaining_balance, territory_name } = watch();
 
   // Api Call Start
   const { createDoc: CreateSalesInvoice, loading: CreateSalesLoading } = addSalesInvoice();
@@ -51,6 +54,8 @@ const AddSalesInvoice = () => {
   };
 
   const handleSubmit = (data: AddSalesFormData) => {
+    console.log(data);
+    return;
     const payload = {
       creation: dayjs().format('YYYY-MM-DD HH:mm:ss'),
       modified: dayjs().format('YYYY-MM-DD HH:mm:ss'),
@@ -104,10 +109,6 @@ const AddSalesInvoice = () => {
     setTableData([...tableData, newItem]);
   };
 
-  const handleDeleteItem = (record: AddSalesItemTableDataType) => {
-    setTableData(tableData.filter((item) => item !== record));
-  };
-
   // Table Columns
   const Columns = AddSalesTableColumns({ tableData, setTableData, watch });
 
@@ -115,14 +116,14 @@ const AddSalesInvoice = () => {
     <div>
       {/* Details Section */}
       <div className='flex justify-between items-center mt-5'>
-        <h2 className='text-2xl text-primary font-bold'>Details</h2>
+        <DetailsTitle title='Add Sales Invoice' />
         <div className='flex gap-2 items-center'>
           <div className='text-lg text-primary font-semibold'>
             Remaining Balance : {remaining_balance}
           </div>
           <AntButton
             label='Limit Details'
-            icon={<ClearOutlined />}
+            icon={<CgDanger />}
             color='cyan'
             variant='solid'
             disabled={!customer_name}
@@ -139,7 +140,7 @@ const AddSalesInvoice = () => {
           />
           <AntButton
             label='Submit'
-            icon={<SendOutlined />}
+            icon={<AiOutlineSave />}
             type='primary'
             onClick={submitForm(handleSubmit)}
             loading={CreateSalesLoading}
@@ -148,42 +149,39 @@ const AddSalesInvoice = () => {
       </div>
       {/* Form Section */}
       <AddSalesDetailsForm control={control} setValue={setValue} />
+      {territory_name && territory_name === 'CORPORATE' && (
+        <AddSalesAdditionalDetailsForm control={control} />
+      )}
 
       {/* Table Section */}
       <AntCustomTable<AddSalesItemTableDataType>
         className='mt-5 drop-shadow-md intro-y'
-        columns={[
-          ...(Columns || []),
-          {
-            title: 'Action',
-            dataIndex: 'action',
-            key: 'action',
-            render: (_, record) => (
-              <Button onClick={() => handleDeleteItem(record)} variant='outline-danger' size='sm'>
-                <DeleteOutlined />
-              </Button>
-            ),
-          },
-        ]}
+        columns={Columns || []}
         data={tableData}
         loading={false}
         title={() => (
           <>
             <div className='flex justify-between items-center px-2'>
               <div className='text-lg font-bold'>Items</div>
-              <AntButton label='Add Item' icon={<PlusOutlined />} onClick={handleAddItem} />
+              <AntButton
+                label='Add Item'
+                icon={<PlusCircleOutlined />}
+                onClick={handleAddItem}
+                type='primary'
+                size='middle'
+              />
             </div>
           </>
         )}
         footer={() => (
-          <div className='flex justify-end items-center'>
+          <div className='flex justify-end items-center text-primary'>
             <div className='text-lg font-bold'>Total : </div>
             <div className='text-lg font-bold ml-2'>
-              {tableData.reduce((acc, curr) => acc + (curr.total ?? 0), 0)}
+              {formatCurrency(tableData.reduce((acc, curr) => acc + (curr.total ?? 0), 0))}
             </div>
           </div>
         )}
-        scroll={{ y: 400 }}
+        scroll={{ y: 400, x: 1000 }}
         pagination={false}
       />
 

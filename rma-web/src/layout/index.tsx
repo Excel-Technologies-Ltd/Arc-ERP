@@ -81,7 +81,7 @@ function Main() {
                       }}
                       className={clsx([menu.active ? 'side-menu side-menu--active' : 'side-menu'])}
                     >
-                      <div className='side-menu__icon'>{menu.icon}</div>
+                      <div className='side-menu__icon text-xl'>{menu.icon}</div>
                       <div className='side-menu__title'>
                         {menu.title}
                         {menu.subMenu && (

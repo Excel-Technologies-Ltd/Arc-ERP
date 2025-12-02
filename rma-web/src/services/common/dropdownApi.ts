@@ -1,5 +1,14 @@
-import { BRAND, CUSTOMER, ITEM, SUPPLIER, TERRITORY, WAREHOUSE } from '@/constants/doctype-strings';
+import {
+  BRAND,
+  CUSTOMER,
+  ITEM,
+  PROJECT,
+  SUPPLIER,
+  TERRITORY,
+  WAREHOUSE,
+} from '@/constants/doctype-strings';
 import { Supplier } from '@/types/Buying/Supplier';
+import { Project } from '@/types/Projects/Project';
 import { Customer } from '@/types/Selling/Customer';
 import { Brand } from '@/types/Setup/Brand';
 import { Territory } from '@/types/Setup/Territory';
@@ -52,5 +61,13 @@ export const getBrandDropdownList = (name?: string | null) => {
   return useFrappeGetDocList<Brand>(BRAND, {
     fields: ['name', 'brand'],
     filters: name ? ([['name', 'like', `%${name}%`]] as Filter[]) : undefined,
+  });
+};
+
+// Api Call to Get Project based on search
+export const getProjectDropdownList = (name?: string | null) => {
+  return useFrappeGetDocList<Project>(PROJECT, {
+    fields: ['name', 'project_name', 'customer'],
+    filters: name ? ([['project_name', 'like', `%${name}%`]] as Filter[]) : undefined,
   });
 };

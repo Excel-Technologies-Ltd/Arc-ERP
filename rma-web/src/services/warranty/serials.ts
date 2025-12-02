@@ -127,7 +127,8 @@ export const getDeliveredSerials = (
     },
     cacheKey,
     {
-      revalidateOnMount: false,
+      revalidateOnMount: true,
+      keepPreviousData: false,
     }
   );
 };

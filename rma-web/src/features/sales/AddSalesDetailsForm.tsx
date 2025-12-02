@@ -82,19 +82,14 @@ const AddSalesDetailsForm = ({
   }, [customerName, mutate, mutateCustomerList, setValue, customerDetails, mutateRemainingBalance]);
 
   return (
-    <div className='mt-5 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-2 w-full bg-white dark:bg-darkmode-800 p-5 rounded-md drop-shadow-md intro-y'>
-      {RenderController<AddSalesFormData>(
-        control,
-        'posting_date',
-        <AntDatePicker placeholder='Select Posting Date' minDate={dayjs()} />
-      )}
-
+    <div className='mt-5 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-y-4 gap-x-2 w-full bg-white dark:bg-darkmode-800 p-5 rounded-md drop-shadow-md border dark:border-darkmode-800 intro-y'>
       {/* Customer Name */}
       {RenderController<AddSalesFormData>(
         control,
         'customer_name',
         <AntSelect
           placeholder='Select Customer'
+          label='Customer'
           options={customerList?.map((c) => ({
             value: c.name,
             label: c.customer_name,
@@ -106,11 +101,17 @@ const AddSalesDetailsForm = ({
         />
       )}
 
+      {RenderController<AddSalesFormData>(
+        control,
+        'posting_date',
+        <AntDatePicker placeholder='Select Posting Date' minDate={dayjs()} label='Posting Date' />
+      )}
+
       {/* Due Date */}
       {RenderController<AddSalesFormData>(
         control,
         'due_date',
-        <AntDatePicker placeholder='Select Due Date' />
+        <AntDatePicker placeholder='Select Due Date' label='Due Date' />
       )}
 
       {/* Warehouse Name */}
@@ -119,6 +120,7 @@ const AddSalesDetailsForm = ({
         'warehouse_name',
         <AntSelect
           placeholder='Select Warehouse'
+          label='Warehouse'
           options={warehouseList?.map((w) => ({
             value: w.name,
             label: w.warehouse_name,
@@ -134,6 +136,7 @@ const AddSalesDetailsForm = ({
         'territory_name',
         <AntSelect
           placeholder='Select Territory'
+          label='Territory'
           options={territoryList?.map((t) => ({
             value: t.name,
             label: t.territory_name,
@@ -150,6 +153,7 @@ const AddSalesDetailsForm = ({
         control,
         'customer_address',
         <AntSelect
+          label='Customer Address'
           placeholder='Select Address'
           options={customerAddress ? [{ value: customerAddress, label: customerAddress }] : []}
           notFoundText='No Address Found'
@@ -158,11 +162,13 @@ const AddSalesDetailsForm = ({
       )}
 
       {/* Remarks */}
-      {RenderController<AddSalesFormData>(
-        control,
-        'remarks',
-        <AntInput type='text' placeholder='Enter Remarks' />
-      )}
+      <div className='col-span-2'>
+        {RenderController<AddSalesFormData>(
+          control,
+          'remarks',
+          <AntInput type='textarea' placeholder='Enter Remarks' label='Remarks' />
+        )}
+      </div>
     </div>
   );
 };

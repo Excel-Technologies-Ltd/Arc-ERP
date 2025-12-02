@@ -1,5 +1,4 @@
 import { Menu } from '@/types/menu/menu.types';
-import { FaHome, FaShoppingBag } from '@/components/Base/Icons';
 import {
   URLPurchase,
   URLSalesInvoiceList,
@@ -17,6 +16,11 @@ import {
   URLSerialListSearch,
   URLSerialDetailSearch,
 } from '@/router/routes.url';
+import { FaHome } from 'react-icons/fa';
+import { BiLineChart, BiPurchaseTag } from 'react-icons/bi';
+import { RiStockLine } from 'react-icons/ri';
+import { IoPeopleCircle } from 'react-icons/io5';
+import { MdConfirmationNumber, MdVerifiedUser } from 'react-icons/md';
 
 const MainMenu = () => {
   const menu: Array<Menu | 'divider'> = [
@@ -26,12 +30,12 @@ const MainMenu = () => {
       pathname: '/',
     },
     {
-      icon: <FaShoppingBag />,
+      icon: <BiLineChart />,
       title: 'Purchase',
       pathname: URLPurchase(),
     },
     {
-      icon: <FaShoppingBag />,
+      icon: <BiPurchaseTag />,
       title: 'Sales',
       subMenu: [
         {
@@ -52,7 +56,7 @@ const MainMenu = () => {
       ],
     },
     {
-      icon: <FaHome />,
+      icon: <RiStockLine />,
       title: 'Stock',
       subMenu: [
         {
@@ -83,7 +87,7 @@ const MainMenu = () => {
       ],
     },
     {
-      icon: <FaHome />,
+      icon: <IoPeopleCircle />,
       title: 'Customer',
       subMenu: [
         {
@@ -99,7 +103,7 @@ const MainMenu = () => {
       ],
     },
     {
-      icon: <FaHome />,
+      icon: <MdVerifiedUser />,
       title: 'Warranty Portal',
       subMenu: [
         {
@@ -115,7 +119,7 @@ const MainMenu = () => {
       ],
     },
     {
-      icon: <FaHome />,
+      icon: <MdConfirmationNumber />,
       title: 'Settings',
       subMenu: [
         {

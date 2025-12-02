@@ -23,3 +23,9 @@ export const MODAL_TYPE = {
   SALES_SERIAL_RESET: 'sales-serial-reset',
   CUSTOMER_BRAND_LIMIT_DETAILS: 'customer-brand-limit-details',
 };
+
+export const SALES_INVOICE_TYPE = {
+  REGULAR_SALES: 'Regular Sales',
+  IN_PROGRESS_PROJECT: 'In-Progress Project',
+  COMPLETED_PROJECT: 'Completed Project',
+};

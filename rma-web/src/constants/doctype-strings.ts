@@ -8,3 +8,4 @@ export const TERRITORY = 'Territory';
 export const SUPPLIER = 'Supplier';
 export const ITEM = 'Item';
 export const BRAND = 'Brand';
+export const PROJECT = 'Project';

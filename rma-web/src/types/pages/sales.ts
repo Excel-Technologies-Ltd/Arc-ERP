@@ -1,5 +1,6 @@
 import { Dayjs } from 'dayjs';
 import { Customer } from '../Selling/Customer';
+import { SalesInvoice } from '../Accounts/SalesInvoice';
 
 export interface AddSalesItemTableDataType {
   item_name?: string;
@@ -19,6 +20,14 @@ export type AddSalesFormData = {
   remarks: string;
   customer_details: Customer | undefined;
   remaining_balance: number;
+
+  // Aditional Details
+  customer_mfs_name: string;
+  project_name: string;
+  customer_purchase_order: string;
+  customer_purchase_order_date: Dayjs | undefined;
+  invoice_type: SalesInvoice['excel_invoice_type'];
+  hand_over_date: Dayjs | undefined;
 };
 
 export interface SalesInvoiceListFilterFormData {

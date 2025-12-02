@@ -2,7 +2,7 @@ import React from 'react';
 import { Input, type InputProps } from 'antd';
 
 //Define a type for the input type
-type InputType = 'text' | 'password' | 'number';
+type InputType = 'text' | 'password' | 'number' | 'textarea';
 
 // Interface for the props
 interface AntInputProps extends InputProps {
@@ -10,6 +10,7 @@ interface AntInputProps extends InputProps {
   label?: string;
   errors?: boolean;
   isCapitalised?: boolean;
+  rows?: number;
 }
 
 const AntInput: React.FC<AntInputProps> = (props) => {
@@ -20,13 +21,33 @@ const AntInput: React.FC<AntInputProps> = (props) => {
     size = 'large',
     allowClear = true,
     isCapitalised = false,
+    rows = 1,
     ...rest
   } = props;
   return (
-    <div className='flex flex-col w-full'>
-      {label && <label className='ant-input-label'>{label}</label>}
+    <div className='flex flex-col gap-1 w-full'>
+      {label && (
+        <label className='text-xs font-medium text-gray-500 dark:text-gray-400'>{label}</label>
+      )}
       {type === 'password' ? (
         <Input.Password {...rest} status={errors ? 'error' : undefined} size={size} />
+      ) : type === 'textarea' ? (
+        (() => {
+          // Narrow props for TextArea to avoid type incompatibilities with InputProps (e.g. prefix)
+          type TextAreaProps = React.ComponentProps<typeof Input.TextArea>;
+          const textAreaProps = rest as TextAreaProps;
+
+          return (
+            <Input.TextArea
+              className='w-full'
+              status={errors ? 'error' : undefined}
+              size={size}
+              rows={rows}
+              allowClear={allowClear}
+              {...textAreaProps}
+            />
+          );
+        })()
       ) : (
         (() => {
           const { onChange, className, ...inputProps } = rest;

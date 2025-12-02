@@ -5,27 +5,18 @@ import AntButton from '@/components/Base/Button/AntButton';
 import { getDeliveredSerials } from '@/services/warranty/serials';
 import { useParams } from 'react-router-dom';
 import { SerialNoDataType } from '@/types/pages/warranty';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { usePagination } from '@/hooks/usePagination';
 import { useAppDispatch } from '@/stores/hooks';
 import { handleModal } from '@/stores/modalSlice';
 import { MODAL_TYPE } from '@/constants/app-strings';
 import DumpModalUi from './modal-ui/DumpModalUi';
-import { useSWRConfig } from 'frappe-react-sdk';
-import { GET_DELIVERED_SERIALS } from '@/constants/api-strings';
 
 const DeliveredSerialUi = () => {
   const params = useParams();
   const dispatch = useAppDispatch();
   const [searchValue, setSearchValue] = useState<string | null>(null);
   const { page, pageSize, limitStart, handlePageChange } = usePagination();
-  const { mutate: mutateSWR } = useSWRConfig();
-
-  // Clear cache when component mounts
-  useEffect(() => {
-    // Clear the specific cache key
-    mutateSWR(GET_DELIVERED_SERIALS, undefined);
-  }, []);
 
   // APi Call Start Here
   const { data, isLoading, mutate, isValidating } = getDeliveredSerials(

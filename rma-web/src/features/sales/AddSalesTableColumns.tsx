@@ -7,6 +7,9 @@ import { getBinList } from '@/services/bin/bin';
 import { useEffect, useState } from 'react';
 import { useNotify } from '@/hooks/useNotify';
 import { AntInput, AntSelect } from '@/components/Base/Form';
+import Button from '@/components/Base/Button';
+import { DeleteOutlined } from '@ant-design/icons';
+import { ColumnSerialNumber } from '@/components/Table/TableColumnUi';
 
 export const AddSalesTableColumns = ({
   tableData,
@@ -72,7 +75,18 @@ export const AddSalesTableColumns = ({
     }
   }, [selectedItemName, warehouse_name, selectedItemIndex, mutateBinList]);
 
+  // Handle Delete Item
+  const handleDeleteItem = (record: AddSalesItemTableDataType) => {
+    setTableData(tableData.filter((item) => item !== record));
+  };
+
   return [
+    {
+      title: 'SL',
+      key: 'sl',
+      render: (_, __, index) => ColumnSerialNumber(index),
+      width: '50px',
+    },
     {
       title: 'Item',
       dataIndex: 'item_name',
@@ -153,6 +167,16 @@ export const AddSalesTableColumns = ({
       dataIndex: 'total',
       key: 'total',
       render: (value) => <div>{value || '0'}</div>,
+    },
+    {
+      title: 'Action',
+      dataIndex: 'action',
+      key: 'action',
+      render: (_, record) => (
+        <Button onClick={() => handleDeleteItem(record)} variant='outline-danger' size='sm'>
+          <DeleteOutlined />
+        </Button>
+      ),
     },
   ];
 };
