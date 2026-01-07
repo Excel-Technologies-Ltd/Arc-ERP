@@ -101,7 +101,10 @@ export const AddSalesTableColumns = ({
           loading={isLoadingItemList}
           size='middle'
           notFoundText='No Item Found'
-          onSearch={(value) => setSearchInput(value)}
+          showSearch={{
+            onSearch: (value) => setSearchInput(value),
+            filterOption: false,
+          }}
           onClear={() => setSearchInput(null)}
           onChange={(value) => {
             if (!warehouse_name) {

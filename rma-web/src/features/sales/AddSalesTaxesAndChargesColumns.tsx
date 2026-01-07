@@ -1,5 +1,5 @@
 import Button from '@/components/Base/Button';
-import { AntSelect } from '@/components/Base/Form';
+import { AntInput, AntSelect } from '@/components/Base/Form';
 import { ColumnSerialNumber } from '@/components/Table/TableColumnUi';
 import { SALES_INVOICE_TYPE } from '@/constants/app-strings';
 import useDebouncedSearch from '@/hooks/debounce/useDebounceSearch';
@@ -33,7 +33,7 @@ export const AddSalesTaxesAndChargesColumns = ({
       title: 'SL',
       key: 'sl',
       render: (_, __, index) => ColumnSerialNumber(index),
-      width: '50px',
+      width: 10,
     },
     {
       title: 'Type',
@@ -48,15 +48,15 @@ export const AddSalesTaxesAndChargesColumns = ({
               label: i,
             }))}
             showSearch={false}
+            size='middle'
           />
         );
       },
+      width: 20,
     },
     {
       title: 'Account Head',
-      dataIndex: 'account_head',
-      render: (_, __, index) => {
-        console.log(index);
+      render: () => {
         return (
           <AntSelect
             placeholder='Select Account Head'
@@ -71,10 +71,28 @@ export const AddSalesTaxesAndChargesColumns = ({
               filterOption: false,
             }}
             notFoundText='No Account Head Found'
+            size='middle'
           />
         );
       },
     },
+    {
+      title: 'Tax Rate',
+      render: () => (
+        <AntInput type='number' placeholder='Enter Tax Rate' size='middle' onChange={() => {}} />
+      ),
+    },
+    {
+      title: 'Amount',
+      render: () => (
+        <AntInput type='number' placeholder='Enter Amount' size='middle' onChange={() => {}} />
+      ),
+    },
+    {
+      title: 'Total',
+      render: () => '0',
+    },
+
     {
       title: 'Action',
       key: 'action',

@@ -125,9 +125,6 @@ const AddSalesInvoice = () => {
       sl: taxesAndChargesTableData.length + 1,
     };
     setTaxesAndChargesTableData([...taxesAndChargesTableData, newTaxesAndCharges]);
-    notify.success({
-      title: 'Taxes and Charges Added Successfully',
-    });
   };
 
   // Table Columns
